@@ -38,3 +38,9 @@ end
 -- load all prerequisite libraries, these are typically external, written and pure lua and not by myself.
 rain.util.loadlibraries()
 rain.util.loadraindrop()
+
+function rain:Initialize()
+	if SV then
+		rain.util.initraindrop()
+	end
+end

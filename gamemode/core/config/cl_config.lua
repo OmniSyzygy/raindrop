@@ -1,4 +1,4 @@
-rain.cfg = {}
+rain.cfg = rain.cfg or {}
 rain.cfg.HiddenUIElements = {}
 rain.cfg.HiddenUIElements["CHudAmmo"] = true
 rain.cfg.HiddenUIElements["CHudBattery"] = true

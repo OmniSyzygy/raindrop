@@ -539,6 +539,8 @@ function mysql:OnConnected()
 	MsgC(Color(25, 235, 25), "[mysql] Connected to the database!\n");
 
 	hook.Call("DatabaseConnected", nil);
+
+	rain.db.onconnectionsuccess()
 end;
 
 -- Called when the database connection fails.
@@ -546,6 +548,8 @@ function mysql:OnConnectionFailed(errorText)
 	ErrorNoHalt("[mysql] Unable to connect to the database!\n"..errorText.."\n");
 
 	hook.Call("DatabaseConnectionFailed", nil, errorText);
+
+	rain.db.onconnectionfailed()
 end;
 
 return mysql;

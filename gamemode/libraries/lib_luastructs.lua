@@ -3,14 +3,14 @@
 	Notes: I'm too used to C++ and I hate having to constantly do type checking bullshit.
 --]]
 
-GM.structs = {} -- table containing all structs
+rain.structs = {} -- table containing all structs
 
 --[[
 	Function: RegisterStruct
 	Purpose: These are registered here as a generic struct, the purpose of the struct is to make it so that there is always a set default value.
 --]]
 
-function GM:RegisterStruct(sUniqueIdentifier, tStruct)
+function rain:RegisterStruct(sUniqueIdentifier, tStruct)
 	self.structs[sUniqueIdentifier] = tStruct
 end
 
@@ -19,7 +19,7 @@ end
 	Purpose: Gets a structured table from the master table.
 --]]
 
-function GM:GetStruct(sUniqueIdentifier)
+function rain:GetStruct(sUniqueIdentifier)
 	local ret = {}
 	ret = table.Copy(self.structs[sUniqueIdentifier])
 	return ret
