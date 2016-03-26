@@ -47,4 +47,4 @@ function PANEL:Paint(w, h)
 	return true
 end
 
-derma.DefineControl( "CCStalkerProgressBar", "", PANEL, "DPanel" )
+derma.DefineControl( "RD_StalkerProgressBar", "", PANEL, "DPanel" )

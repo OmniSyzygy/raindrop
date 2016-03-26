@@ -139,4 +139,4 @@ function PANEL:Paint(w, h)
 	return true
 end
 
-derma.DefineControl( "CCStalkerItemHolder", "", PANEL, "DPanel" )
+derma.DefineControl( "RD_StalkerItemHolder", "", PANEL, "DPanel" )

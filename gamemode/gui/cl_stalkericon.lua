@@ -70,4 +70,4 @@ function PANEL:PostThink()
 	end
 end
 
-derma.DefineControl( "CCStalkerIcon", "", PANEL, "DButton" )
+derma.DefineControl( "RD_StalkerIcon", "", PANEL, "DButton" )

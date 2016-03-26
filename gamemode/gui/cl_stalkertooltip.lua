@@ -98,4 +98,4 @@ function PANEL:Paint(w, h)
 	end
 end
 
-derma.DefineControl( "CCStalkerToolTip", "", PANEL, "DPanel" )
+derma.DefineControl( "RD_StalkerToolTip", "", PANEL, "DPanel" )

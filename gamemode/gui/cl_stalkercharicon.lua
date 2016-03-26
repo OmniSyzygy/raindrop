@@ -32,4 +32,4 @@ function PANEL:Paint( w, h )
 	return true
 end
 
-derma.DefineControl( "CCStalkerCharIcon", "", PANEL, "DPanel" )
+derma.DefineControl( "RD_StalkerCharIcon", "", PANEL, "DPanel" )

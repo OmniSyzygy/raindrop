@@ -1,7 +1,7 @@
 "Raindrop"
 {
 	"base"			"base"
-	"title"			"Raindrop"
+	"title"			"RAINDROP"
 	"menusystem" 	"1"
 	"maps"			"^rp_"
 }

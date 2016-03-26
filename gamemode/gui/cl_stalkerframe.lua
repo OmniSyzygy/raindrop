@@ -217,4 +217,4 @@ function PANEL:Paint(w, h)
 	return true
 end
 
-derma.DefineControl( "CCStalkerFrame", "", PANEL, "DFrame" )
+derma.DefineControl( "RD_StalkerFrame", "", PANEL, "DFrame" )

@@ -12,4 +12,4 @@ function PANEL:Paint(w, h)
 	return true
 end
 
-derma.DefineControl("CCStalkerTree", "", PANEL, "DPanel")
+derma.DefineControl("RD_StalkerTree", "", PANEL, "DPanel")
