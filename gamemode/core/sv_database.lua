@@ -24,6 +24,7 @@ function rain.db.onconnectionsuccess()
 	queryObj:Create("data_character", "MEDIUMTEXT NOT NULL")
 	queryObj:Create("data_appearance", "MEDIUMTEXT NOT NULL")
 	queryObj:Create("data_adminonly", "MEDIUMTEXT NOT NULL")
+	queryObj:Create("data_inventory", "MEDIUMTEXT NOT NULL")
 	queryObj:PrimaryKey("id")
 	queryObj:Execute()
 
