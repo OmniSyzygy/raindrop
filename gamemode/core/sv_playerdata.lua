@@ -4,6 +4,12 @@ rain.pdata = {}
 rain.lastinsertindex = rain.lastinsertindex or {}
 rain.lastsyncindex = rain.lastsyncindex or {}
 
+--[[
+	Name: Client Initial Spawn
+	Chategory: Player Data
+	Desc: Called when a player spawns, currently is used to update their data in the database.
+--]]
+
 function rain.pdata.clientinitialspawn(pClient)
 	if !pClient.rain then
 		local QueryObj = mysql:Select("players")
@@ -39,6 +45,12 @@ function rain.pdata.clientinitialspawn(pClient)
 		QueryObj:Execute()
 	end
 end
+
+--[[
+	Name: Update Logged Data
+	Chategory: Player Data
+	Desc: Updates IP logs, and Steam Name logs.
+--]]
 
 function rain.pdata.updateloggeddata(pClient)
 
@@ -88,9 +100,13 @@ function rain.pdata.isvaliddatatype(sDataType)
 	return rain.pdata.datatypes[sDataType] or false
 end
 
-function rain.pdata.loaddataoffline(sSteamID, fnCallback)
-	hook.Add("OnOfflineDataLoaded", sSteamID, fnCallback)
+--[[
+	Name: Load Data Offline
+	Chategory: Player Data
+	Desc: Retrieves data then calls a callback function supplying the players data
+--]]
 
+function rain.pdata.loaddataoffline(sSteamID, fnCallback)
 	local LoadObj = mysql:Select("players")
 	LoadObj:Where("steam_id64", self:SteamID64())
 	LoadObj:Callback(function(wResult, uStatus, uLastID)
@@ -103,11 +119,18 @@ function rain.pdata.loaddataoffline(sSteamID, fnCallback)
 			data.last_ip = tResult.last_ip
 			data.steam_name_history = pon.decode(tResult.steam_name_history)
 
-			hook.Call("OnOfflineDataLoaded")
-			hook.Remove("OnOfflineDataLoaded", sSteamID)
+			if (fnCallback) then
+				fnCallback(data)
+			end
 		end
 	end)
 end
+
+--[[
+	Name: Set Client Data Offline
+	Chategory: Player Data
+	Desc: Sets a players data while they're offline using their SteamID64
+--]]
 
 function rain.pdata.setdataoffline(sSteamID, sDataType, wNewValue)
 	local sNewValue = ""
@@ -124,11 +147,22 @@ function rain.pdata.setdataoffline(sSteamID, sDataType, wNewValue)
 	UpdateObj:Execute()
 end
 
+--[[
+	Name: Set Client Data Offline
+	Chategory: Player Data
+	Desc: Sets a players client data while they're offline using their SteamID64
+--]]
+
 function rain.pdata.setclientdataoffline(sSteamID, wNewValue)
 	rain.pdata.setdataoffline(sSteamID, "client_data", wNewValue)
 end
 
 local rainclient = FindMetaTable("Player")
+
+--[[
+	Name: Add Character
+	Desc: Adds a character id to the client data
+--]]
 
 function rainclient:AddCharacter(nCharID)
 	table.insert(self.data.characters, nCharID)
@@ -136,11 +170,21 @@ function rainclient:AddCharacter(nCharID)
 	self:SyncDataByKey("characters")
 end
 
+--[[
+	Name: Remove Character
+	Desc: Removes a character from the players character list, characters will never be deleted for security and logging purposes.
+--]]
+
 function rainclient:RemoveCharacter(nCharID)
 	table.RemoveByValue(self.data.characters, nCharID)
 	self:SaveData()
 	self:SyncDataByKey("characters")
 end
+
+--[[
+	Name: Save Data
+	Desc: Saves a players data, this function is cached to reduce the length of a mysql query
+--]]
 
 function rainclient:SaveData()
 	local SaveObj = mysql:Select("players")
@@ -148,7 +192,7 @@ function rainclient:SaveData()
 	
 	if (rain.lastinsertindex[self:SteamID()]) then
 		for k, v in pairs(self.data) do
-			if self.data[k] != self.lastinsertindex[self:SteamID()].data[k] then
+			if self.data[k] != rain.lastinsertindex[self:SteamID()].data[k] then
 				SaveObj:Update(k, v)
 			end
 		end
@@ -164,15 +208,29 @@ function rainclient:SaveData()
 	SaveObj:Execute()
 end
 
+--[[
+	Name: Sync Data
+	Desc: Syncs a clients data in its entirety
+--]]
+
 function rainclient:SyncData()
-	-- this will be written once I figure out some networking backend stuff
+
 end
+
+--[[
+	Name: Sync Data By Key
+	Desc: Syncs data accross the network by a specific key, this should be used as much as possible to reduce overhead
+--]]
 
 function rainclient:SyncDataByKey(sKey)
-	-- same as above
+
 end
 
--- Loads the clients data from the DB.
+--[[
+	Name: Load Data
+	Desc: Loads client data from the DB
+--]]
+
 function rainclient:LoadData()
 	local LoadObj = mysql:Select("players")
 	LoadObj:Where("steam_id64", self:SteamID64())
@@ -191,8 +249,10 @@ function rainclient:LoadData()
 	LoadObj:Execute()
 end
 
--- Set Data
--- Sets data on a client and saves to the DB, wNewValue is a wildcard which should only be a serialized or unserialzed table
+--[[
+	Name: Set Data
+	Desc: Sets data on a client and saves to the DB, wNewValue is a wildcard which should only be a serialized or unserialzed table
+--]]
 
 function rainclient:SetData(sDataType, wNewValue)
 	if !sDataType or !wNewValue then
@@ -219,8 +279,10 @@ function rainclient:SetData(sDataType, wNewValue)
 	UpdateObj:Execute()
 end
 
--- Set Client Data
--- Quick and dirty version of the function above, rewritten slightly to be a bit easier on the eyes
+--[[
+	Name: Set Client Data
+	Desc: Quick and dirty version of the function above, rewritten slightly to be a bit easier on the eyes
+--]]
 
 function rainclient:SetClientData(wNewValue)
 	self:SetData("client_data", wNewValue)
