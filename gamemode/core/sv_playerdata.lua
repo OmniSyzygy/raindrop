@@ -86,6 +86,23 @@ end
 
 local rainclient = FindMetaTable("Player")
 
+-- Loads the clients data from the DB.
+function rainclient:LoadData()
+	local LoadObj = mysql:Select("players")
+	LoadObj:Where("steam_id64", self:SteamID64())
+	LoadObj:Callback(function(wResult, uStatus, uLastID)
+		if (type(wResult) == "table") and (#wResult > 0) then
+			local tResult = wResult[1]
+
+			self.data = {}
+			self.data.iphistory = pon.decode(tResult.iphistory)
+			self.data.client_data = pon.decode(tResult.client_data)
+			self.data.last_ip = tResult.last_ip
+			self.data.steam_name_history = pon.decode(tResult.steam_name_history)
+		end
+	end)
+end
+
 -- Set Data
 -- Sets data on a client and saves to the DB, wNewValue is a wildcard which should only be a serialized or unserialzed table
 
@@ -94,14 +111,18 @@ function rainclient:SetData(sDataType, wNewValue)
 		return
 	end
 
+	if !self.data then
+		return
+	end
+
 	local sNewValue = ""
 
 	if type(wNewValue) = "table" then
 		sNewValue = pon.encode(wNewValue)
-		self[sDataType] = wNewValue
+		self.data[sDataType] = wNewValue
 	else
 		sNewValue = tostring(wNewValue)
-		self[sDataType] = pon.decode(wNewValue)
+		self.data[sDataType] = pon.decode(wNewValue)
 	end
 
 	local UpdateObj = mysql:Update("players")
