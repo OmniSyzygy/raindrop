@@ -1,5 +1,9 @@
 rain.pdata = {}
 
+-- these are caches, so they're preserved when the gamemode reloads
+rain.lastinsertindex = rain.lastinsertindex or {}
+rain.lastsyncindex = rain.lastsyncindex or {}
+
 function rain.pdata.clientinitialspawn(pClient)
 	if !pClient.rain then
 		local QueryObj = mysql:Select("players")
@@ -84,7 +88,89 @@ function rain.pdata.isvaliddatatype(sDataType)
 	return rain.pdata.datatypes[sDataType] or false
 end
 
+function rain.pdata.loaddataoffline(sSteamID, fnCallback)
+	hook.Add("OnOfflineDataLoaded", sSteamID, fnCallback)
+
+	local LoadObj = mysql:Select("players")
+	LoadObj:Where("steam_id64", self:SteamID64())
+	LoadObj:Callback(function(wResult, uStatus, uLastID)
+		if (type(wResult) == "table") and (#wResult > 0) then
+			local tResult = wResult[1]
+
+			local data = {}
+			data.iphistory = pon.decode(tResult.iphistory)
+			data.client_data = pon.decode(tResult.client_data)
+			data.last_ip = tResult.last_ip
+			data.steam_name_history = pon.decode(tResult.steam_name_history)
+
+			hook.Call("OnOfflineDataLoaded")
+			hook.Remove("OnOfflineDataLoaded", sSteamID)
+		end
+	end)
+end
+
+function rain.pdata.setdataoffline(sSteamID, sDataType, wNewValue)
+	local sNewValue = ""
+
+	if type(wNewValue) = "table" then
+		sNewValue = pon.encode(wNewValue)
+	else
+		sNewValue = tostring(wNewValue)
+	end
+
+	local UpdateObj = mysql:Update("players")
+	UpdateObj:Update(sDataType, sNewValue)
+	UpdateObj:Where("steam_id64", sSteamID)
+	UpdateObj:Execute()
+end
+
+function rain.pdata.setclientdataoffline(sSteamID, wNewValue)
+	rain.pdata.setdataoffline(sSteamID, "client_data", wNewValue)
+end
+
 local rainclient = FindMetaTable("Player")
+
+function rainclient:AddCharacter(nCharID)
+	table.insert(self.data.characters, nCharID)
+	self:SaveData()
+	self:SyncDataByKey("characters")
+end
+
+function rainclient:RemoveCharacter(nCharID)
+	table.RemoveByValue(self.data.characters, nCharID)
+	self:SaveData()
+	self:SyncDataByKey("characters")
+end
+
+function rainclient:SaveData()
+	local SaveObj = mysql:Select("players")
+	SaveObj:Where("steam_id64", self:SteamID64())
+	
+	if (rain.lastinsertindex[self:SteamID()]) then
+		for k, v in pairs(self.data) do
+			if self.data[k] != self.lastinsertindex[self:SteamID()].data[k] then
+				SaveObj:Update(k, v)
+			end
+		end
+	else
+		for k, v in pairs(self.data) do
+			SaveObj:Update(k, v)
+		end
+	end
+
+	rain.lastinsertindex[self:SteamID()].data = self.data
+
+	SaveObj:Update("steam_name", self:Name())
+	SaveObj:Execute()
+end
+
+function rainclient:SyncData()
+	-- this will be written once I figure out some networking backend stuff
+end
+
+function rainclient:SyncDataByKey(sKey)
+	-- same as above
+end
 
 -- Loads the clients data from the DB.
 function rainclient:LoadData()
@@ -95,12 +181,14 @@ function rainclient:LoadData()
 			local tResult = wResult[1]
 
 			self.data = {}
+			self.data.characters = pon.decode(tResult.characters)
 			self.data.iphistory = pon.decode(tResult.iphistory)
 			self.data.client_data = pon.decode(tResult.client_data)
 			self.data.last_ip = tResult.last_ip
 			self.data.steam_name_history = pon.decode(tResult.steam_name_history)
 		end
 	end)
+	LoadObj:Execute()
 end
 
 -- Set Data
@@ -126,7 +214,7 @@ function rainclient:SetData(sDataType, wNewValue)
 	end
 
 	local UpdateObj = mysql:Update("players")
-	UpdateObj:Update(sDataType, wNewValue)
+	UpdateObj:Update(sDataType, sNewValue)
 	UpdateObj:Where("steam_id64", self:SteamID64())
 	UpdateObj:Execute()
 end
