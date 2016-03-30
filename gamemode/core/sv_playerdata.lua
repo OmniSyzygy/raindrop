@@ -37,6 +37,7 @@ function rain.pdata.clientinitialspawn(pClient)
 end
 
 function rain.pdata.updateloggeddata(pClient)
+
 	rain.util.log("Update logged data for "..pClient:Name()..".", "DB")
 
 	local QueryObj = mysql:Select("players")
@@ -70,4 +71,48 @@ function rain.pdata.updateloggeddata(pClient)
 	end)
 
 	QueryObj:Execute()
+
+end
+
+rain.pdata.datatypes = {}
+rain.pdata.datatypes["steam_name_history"] = true
+rain.pdata.datatypes["last_ip"] = true
+rain.pdata.datatypes["iphistory"] = true
+rain.pdata.datatypes["client_data"] = true
+
+function rain.pdata.isvaliddatatype(sDataType)
+	return rain.pdata.datatypes[sDataType] or false
+end
+
+local rainclient = FindMetaTable("Player")
+
+-- Set Data
+-- Sets data on a client and saves to the DB, wNewValue is a wildcard which should only be a serialized or unserialzed table
+
+function rainclient:SetData(sDataType, wNewValue)
+	if !sDataType or !wNewValue then
+		return
+	end
+
+	local sNewValue = ""
+
+	if type(wNewValue) = "table" then
+		sNewValue = pon.encode(wNewValue)
+		self[sDataType] = wNewValue
+	else
+		sNewValue = tostring(wNewValue)
+		self[sDataType] = pon.decode(wNewValue)
+	end
+
+	local UpdateObj = mysql:Update("players")
+	UpdateObj:Update(sDataType, wNewValue)
+	UpdateObj:Where("steam_id64", self:SteamID64())
+	UpdateObj:Execute()
+end
+
+-- Set Client Data
+-- Quick and dirty version of the function above, rewritten slightly to be a bit easier on the eyes
+
+function rainclient:SetClientData(wNewValue)
+	self:SetData("client_data", wNewValue)
 end
