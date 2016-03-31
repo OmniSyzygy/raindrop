@@ -31,7 +31,7 @@ if (SERVER) then
 	--]]
 	
 	function character_meta:Save()
-		local SaveObj = mysql:Select("characters")
+		local SaveObj = mysql:Update("characters")
 		SaveObj:Where("id", self:GetCharID())
 
 		local SortData = {}
@@ -43,7 +43,11 @@ if (SERVER) then
 		SortData["data_inventory"] = d
 
 		for k, v in pairs(SortData) do
-			SaveObj:Update(k, pon.encode(v))
+			if type(v) == "table" then
+				SaveObj:Update(k, pon.encode(v))
+			elseif type(v) == "string" then
+				SaveObj:Update(k, v)
+			end
 		end
 					
 		SaveObj:Update("charname", self:GetName())

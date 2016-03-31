@@ -188,14 +188,16 @@ end
 --]]
 
 function rainclient:SaveData()
-	local SaveObj = mysql:Select("players")
+	local SaveObj = mysql:Update("players")
 	SaveObj:Where("steam_id64", self:SteamID64())
 
 	for k, v in pairs(self.data) do
-		SaveObj:Update(k, v)
+		if type(v) == "table" then
+			SaveObj:Update(k, pon.encode(v))
+		elseif type(v) == "string" then
+			SaveObj:Update(k, v)
+		end
 	end
-
-	rain.lastinsertindex[self:SteamID()] = self.data
 
 	SaveObj:Update("steam_name", self:Name())
 	SaveObj:Execute()
