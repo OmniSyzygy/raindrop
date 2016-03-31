@@ -1,7 +1,6 @@
 rain.pdata = {}
 
 -- these are caches, so they're preserved when the gamemode reloads
-rain.lastinsertindex = rain.lastinsertindex or {}
 rain.lastsyncindex = rain.lastsyncindex or {}
 
 --[[
@@ -191,17 +190,9 @@ end
 function rainclient:SaveData()
 	local SaveObj = mysql:Select("players")
 	SaveObj:Where("steam_id64", self:SteamID64())
-	
-	if (rain.lastinsertindex[self:SteamID()]) then
-		for k, v in pairs(self.data) do
-			if self.data[k] != rain.lastinsertindex[self:SteamID()][k] then
-				SaveObj:Update(k, v)
-			end
-		end
-	else
-		for k, v in pairs(self.data) do
-			SaveObj:Update(k, v)
-		end
+
+	for k, v in pairs(self.data) do
+		SaveObj:Update(k, v)
 	end
 
 	rain.lastinsertindex[self:SteamID()] = self.data
