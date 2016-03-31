@@ -166,6 +166,8 @@ local rainclient = FindMetaTable("Player")
 
 function rainclient:AddCharacter(nCharID)
 	table.insert(self.data.characters, nCharID)
+	print(self.data.characters)
+	PrintTable(self.data.characters)
 	self:SaveData()
 	self:SyncDataByKey("characters")
 end
@@ -192,7 +194,7 @@ function rainclient:SaveData()
 	
 	if (rain.lastinsertindex[self:SteamID()]) then
 		for k, v in pairs(self.data) do
-			if self.data[k] != rain.lastinsertindex[self:SteamID()].data[k] then
+			if self.data[k] != rain.lastinsertindex[self:SteamID()][k] then
 				SaveObj:Update(k, v)
 			end
 		end
@@ -202,7 +204,7 @@ function rainclient:SaveData()
 		end
 	end
 
-	rain.lastinsertindex[self:SteamID()].data = self.data
+	rain.lastinsertindex[self:SteamID()] = self.data
 
 	SaveObj:Update("steam_name", self:Name())
 	SaveObj:Execute()

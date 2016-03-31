@@ -9,7 +9,7 @@
 mysql = mysql or {};
 
 local QueueTable = {};
-local Module = "sqlite";
+local Module = "tmysql4";
 local type = type;
 local tostring = tostring;
 local table = table;

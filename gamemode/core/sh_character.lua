@@ -2,7 +2,6 @@ rain.character = {}
 
 if (SERVER) then
 	rain.characterindex = rain.characterindex or {}
-	rain.lastsaveindex = rain.lastsaveindex or {}
 end
 
 local character_meta = {}
@@ -43,20 +42,10 @@ if (SERVER) then
 		SortData["data_adminonly"] = c
 		SortData["data_inventory"] = d
 
-		if rain.lastsaveindex[self:GetCharID()] then
-			for k, v in pairs(SortData) do
-				if v != rain.lastinsertindex[self:SteamID()].sortdata[k] then
-					SaveObj:Update(k, pon.encode(v))
-				end
-			end
-		else
-			for k, v in pairs(SortData) do
-				SaveObj:Update(k, pon.encode(v))
-			end
+		for k, v in pairs(SortData) do
+			SaveObj:Update(k, pon.encode(v))
 		end
-			
-		rain.lastinsertindex[self:SteamID()].sortdata = SortData
-		
+					
 		SaveObj:Update("charname", self:GetName())
 		SaveObj:Execute()
 	end
@@ -114,7 +103,8 @@ if (SERVER) then
 		InsertObj:Insert("data_adminonly", "{}")
 		InsertObj:Insert("data_inventory", inventory)
 		InsertObj:Callback(function(result, status, lastID)
-			--pOwningClient:AddCharacter(lastID)
+			print(result, status, lastID)
+			pOwningClient:AddCharacter(lastID)
 		end)
 		InsertObj:Execute()
 	end
@@ -152,7 +142,7 @@ if (SERVER) then
 		LoadObj:Callback(function(wResult, uStatus, uLastID)
 			if (type(wResult) == "table") and (#wResult > 0) then
 				local tResult = wResult[1]
-				
+
 				local chars = pon.decode(tResult.characters)
 				if !table.HasValue(chars, nCharID) then
 					return
