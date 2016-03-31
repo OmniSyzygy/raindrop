@@ -27,6 +27,8 @@ rain.Website = "thereeplex.com"
 rain.Author = "jooni"
 rain.Email = "jooni@thereeplex.com"
 
+rain.dev = true
+
 -- include raindrop utilities to make loading the rest of the gamemode easier
 if (SERVER) then
 	AddCSLuaFile("sh_util.lua")

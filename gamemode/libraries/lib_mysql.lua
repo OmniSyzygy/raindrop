@@ -101,6 +101,8 @@ function QUERY_CLASS:Select(fieldName)
 end;
 
 function QUERY_CLASS:Insert(key, value)
+	print(key, value, self:Escape(value))
+	print(self:Escape(value))
 	self.insertList[#self.insertList + 1] = {"`"..key.."`", "\""..self:Escape(value).."\""};
 end;
 

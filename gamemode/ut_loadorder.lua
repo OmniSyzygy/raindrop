@@ -1,1 +1,1 @@
-rain.util.loadorder = {"core/config", "core", "dev", "gui", "raindrop/config", "raindrop", "raindrop/maps"}
+rain.util.loadorder = {"core/config", "core", "core/hooks", "dev", "gui", "raindrop/config", "raindrop", "raindrop/maps"}

@@ -1,7 +1,7 @@
 rain.db = {}
 
 function rain.db.connect(sAddress, sUsername, sPassword, sDatabase, nPort)
-	mysql:SetModule("mysqloo")
+	mysql:SetModule("tmysql4")
 	mysql:Connect(sAddress, sUsername, sPassword, sDatabase, nPort)
 end
 
@@ -11,16 +11,16 @@ function rain.db.onconnectionsuccess()
 	queryObj:Create("steam_id64", "VARCHAR(255) NOT NULL")
 	queryObj:Create("steam_name", "TINYTEXT NOT NULL")
 	queryObj:Create("steam_name_history", "MEDIUMTEXT NOT NULL")
-	queryObj:Create("characters", "TINYTEXT NOT NULL")
+	queryObj:Create("characters", "VARCHAR(64) NOT NULL")
 	queryObj:Create("last_ip", "VARCHAR(128) NOT NULL")
 	queryObj:Create("iphistory", "VARCHAR(512) NOT NULL")
-	queryObj:Create("client_data", "TEXT NOT NULL")
+	queryObj:Create("client_data", "VARCHAR(1024) NOT NULL")
 	queryObj:PrimaryKey("id")
 	queryObj:Execute()
 
 	local queryObj = mysql:Create("characters")
 	queryObj:Create("id", "INT NOT NULL AUTO_INCREMENT")
-	queryObj:Create("charname", "TINYTEXT NOT NULL")
+	queryObj:Create("charname", "VARCHAR(48) NOT NULL")
 	queryObj:Create("data_character", "MEDIUMTEXT NOT NULL")
 	queryObj:Create("data_appearance", "MEDIUMTEXT NOT NULL")
 	queryObj:Create("data_adminonly", "MEDIUMTEXT NOT NULL")

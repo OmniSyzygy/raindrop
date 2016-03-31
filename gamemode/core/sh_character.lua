@@ -97,17 +97,13 @@ if (SERVER) then
 			chardata = tCharCreateData.CharData
 		end
 
-		local appearance
-		if !tAppearanceData then
-			appearance = "{}"
-		else
+		local appearance = "{}"
+		if tAppearanceData then
 			appearance = pon.encode(tAppearanceData)
 		end
 
-		local inventory
-		if !tInventory then
-			inventory = "{}"
-		else
+		local inventory = "{}"
+		if tInventory then
 			inventory = pon.encode(tInventory)
 		end
 
@@ -118,7 +114,7 @@ if (SERVER) then
 		InsertObj:Insert("data_adminonly", "{}")
 		InsertObj:Insert("data_inventory", inventory)
 		InsertObj:Callback(function(result, status, lastID)
-			pOwningClient:AddCharacter(lastID)
+			--pOwningClient:AddCharacter(lastID)
 		end)
 		InsertObj:Execute()
 	end

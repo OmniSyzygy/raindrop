@@ -135,7 +135,7 @@ end
 function rain.pdata.setdataoffline(sSteamID, sDataType, wNewValue)
 	local sNewValue = ""
 
-	if type(wNewValue) = "table" then
+	if type(wNewValue) == "table" then
 		sNewValue = pon.encode(wNewValue)
 	else
 		sNewValue = tostring(wNewValue)
@@ -265,7 +265,7 @@ function rainclient:SetData(sDataType, wNewValue)
 
 	local sNewValue = ""
 
-	if type(wNewValue) = "table" then
+	if type(wNewValue) == "table" then
 		sNewValue = pon.encode(wNewValue)
 		self.data[sDataType] = wNewValue
 	else
