@@ -3,22 +3,22 @@
 	Notes: This is the file that handles volume creation, enter/exit events, etc.
 --]]
 
-GM.volumeindex = {} -- all the types of volumes are stored here
-GM.volumes = {} -- this is where actual volume data is stored
+rain.volumeindex = {} -- all the types of volumes are stored here
+rain.volumes = {} -- this is where actual volume data is stored
 
 -- enumerations
 E_ENTERVOLUME = 0
 E_INVOLUME = 1
 E_EXITVOLUME = 2
 
-GM:RegisterStruct("Volume", {
+rain.struct:RegisterStruct("Volume", {
 	Type = "VolumeType",
 	Min = Vector(0,0,0),
 	Max = Vector(1,1,1),
 	Radial = false
 })
 
-GM:RegisterStruct("VolumeType", {
+rain.struct:RegisterStruct("VolumeType", {
 	Name = "VolumeType", -- Name, for debugging purposes mostly.
 	Strength = 1, -- 0-1 variable, this is passed on to the OnEnter/OnExit/WhileInside functions.
 	Metadata = {}, -- passed on as a function to the functions
@@ -42,7 +42,7 @@ GM:RegisterStruct("VolumeType", {
 local VolumeThinkLimit = 0.5
 local NextThink = CurTime() + VolumeThinkLimit -- limit the tickrate
 
-function GM:VolumeThink()
+function rain:VolumeThink()
 	if (CurTime() > NextThink) then
 		for k, v in pairs(self.volumes) do
 			local voldata = self:GetVolumeType(v.Type)
@@ -108,8 +108,8 @@ end
 	Purpose: Registers a volume type for future usage
 --]]
 
-function GM:RegisterVolumeType(sType, sName, nStrength, bServerSideVerification, tMetadata, cDrawColor, fnOnEnter, fnOnExit, fnWhileInside)
-	local VolumeType = self:GetStruct("VolumeType")
+function rain:RegisterVolumeType(sType, sName, nStrength, bServerSideVerification, tMetadata, cDrawColor, fnOnEnter, fnOnExit, fnWhileInside)
+	local VolumeType = rain.struct:GetStruct("VolumeType")
 
 	VolumeType.Name = sName or VolumeType.Name
 	VolumeType.Strength = nStrength or VolumeType.Strength
@@ -128,7 +128,7 @@ end
 	Purpose: Gets the volume from the index at the specified point.
 --]]
 
-function GM:GetVolumeType(sName)
+function rain:GetVolumeType(sName)
 	return self.volumeindex[sName]
 end
 
@@ -137,8 +137,8 @@ end
 	Purpose: When called it adds a volume to the registry, this function gets replicated from server to client but not the other way around.
 --]]
 
-function GM:AddVolume(tVolume, index)
-	local NewVolume = self:GetStruct("Volume")
+function rain:AddVolume(tVolume, index)
+	local NewVolume = rain.struct:GetStruct("Volume")
 	NewVolume.Min = tVolume.Min or NewVolume.Min
 	NewVolume.Max = tVolume.Max or NewVolume.Max
 	NewVolume.Type = tVolume.Type or NewVolume.Type
@@ -160,7 +160,7 @@ end
 	Purpose: Removes a volume by iterating through all of the volumes, removing the first volume that is within 256 units of the first argument
 --]]
 
-function GM:RemoveVolume(vPos)
+function rain:RemoveVolume(vPos)
 	for k, v in pairs(self.volumes) do
 		if ((v.Min:Distance(vPos) < 256) or (v.Max:Distance(vPos) < 256)) then
 			self.volumes[k] = nil
@@ -211,6 +211,6 @@ end
 	This needs to be moved to a config file
 --]]
 
-GM:RegisterVolumeType("AmbientSound", "Ambient Sound", 1, true, {}, Color(100, 255, 100, 255))
-GM:RegisterVolumeType("AreaTrigger", "Area Trigger", 1, true, {}, Color(100, 100, 255, 255))
-GM:RegisterVolumeType("S2KZone", "S2K Zone", 1, true, {}, Color(255, 100, 100, 255))
+rain:RegisterVolumeType("AmbientSound", "Ambient Sound", 1, true, {}, Color(100, 255, 100, 255))
+rain:RegisterVolumeType("AreaTrigger", "Area Trigger", 1, true, {}, Color(100, 100, 255, 255))
+rain:RegisterVolumeType("S2KZone", "S2K Zone", 1, true, {}, Color(255, 100, 100, 255))

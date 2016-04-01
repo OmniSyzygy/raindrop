@@ -67,7 +67,7 @@ rain_structmeta.__index = rain_structmeta
 
 function rain.struct:RegisterStruct(sUniqueIdentifier, tStruct)
 	tStruct.s_uid = sUniqueIdentifier
-	self.structs[sUniqueIdentifier] = tStruct
+	rain.structs[sUniqueIdentifier] = tStruct
 end
 
 --[[
@@ -77,7 +77,7 @@ end
 
 function rain.struct:GetStruct(sUniqueIdentifier)
 	local ret = {}
-	ret = table.Copy(self.structs[sUniqueIdentifier])
+	ret = table.Copy(rain.structs[sUniqueIdentifier])
 	setmetatable(ret, rain_structmeta)
 	return ret
 end

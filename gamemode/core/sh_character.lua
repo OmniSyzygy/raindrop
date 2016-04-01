@@ -107,7 +107,6 @@ if (SERVER) then
 		InsertObj:Insert("data_adminonly", "{}")
 		InsertObj:Insert("data_inventory", inventory)
 		InsertObj:Callback(function(result, status, lastID)
-			print(result, status, lastID)
 			pOwningClient:AddCharacter(lastID)
 		end)
 		InsertObj:Execute()

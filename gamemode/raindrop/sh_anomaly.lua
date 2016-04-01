@@ -3,15 +3,15 @@
 	Notes: This is the file that new anomalies are registered in.
 --]]
 
-GM.anomalies = {}
-GM.elements = {}
+rain.anomalies = {}
+rain.elements = {}
 
-GM:RegisterStruct("AnomalyStruct", {
+rain.struct:RegisterStruct("AnomalyStruct", {
 	Name = "Anomaly", -- Name, for debugging purposes.
 	Elements = {} -- Table of strings that contain the anomaly elements
 })
 
-GM:RegisterStruct("AnomalyElement", {
+rain.struct:RegisterStruct("AnomalyElement", {
 	Name = "Anomaly Element", -- Name, for debugging purposes.
 	OnEntityNear = function(ent, dist, strength) -- called constantly once OnEnter has been called
 		print(ent, dist)
@@ -32,8 +32,8 @@ GM:RegisterStruct("AnomalyElement", {
 	Purpose: Registers an Anomaly for use in the future.
 --]]
 
-function GM:RegisterAnomaly(sName, tElements)
-	local Anomaly = self:GetStruct("AnomalyStruct")
+function rain:RegisterAnomaly(sName, tElements)
+	local Anomaly = rain.struct:GetStruct("AnomalyStruct")
 	Anomaly.Name = sName or Anomaly.Name
 	Anomaly.Elements = tElements or Anomaly.Elements
 
@@ -45,8 +45,8 @@ end
 	Purpose: Registers an Anomaly element for use later on
 --]]
 
-function GM:RegisterElement(sName, fnAnomalyInit, fnAnomalyThink, fnAnomalyDraw)
-	local AnomalyElement = self:GetStruct("AnomalyElement")
+function rain:RegisterElement(sName, fnAnomalyInit, fnAnomalyThink, fnAnomalyDraw)
+	local AnomalyElement = rain.struct:GetStruct("AnomalyElement")
 	AnomalyElement.Name = sName or AnomalyElement.Name
 	AnomalyElement.AnomalyInit = fnAnomalyInit or AnomalyElement.AnomalyInit
 	AnomalyElement.AnomalyThink = fnAnomalyThink or AnomalyElement.AnomalyThink
@@ -60,7 +60,7 @@ end
 	Purpose: Gets an element based off the keyname provided
 --]]
 
-function GM:GetElement(sName)
+function rain:GetElement(sName)
 	return self.elements[sName]
 end
 
@@ -69,7 +69,7 @@ end
 	Purpose: Returns the anomaly struct indicated by the key
 --]]
 
-function GM:GetAnomaly(sName)
+function rain:GetAnomaly(sName)
 	return self.anomalies[sName]
 end
 
@@ -78,7 +78,7 @@ end
 	Purpose: Spawns an Anomaly at a given position, second argument is the anomaly type, third is the strength
 --]]
 
-function GM:SpawnAnomaly(vPos, sAnomalyType)
+function rain:SpawnAnomaly(vPos, sAnomalyType)
 	local sAnomalyType = sAnomalyType or "ERROR"
 	local pos = vPos or Vector(0,0,0)
 	local anomaly = self.anomalies[sAnomalyType]
@@ -94,7 +94,7 @@ end
 	Purpose: Called every time the gamemode is reloaded to make sure the anomalies have changes applied to them.
 --]]
 
-function GM:ReloadAnomalies()
+function rain:ReloadAnomalies()
 	for k, v in pairs(ents.FindByClass("cc_anomaly")) do
 		v:Reload()
 	end
@@ -104,8 +104,8 @@ end
 	Anything past this point is implementation of anomaly types
 --]]
 
---GM:RegisterElement("TestElement")
---GM:RegisterAnomaly("TestAnomaly", {"TestElement"})
+--rain:RegisterElement("TestElement")
+--rain:RegisterAnomaly("TestAnomaly", {"TestElement"})
 
 -- This metatable modification is required for one of the anomaly elements
 local eMeta = FindMetaTable("Entity")
@@ -145,7 +145,7 @@ local function BeadInit(ent)
 		if IsValid( phys ) then
 		
 			phys:Wake()
-			phys:SetMaterial( "gmod_silent" )
+			phys:SetMaterial( "rainod_silent" )
 	
 		end
 		
@@ -246,8 +246,8 @@ local function BeadDraw(ent)
 	end
 end
 
-GM:RegisterAnomaly("Bead", {"EBead"})
-GM:RegisterElement("EBead", BeadInit, BeadThink, BeadDraw)
+rain:RegisterAnomaly("Bead", {"EBead"})
+rain:RegisterElement("EBead", BeadInit, BeadThink, BeadDraw)
 
 local function BigVortexInit(self)
 	self.PreSuck = Sound( "ambient/levels/labs/teleport_mechanism_windup5.wav" )
@@ -488,8 +488,8 @@ local function BigVortexDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("BigVortex", {"EBigVortex"})
-GM:RegisterElement("EBigVortex", BigVortexInit, BigVortexThink, BigVortexDraw)
+rain:RegisterAnomaly("BigVortex", {"EBigVortex"})
+rain:RegisterElement("EBigVortex", BigVortexInit, BigVortexThink, BigVortexDraw)
 
 local function BubbleInit(self)
 	self.Damage = 80
@@ -599,8 +599,8 @@ local function BubbleDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("Bubble", {"EBubble"})
-GM:RegisterElement("EBubble", BubbleInit, BubbleThink, BubbleDraw)
+rain:RegisterAnomaly("Bubble", {"EBubble"})
+rain:RegisterElement("EBubble", BubbleInit, BubbleThink, BubbleDraw)
 
 local function BurnerInit(self)
 	self.Damage = 12
@@ -790,8 +790,8 @@ local function BurnerDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("Burner", {"EBurner"})
-GM:RegisterElement("EBurner", BurnerInit, BurnerThink, BurnerDraw)
+rain:RegisterAnomaly("Burner", {"EBurner"})
+rain:RegisterElement("EBurner", BurnerInit, BurnerThink, BurnerDraw)
 
 local function DamageInit(self)
 	self.BaseScale = 100
@@ -920,8 +920,8 @@ local function DamageDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("Damage", {"EDamage"})
-GM:RegisterElement("EDamage", DamageInit, DamageThink, DamageDraw)
+rain:RegisterAnomaly("Damage", {"EDamage"})
+rain:RegisterElement("EDamage", DamageInit, DamageThink, DamageDraw)
 
 local function DeathFogInit(self)
 	self.Awaken = Sound( "ambient/atmosphere/cave_hit5.wav" )
@@ -1112,13 +1112,13 @@ local function DeathFogThink(self)
 	end
 end
 
-GM:RegisterAnomaly("DeathFog", {"EDeathFog"})
-GM:RegisterElement("EDeathFog", DeathFogInit, DeathFogThink)
+rain:RegisterAnomaly("DeathFog", {"EDeathFog"})
+rain:RegisterElement("EDeathFog", DeathFogInit, DeathFogThink)
 
 local function EvadeInit(self)
 	if (SERVER) then
 		self.Entity:SetModel( "models/props_junk/watermelon01.mdl" ) --Set its model.
-		self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, gmod is a physics
+		self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, rainod is a physics
 		self.Entity:SetSolid( SOLID_NONE ) 	-- Toolbox
 		self.Entity:SetKeyValue("rendercolor", "150 255 150") 
 		self.Entity:SetKeyValue("renderamt", "0") 
@@ -1200,13 +1200,13 @@ local function EvadeThink(self)
 	end
 end
 
-GM:RegisterAnomaly("Evade", {"EEvade"})
-GM:RegisterElement("EEvade", EvadeInit, EvadeThink)
+rain:RegisterAnomaly("Evade", {"EEvade"})
+rain:RegisterElement("EEvade", EvadeInit, EvadeThink)
 
 local function HeatInit(self)
 	if (SERVER) then
 		self.Entity:SetModel( "models/props_junk/watermelon01.mdl" ) --Set its model.
-		self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, gmod is a physics
+		self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, rainod is a physics
 		self.Entity:SetSolid( SOLID_NONE ) 	-- Toolbox
 		
 		self.Entity:SetKeyValue("rendercolor", "150 255 150") 
@@ -1258,8 +1258,8 @@ local function HeatThink(self)
 	end	
 end
 
-GM:RegisterAnomaly("Heat", {"EHeat"})
-GM:RegisterElement("EHeat", HeatInit, HeatThink)
+rain:RegisterAnomaly("Heat", {"EHeat"})
+rain:RegisterElement("EHeat", HeatInit, HeatThink)
 
 local function HoverstoneInit(self)
 	self.Models = { "models/props_debris/concrete_column001a_chunk01.mdl",
@@ -1413,8 +1413,8 @@ local function HoverstoneDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("Hoverstone", {"EHoverstone"})
-GM:RegisterElement("EHoverstone", HoverstoneInit, HoverstoneThink, HoverstoneDraw)
+rain:RegisterAnomaly("Hoverstone", {"EHoverstone"})
+rain:RegisterElement("EHoverstone", HoverstoneInit, HoverstoneThink, HoverstoneDraw)
 
 local function HydroInit(self)
 	if (CLIENT) then
@@ -1422,7 +1422,7 @@ local function HydroInit(self)
 	else
 		self.Entity:SetModel( "models/props_borealis/bluebarrel001.mdl" )
 		self.Entity:PhysicsInit( SOLID_NONE )      -- Make us work with physics,
-		self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, gmod is a physics
+		self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, rainod is a physics
 		self.Entity:SetSolid( SOLID_NONE ) 	-- Toolbox
 		 
 		local phys = self.Entity:GetPhysicsObject()
@@ -1466,8 +1466,8 @@ local function HydroDraw(self) -- is this a half assed attempt at optimization?
 	end
 end
 
-GM:RegisterAnomaly("Hydro", {"EHydro"})
-GM:RegisterElement("EHydro", HydroInit, HydroThink, HydroDraw)
+rain:RegisterAnomaly("Hydro", {"EHydro"})
+rain:RegisterElement("EHydro", HydroInit, HydroThink, HydroDraw)
 
 local function MysticInit(self)
 	self.WeirdSounds = { Sound( "ambient/levels/citadel/strange_talk1.wav" ), 
@@ -1598,8 +1598,8 @@ local function MysticDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("Mystic", {"EMystic"})
-GM:RegisterElement("EMystic", MysticInit, MysticThink, MysticDraw)
+rain:RegisterAnomaly("Mystic", {"EMystic"})
+rain:RegisterElement("EMystic", MysticInit, MysticThink, MysticDraw)
 
 local function distort(ent, pos)
 	local effectdata = EffectData()
@@ -1652,8 +1652,8 @@ local function PunchThink(self)
 	distort(self.Entity, self.Entity:GetPos())
 end
 
-GM:RegisterAnomaly("Punch", {"EPunch"})
-GM:RegisterElement("EPunch", PunchInit, PunchThink)
+rain:RegisterAnomaly("Punch", {"EPunch"})
+rain:RegisterElement("EPunch", PunchInit, PunchThink)
 
 local function StaticInit(self)
 	self.PreZap = {"weapons/physcannon/superphys_small_zap1.wav",
@@ -1884,8 +1884,8 @@ local function StaticDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("Static", {"EStatic"})
-GM:RegisterElement("EStatic", StaticInit, StaticThink, StaticDraw)
+rain:RegisterAnomaly("Static", {"EStatic"})
+rain:RegisterElement("EStatic", StaticInit, StaticThink, StaticDraw)
 
 local function VortexInit(self)
 	self.PreSuck = Sound( "ambient/levels/labs/teleport_mechanism_windup5.wav" )
@@ -2064,8 +2064,8 @@ local function VortexDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("Vortex", {"EVortex"})
-GM:RegisterElement("EVortex", VortexInit, VortexThink, VortexDraw)
+rain:RegisterAnomaly("Vortex", {"EVortex"})
+rain:RegisterElement("EVortex", VortexInit, VortexThink, VortexDraw)
 
 local function WhirlgigInit(self)
 	if (CLIENT) then
@@ -2073,7 +2073,7 @@ local function WhirlgigInit(self)
 	end
 
 	self.Entity:SetModel( "models/props_junk/watermelon01.mdl" ) --Set its model.
-	self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, gmod is a physics
+	self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, rainod is a physics
 	self.Entity:SetSolid( SOLID_NONE ) 	-- Toolbox
 	
 	self.Entity:SetKeyValue("rendercolor", "150 255 150") 
@@ -2185,8 +2185,8 @@ local function WhirlgigDraw(self)
 	end
 end
 
-GM:RegisterAnomaly("Whirlgig", {"EWhirlgig"})
-GM:RegisterElement("EWhirlgig", WhirlgigInit, WhirlgigThink, WhirlgigDraw)
+rain:RegisterAnomaly("Whirlgig", {"EWhirlgig"})
+rain:RegisterElement("EWhirlgig", WhirlgigInit, WhirlgigThink, WhirlgigDraw)
 
 local function ElectroInit(self)
 	self.ShockSound = "";
@@ -2245,5 +2245,5 @@ local function ElectroThink(self)
 	return true;
 end
 
-GM:RegisterAnomaly("Electro", {"EElectro"})
-GM:RegisterElement("EElectro", ElectroInit, ElectroThink)
+rain:RegisterAnomaly("Electro", {"EElectro"})
+rain:RegisterElement("EElectro", ElectroInit, ElectroThink)
