@@ -19,6 +19,37 @@ function DrawBlurRect(x, y, w, h, amount, heavyness)
 	end
 end
 
+function DrawFancyRect(cDrawColor, nPosX, nPosY, nWidth, nHeight, nAlpha)
+	nAlpha = nAlpha or 1
+
+	cDrawColor.a = cDrawColor.a * nAlpha
+	surface.SetDrawColor(cDrawColor)
+	surface.DrawRect(nPosX, nPosY, nWidth, nHeight)
+
+	DrawBlurRect(nPosX, nPosY, nWidth, nHeight, 5, 2)
+
+	surface.SetDrawColor(cDrawColor)
+	surface.DrawOutlinedRect(nPosX, nPosY, nWidth, nHeight)
+
+	surface.SetDrawColor(50,50,50,30 * nAlpha)
+	surface.DrawRect(nPosX + nWidth - 6, nPosY - 6, 12, 12)
+	surface.DrawRect(nPosX - 6, nPosY - 6, 12, 12)
+	surface.DrawRect(nPosX + nWidth - 6, nPosY + nHeight - 6, 12, 12)
+	surface.DrawRect(nPosX - 6, nPosY + nHeight - 6, 12, 12)
+
+	surface.SetDrawColor(cDrawColor)
+	surface.DrawOutlinedRect(nPosX + nWidth - 6, nPosY - 6, 12, 12)
+	surface.DrawOutlinedRect(nPosX - 6, nPosY - 6, 12, 12)
+	surface.DrawOutlinedRect(nPosX + nWidth - 6, nPosY + nHeight - 6, 12, 12)
+	surface.DrawOutlinedRect(nPosX - 6, nPosY + nHeight - 6, 12, 12)
+
+	surface.SetDrawColor(255, 255, 255, 255 * nAlpha)
+	surface.DrawRect(nPosX + nWidth - 3, nPosY - 3, 6, 6)
+	surface.DrawRect(nPosX - 3, nPosY - 3, 6, 6)
+	surface.DrawRect(nPosX + nWidth - 3, nPosY + nHeight - 3, 6, 6)
+	surface.DrawRect(nPosX - 3, nPosY + nHeight - 3, 6, 6)
+end
+
 hook.Add("HUDPaint", "testblur", function()
 
 	local sizemul = 0.05

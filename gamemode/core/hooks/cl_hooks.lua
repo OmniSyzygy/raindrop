@@ -27,3 +27,145 @@ function rain:CalcView(pClient, vPos, aAngs, nFOV, nNearZ, nFarZ)
 
 	return view
 end
+
+local LerpTarget = 0
+
+surface.CreateFont("BlurredAmmoCounter48", {
+	font = "Arial",
+	size = 48,
+	weight = 0,
+	blursize = 3,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+}) 
+
+surface.CreateFont("AmmoCounter48", {
+	font = "Arial",
+	size = 48,
+	weight = 0,
+	blursize = 0,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+}) 
+
+surface.CreateFont("BlurredAmmoCounter54", {
+	font = "Arial",
+	size = 54,
+	weight = 0,
+	blursize = 3,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+}) 
+
+surface.CreateFont("AmmoCounter54", {
+	font = "Arial",
+	size = 54,
+	weight = 0,
+	blursize = 0,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+}) 
+
+function rain:HUDPaint()
+	if (LocalPlayer():GetActiveWeapon().Primary) then -- check if it's a C++ weapon or not
+		if (LocalPlayer():GetActiveWeapon():GetMaxClip1() > 0) then
+			self:DrawAmmoCounter()
+		end
+	elseif (LocalPlayer():GetActiveWeapon():GetMaxClip1() > 0) then
+		self:DrawAmmoCounter()
+	end
+end
+
+local NextFlash = CurTime()
+local FlashDelay = 0.3
+local CurrentlyFlashed = false
+local rescol = Color(255, 255, 255, 255)
+function rain:DrawAmmoCounter(nAlpha)
+	if (LocalPlayer():GetActiveWeapon():LastShootTime() > CurTime() - 3) then
+
+		DrawFancyRect(Color(0, 0, 0, 75), ScrW() - 32 - 128, ScrH() - 32 - 128, 128, 128)
+	
+		if (LocalPlayer():GetActiveWeapon():LastShootTime() < CurTime() - 0.15) then
+			surface.SetFont("AmmoCounter54")
+		else
+			surface.SetFont("BlurredAmmoCounter54")
+		end
+	
+		local toptext = LocalPlayer():GetActiveWeapon():Clip1().."/"..LocalPlayer():GetActiveWeapon():GetMaxClip1()
+		local tw, th = surface.GetTextSize(toptext)
+	
+		surface.SetTextColor(0, 0, 0, 100)
+		surface.SetTextPos(ScrW() - 32 + 2 - 64 - (tw/2), ScrH() - 32 + 2 - 64 - th)
+		surface.DrawText(toptext)
+	
+		surface.SetTextColor(255, 255, 255, 255)
+		surface.SetTextPos(ScrW() - 32 - 64 - (tw/2), ScrH() - 32 - 64 - th)
+		surface.DrawText(toptext)
+	
+		if (LocalPlayer():GetActiveWeapon():LastShootTime() < CurTime() - 0.15) then
+			surface.SetFont("AmmoCounter48")
+		else
+			surface.SetFont("BlurredAmmoCounter48")
+		end
+	
+		local toptext = "+"..LocalPlayer():GetAmmoCount(LocalPlayer():GetActiveWeapon():GetPrimaryAmmoType())
+		local tw, th = surface.GetTextSize(toptext)
+		
+		if (LocalPlayer():GetAmmoCount(LocalPlayer():GetActiveWeapon():GetPrimaryAmmoType()) == 0) then
+			if (CurTime() > NextFlash and !CurrentlyFlashed) then
+				NextFlash = CurTime() + FlashDelay
+				CurrentlyFlashed = true
+				rescol = Color(255, 0, 0, 255)
+			elseif (CurTime() > NextFlash  and CurrentlyFlashed) then
+				NextFlash = CurTime() + FlashDelay
+				CurrentlyFlashed = false
+				rescol = Color(255, 255, 255, 255)
+			end
+		else 
+			rescol = Color(255, 255, 255, 255)	
+		end
+	
+		surface.SetTextColor(0, 0, 0, 100)
+	
+		surface.SetTextPos(ScrW() - 32 + 2 - 64 - (tw/2), ScrH() + 2 - 48 - th)
+		surface.DrawText(toptext)
+	
+		surface.SetTextColor(rescol)
+	
+		surface.SetTextPos(ScrW() - 32 - 64 - (tw/2), ScrH() - 48 - th)
+		surface.DrawText(toptext)
+
+	end
+end
