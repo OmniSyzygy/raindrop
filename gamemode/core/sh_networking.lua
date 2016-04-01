@@ -6,6 +6,8 @@
 rain.net = {} -- net wrapper
 rain.repvars = {} -- all replicated vars in the gm
 rain.repvar = {} -- repvar library
+rain.reptablebuffer = {}
+rain.reptable = {}
 
 if (SV) then
 	function rain.net.WriteTinyInt(nInt)
@@ -275,7 +277,6 @@ if (SV) then
 
 	function rain_repvar:NetUpdate()
 		net.Start("rain.repvar.update")
-		print(self:GetUID())
 		net.WriteString(self:GetUID())
 		net.WriteBit(false)
 		rain.net.WriteWildcard(self:GetVar())
@@ -284,7 +285,6 @@ if (SV) then
 
 	function rain_repvar:NetSetup()
 		net.Start("rain.repvar.setup")
-		print(self:GetUID())
 		net.WriteString(self:GetUID())
 		net.WriteBit(false)
 		rain.net.WriteWildcard(self:GetVar())
@@ -314,8 +314,6 @@ if (SV) then
 		end
 	end
 
-	-- end of metatable
-
 	function rain.repvar.newrepvar(sID, wVar)
 		rain_repvar:New(sID, wVar)
 	end
@@ -340,17 +338,118 @@ if (SV) then
 		return rain.repvars[sID]
 	end
 
+	-- replicated tables
+
+	util.AddNetworkString("rain.reptable.setup")
+	util.AddNetworkString("rain.reptable.update")
+
+	local rain_reptable = {}
+	rain_reptable.rt_uid = ""
+	rain_reptable.rt_adminonly = false
+	rain_reptable.__index = rain_reptable
+
+	function rain_reptable:SetUID(sUID)
+		self.rt_uid = sUID
+	end
+
+	function rain_reptable:GetUID()
+		return self.rt_uid
+	end
+
+	function rain_reptable:SetAdminOnly(bAdminOnly)
+		self.rt_adminonly = bAdminOnly
+	end
+
+	function rain_reptable:GetAdminOnly()
+		return self.rt_adminonly
+	end
+
+	function rain_reptable:Setup()
+		rain.reptablebuffer[self:GetUID()] = self
+		self:NetSetup()
+	end
+
+	-- setup the table
+	function rain_reptable:NetSetup()
+		net.Start("rain.reptable.setup")
+		net.WriteString(self:GetUID())
+		rain.net.broadcast(self:GetAdminOnly())
+	end
+
+	-- update a single key in the table
+	function rain_reptable:NetUpdate(sNewKey, wNewValue, bRemoveKey)
+		net.Start("rain.reptable.update")
+		net.WriteBool(bRemoveKey or false)
+		net.WriteString(sNewKey..";"..self:GetUID())
+		rain.net.WriteWildcard(wNewValue)
+		rain.net.broadcast(self:GetAdminOnly())
+	end
+
+	-- adds a single key to the table
+	function rain_reptable:ModifyKey(sNewKey, wNewValue)
+		rain.reptablebuffer[self:GetUID()][sNewKey] = wNewValue
+
+		self:NetUpdate(sNewKey, wNewValue)
+	end
+
+	-- removes a single key from the table
+	function rain_reptable:RemoveKey(sKeyToRemove)
+		rain.reptablebuffer[self:GetUID()][sKeyToRemove] = nil
+
+		self:NetUpdate(sNewKey)
+	end
+
+	-- gets a key from the table
+	function rain_reptable:GetKey(sKeyToGet)
+		return rain.reptablebuffer[self:GetUID()][sKeyToGet]
+	end
+
+	function rain_reptable:New(sUID, bAdminOnly)
+		if (!rain.reptablebuffer[sUID]) and (TypeID(sUID) == TYPE_STRING) then
+
+			NewRepTable = setmetatable({}, rain_reptable)
+
+			NewRepTable:SetUID(sUID)
+			NewRepTable:SetAdminOnly(bAdminOnly)
+			NewRepTable:Setup()
+		else
+			error("Duplicate replicated table")
+		end
+	end
+
+	function rain.reptable.newreptable(sUID)
+		rain_reptable:New(sUID)
+	end
+
+	function rain.reptable.setkey(sUID, sKey, wKeyValue)
+		rain.reptablebuffer[sUID]:ModifyKey(sKey, wKeyValue)
+	end
+
+	function rain.reptable.getkey(sUID, sKey)
+		return rain.reptablebuffer[sUID]:GetKey(sKey)
+	end
+
+	function rain.reptable.removekey(sUID, sKey)
+		rain.reptablebuffer[sUID]:RemoveKey(sKey)
+	end
+
 elseif (CL) then
 
 	function rain.repvar.setup(sID, wVar)
 		rain.repvars[sID] = wVar
-		print(sID, wVar)
 	end
 
 	function rain.repvar.update(sID, wVar)
 		rain.repvars[sID] = wVar
-		print(sID, wVar)
 		hook.Call("rain.netvar.onupdate."..sID, rain, wVar, rain.repvars[sID]) -- new var, old var are passed as arguments
+	end
+
+	function rain.reptable.setup(sID)
+		rain.reptablebuffer[sID] = {}
+	end
+
+	function rain.reptable.modifykey(sID, sKey, wVar)
+		rain.reptablebuffer[sID][sKey] = wVar
 	end
 
 	net.Receive("rain.repvar.setup", function()
@@ -367,5 +466,27 @@ elseif (CL) then
 		local wVar = rain.net.ReadWildcard()
 
 		rain.repvar.update(ID, wVar)
+	end)
+
+	net.Receive("rain.reptable.setup", function()
+		local ID = net.ReadString()
+
+		rain.reptable.setup(ID)
+	end)
+
+	net.Receive("rain.reptable.update", function()
+		local remove = net.ReadBool()
+		local data = net.ReadString()
+		local var = rain.net.ReadWildcard()
+
+		local newdat = string.Explode(";", data)
+
+		if newdat[1] and newdat[2] then
+			if remove then
+				var = nil
+			end
+
+			rain.reptable.modifykey(newdat[2], newdat[1], var)
+		end
 	end)
 end
