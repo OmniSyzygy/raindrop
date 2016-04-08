@@ -63,6 +63,110 @@ if (SERVER) then
 	
 	end
 
+	--[[
+		Name: Sync By Key
+		Category: Character
+		Desc: Syncs the key, in the given dataset, to all players (admin only data only gets networked to that specific player and admins.)
+	--]]
+
+	function character_meta:SyncByKey()
+
+	end
+
+	--[[
+		Name: Get Owning Player
+		Category: Character
+		Desc: returns the client that owns this character
+	--]]
+
+	function character_meta:GetOwningPlayer()
+
+	end
+
+end
+
+--[[
+	Name: Set Appearance Data
+	Category: Character
+	Desc: If the number of arguments > 1 it will set the appearance data using the first argument as a key, second as the new data. 
+		  A single argument means that it set the new appearance data to be equal to that data. The new data will be type checked to a table.
+--]]
+
+function character_meta:SetAppearanceData()
+
+end
+
+--[[
+	Name: Set Data
+	Category: Character
+	Desc: If the number of arguments > 1 it will set the data using the first argument as a key, second as the new data. 
+		  A single argument means that it set the new data to be equal to that data. The new data will be type checked to a table.
+--]]
+
+function character_meta:SetData()
+
+end
+
+--[[
+	Name: Set Admin Only Data
+	Category: Character
+	Desc: If the number of arguments > 1 it will set the admin only data using the first argument as a key, second as the new data. 
+		  A single argument means that it set the new admin only data to be equal to that data. The new data will be type checked to a table.
+--]]
+
+function character_meta:SetAdminOnlyData()
+
+end
+
+--[[
+	Name: Set Inventory Data
+	Category: Character
+	Desc: If the number of arguments > 1 it will set the inventory using the first argument as a key, second as the new data. 
+		  A single argument means that it set the new inventory to be equal to that data. The new data will be type checked to a table.
+--]]
+
+function character_meta:SetInventoryData()
+
+end
+
+--[[
+	Name: Get Appearance Data
+	Category: Character
+	Desc: Gets the appearance data by a key, if no key is supplied the entire table is returned
+--]]
+
+function character_meta:GetAppearanceData()
+
+end
+
+--[[
+	Name: Get Data
+	Category: Character
+	Desc: Gets the character data by a key, if no key is supplied the entire table is returned
+--]]
+
+function character_meta:GetData()
+
+end
+
+--[[
+	Name: Get Admin Only Data
+	Category: Character
+	Desc: Gets the admin only data by a key, if no key is supplied the entire table is returned
+--]]
+
+function character_meta:GetAdminOnlyData()
+
+end
+
+--[[
+	Name: Get Inventory
+	Category: Character
+	Desc: Returns the inventory table
+--]]
+
+function character_meta:GetInventory()
+
 end
 
 character_meta.__index = character_meta
