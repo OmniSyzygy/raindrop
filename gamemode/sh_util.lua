@@ -114,7 +114,28 @@ if SV then
 	end
 end	
 
-function rain.util.countargs( ... )
+function rain.util.countargs(wArg1, wArg2, wArg3, wArg4, wArg5)
 
-	return table.pack(...).n
+	if wArg1 and !wArg2 then
+		return 1
+	end
+
+	if wArg2 and !wArg3 then
+		return 2
+	end
+
+	if wArg3 and !wArg4 then
+		return 3
+	end
+
+	if wArg4 and !wArg5 then
+		return 4
+	end
+
+	if wArg5 then
+		return 5
+	end
+
+	return 1
+
 end

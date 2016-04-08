@@ -112,7 +112,7 @@ if (SERVER) then
 				end
 
 				net.Start("rain.charsync")
-					rain.net.WriteWildcard(data)
+					rain.net.WriteTable(data)
 				net.Send(v)
 			end
 		end
@@ -130,7 +130,7 @@ if (SERVER) then
 		for k, v in pairs(player.GetAll()) do
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
-			rain.net.WriteWildcard({target = self:GetOwningClient(), key = sKey, newdata = tNewData})
+			rain.net.WriteTable({target = self:GetOwningClient(), key = sKey, newdata = tNewData})
 
 			if enumDataType == DATA_ADMINONLY and v:IsAdmin() then
 				net.Send(v)
@@ -152,7 +152,7 @@ if (SERVER) then
 		for k, v in pairs(player.GetAll()) do
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
-			rain.net.WriteWildcard({target = self:GetOwningClient(), newdata = tNewData})
+			rain.net.WriteTable({target = self:GetOwningClient(), newdata = tNewData})
 
 			if enumDataType == DATA_ADMINONLY and v:IsAdmin() then
 				net.Send(v)
@@ -162,6 +162,19 @@ if (SERVER) then
 		end
 	end
 
+end
+
+--[[
+	Name: Setup Default Data Fields
+	Category: Character
+	Desc: sets up the default data fields so indexing is garunteed to work.
+--]]
+
+function character_meta:SetupDefaultDataFields()
+	self.data_appearance = {}
+	self.data_inventory = {}
+	self.data_adminonly = {}
+	self.data_character = {}
 end
 
 --[[
@@ -325,7 +338,7 @@ character_meta.__index = character_meta
 if (CL) then
 
 	net.Receive("rain.charsync", function()
-		local charsyncdata = rain.net.ReadWildcard()
+		local charsyncdata = rain.net.ReadTable()
 		local target = charsyncdata.target
 		local adminonly = charsyncdata.adminonly
 		local character = charsyncdata.character
@@ -334,10 +347,11 @@ if (CL) then
 
 		if target then
 			target.character = {}
-			setmetatable(target, character_meta)
+			setmetatable(target.character, character_meta)
 			target.character:SetOwningClient(target)
 
 			local char = target.character
+			char:SetupDefaultDataFields()
 			char:SetAdminOnlyData()
 			char:SetAppearanceData()
 			char:SetData(character)
@@ -347,7 +361,7 @@ if (CL) then
 
 	net.Receive("rain.charsyncdata", function()
 		local datatype = rain.net.ReadTinyInt(enumDataType)
-		local data = rain.net.ReadWildcard()
+		local data = rain.net.ReadTable()
 
 		local target = data.target
 
@@ -364,7 +378,7 @@ if (CL) then
 
 	net.Receive("rain.charsyncdatabykey", function()
 		local datatype = rain.net.ReadTinyInt(enumDataType)
-		local data = rain.net.ReadWildcard()
+		local data = rain.net.ReadTable()
 
 		local target = data.target
 

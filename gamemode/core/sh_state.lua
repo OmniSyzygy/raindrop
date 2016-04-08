@@ -28,6 +28,7 @@ if (SV) then
 			pClient:SetState(STATE_MENU)
 		else
 			pClient:SetNoDraw(false)
+			rain:PlayerLoadout(pClient)
 		end
 	end
 
