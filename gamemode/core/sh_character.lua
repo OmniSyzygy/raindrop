@@ -357,7 +357,7 @@ if (CL) then
 			target:SetAdminOnlyData(data.key, data.newdata)
 		elseif datatype == DATA_INVENTORY then
 			target:SetInventoryData(data.key, data.newdata)
-		elseif datatype == DATA_APPEARANCE
+		elseif datatype == DATA_APPEARANCE then
 			target:SetAppearanceData(data.key, data.newdata)
 		end
 	end)
@@ -374,7 +374,7 @@ if (CL) then
 			target:SetAdminOnlyData(data.newdata)
 		elseif datatype == DATA_INVENTORY then
 			target:SetInventoryData(data.newdata)
-		elseif datatype == DATA_APPEARANCE
+		elseif datatype == DATA_APPEARANCE then
 			target:SetAppearanceData(data.newdata)
 		end
 	end)

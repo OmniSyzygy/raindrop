@@ -99,12 +99,14 @@ surface.CreateFont("AmmoCounter54", {
 }) 
 
 function rain:HUDPaint()
-	if (LocalPlayer():GetActiveWeapon().Primary) then -- check if it's a C++ weapon or not
-		if (LocalPlayer():GetActiveWeapon():GetMaxClip1() > 0) then
+	if LocalPlayer():GetState() == STATE_ALIVE then
+		if LocalPlayer():GetActiveWeapon().Primary then -- check if it's a C++ weapon or not
+			if LocalPlayer():GetActiveWeapon():GetMaxClip1() > 0 then
+				self:DrawAmmoCounter()
+			end
+		elseif LocalPlayer():GetActiveWeapon():GetMaxClip1() > 0 then
 			self:DrawAmmoCounter()
 		end
-	elseif (LocalPlayer():GetActiveWeapon():GetMaxClip1() > 0) then
-		self:DrawAmmoCounter()
 	end
 end
 
