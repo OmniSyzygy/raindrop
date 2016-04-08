@@ -10,52 +10,114 @@ rain.reptablebuffer = {}
 rain.reptable = {}
 
 if (SV) then
+
+	--[[
+		Name: Write Tiny Int
+		Category: Networking
+	--]]
+
 	function rain.net.WriteTinyInt(nInt)
 		net.WriteInt(nInt, 2 + 1)
 	end
+
+	--[[
+		Name: Write Nibble Int
+		Category: Networking
+	--]]
 	
 	function rain.net.WriteNibbleInt(nInt)
 		net.WriteInt(nInt, 4 + 1)
 	end
+
+	--[[
+		Name: Write Byte
+		Category: Networking
+	--]]
 	
 	function rain.net.WriteByte(nInt)
 		net.WriteInt(nInt, 8 + 1)
 	end
+
+	--[[
+		Name: Write Short Int
+		Category: Networking
+	--]]
 	
 	function rain.net.WriteShortInt(nInt)
 		net.WriteInt(nInt, 16 + 1)
 	end
+
+	--[[
+		Name: Write Long Int
+		Category: Networking
+	--]]
 	
 	function rain.net.WriteLongInt(nInt)
 		net.WriteInt(nInt, 32 + 1)
 	end
 
+	--[[
+		Name: Write Tiny UInt
+		Category: Networking
+	--]]
+	
 	function rain.net.WriteTinyUInt(nUInt)
 		net.WriteUInt(nUInt, 2 + 1)
 	end
+
+	--[[
+		Name: Write Nibble UInt
+		Category: Networking
+	--]]
 	
 	function rain.net.WriteNibbleUInt(nUInt)
 		net.WriteUInt(nUInt, 4 + 1)
 	end
+
+	--[[
+		Name: Write UByte
+		Category: Networking
+	--]]
 	
 	function rain.net.WriteUByte(nUInt)
 		net.WriteUInt(nUInt, 8 + 1)
 	end
+
+	--[[
+		Name: Write Short UInt
+		Category: Networking
+	--]]
 	
 	function rain.net.WriteShortUInt(nUInt)
 		net.WriteUInt(nUInt, 16 + 1)
 	end
+
+	--[[
+		Name: Write Long UInt
+		Category: Networking
+	--]]
 	
 	function rain.net.WriteLongUInt(nUInt)
 		net.WriteUInt(nUInt, 32 + 1)
 	end
 
+	--[[
+		Name: Write Table
+		Category: Networking
+	--]]
+	
 	function rain.net.WriteTable(tTable)
 		if type(tTable) == "table" then
 			net.WriteString(pon.encode(tTable))
 		end
 	end
 
+	--[[
+		Name: Broadcast
+		Category: Networking
+		Desc: Broadcasts a netmessage to all players, exlcuding admins or including admins
+	--]]
+	
 	function rain.net.broadcast(bAdminOnly)
 		if bAdminOnly then
 			for k, v in pairs(player.GetAll()) do
@@ -70,6 +132,12 @@ if (SV) then
 		end
 	end
 
+	--[[
+		Name: Write Wildcard
+		Category: Networking
+		Desc: Write any value to the current netmessage
+	--]]
+	
 	function rain.net.WriteWildcard(wVar)
 		local encoded = pon.encode({wVar})
 		local compressed = util.Compress(encoded)
@@ -79,50 +147,110 @@ if (SV) then
 	end
 else
 
+	--[[
+		Name: Read Table
+		Category: Networking
+	--]]
+	
 	function rain.net.ReadTable()
 		return pon.decode(net.ReadString())
 	end
 
+	--[[
+		Name: Read Tiny Int
+		Category: Networking
+	--]]
+	
 	function rain.net.ReadTinyInt()
 		return net.ReadInt(2 + 1)
 	end
 
+	--[[
+		Name: Read Nibble Int
+		Category: Networking
+	--]]
+	
 	function rain.net.ReadNibbleInt()
 		return net.ReadInt(4 + 1)
 	end
-	
+
+	--[[
+		Name: Read Byte
+		Category: Networking
+	--]]
+		
 	function rain.net.ReadByte()
 		return net.ReadInt(8 + 1)
 	end
-	
+
+	--[[
+		Name: Read Short Int
+		Category: Networking
+	--]]
+		
 	function rain.net.ReadShortInt()
 		return net.ReadInt(16 + 1)
 	end
-	
+
+	--[[
+		Name: Read Long Int
+		Category: Networking
+	--]]
+		
 	function rain.net.ReadLongInt()
 		return net.ReadInt(16 + 1)
 	end
 
+	--[[
+		Name: Read Tiny UInt
+		Category: Networking
+	--]]
+	
 	function rain.net.ReadTinyUInt()
 		return net.ReadUInt(2 + 1)
 	end
-	
+
+	--[[
+		Name: Read Nibble UInt
+		Category: Networking
+	--]]
+		
 	function rain.net.ReadNibbleUInt()
 		return net.ReadUInt(4 + 1)
 	end
-	
+
+	--[[
+		Name: Read UByte
+		Category: Networking
+	--]]
+		
 	function rain.net.ReadUByte()
 		return net.ReadUInt(8 + 1)
 	end
 	
+	--[[
+		Name: Read Short UInt
+		Category: Networking
+	--]]
+		
 	function rain.net.ReadShortUInt()
 		return net.ReadUInt(16 + 1)
 	end
+
+	--[[
+		Name: Read Long UInt
+		Category: Networking
+	--]]
 	
 	function rain.net.ReadLongUInt()
 		return net.ReadUInt(32 + 1)
 	end
 
+	--[[
+		Name: Read Wildcard
+		Category: Networking
+	--]]
+	
 	function rain.net.ReadWildcard()
 		local length = rain.net.ReadLongUInt()
 		local wVar = net.ReadData(length)

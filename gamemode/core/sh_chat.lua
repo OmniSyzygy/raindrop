@@ -35,6 +35,38 @@ function rain.chat.addchatcommand(fnCanUse, fnOnUse, fnOnFail, fnOnSuccess)
 
 end
 
+--[[
+	Name: Add In Area
+	Category: Chat
+	Desc: Adds chat to all players within certain bounds
+--]]
+
+function rain.chat.addinarea(vMin, vMax, enumType, sText)
+
+end
+
+--[[
+	Name: Add In Radius
+	Category: Chat
+	Desc: Adds chat to all players in a specific radius, useful for player zones
+--]]
+
+function rain.chat.addinradius(nRadius, enumType, sText)
+
+end
+
+local rainclient = FindMetaTable("Player")
+
+--[[
+	Name: Add Chat
+	Category: Chat->PlayerMeta
+	Desc: Adds chat to a specific players chatbox
+--]]
+
+function rainclient:addchat(enumType, sText)
+
+end
+
 if (CLIENT) then
 
 	--[[
