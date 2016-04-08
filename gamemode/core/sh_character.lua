@@ -19,16 +19,29 @@ local character_meta = {}
 
 --[[
 	Name: Get Char ID
-	Desc: returns the character ID
+	Category: Character
+	Desc: returns the current character id
 --]]
 
 function character_meta:GetCharID()
 	return self.id or 0
 end
 
+--[[
+	Name: Get Name
+	Category: Character
+	Desc: returns the current character name
+--]]
+
 function character_meta:GetName()
 	return self.charname or ""
 end
+
+--[[
+	Name: Get Character Data
+	Category: Character
+	Desc: returns all of the available character data
+--]]
 
 function character_meta:GetCharacterData()
 	return self.data_character, self.data_appearance, self.data_adminonly, self.data_inventory
@@ -106,14 +119,14 @@ if (SERVER) then
 	end
 
 	--[[
-		Name: Sync By Key
+		Name: Sync Data By Key
 		Category: Character
 		Desc: Syncs the key, in the given dataset, to all players (admin only data only gets networked to that specific player and admins.)
 	--]]
 
 	util.AddNetworkString("rain.charsyncdatabykey")
 
-	function character_meta:SyncByKey(enumDataType, sKey, tNewData)
+	function character_meta:SyncDataByKey(enumDataType, sKey, tNewData)
 		for k, v in pairs(player.GetAll()) do
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
@@ -130,12 +143,12 @@ if (SERVER) then
 	--[[
 		Name: Sync Data
 		Category: Character
-		Desc: syncs an entire table of data
+		Desc: syncs an entire table of data, only a specific table is networked.
 	--]]	
 
 	util.AddNetworkString("rain.charsyncdata")
 
-	function character_meta:SyncByKey(enumDataType, tNewData)
+	function character_meta:SyncData(enumDataType, tNewData)
 		for k, v in pairs(player.GetAll()) do
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
@@ -158,7 +171,7 @@ end
 --]]
 
 function character_meta:GetOwningClient()
-	return self.cm_owningclient
+	return self.cm_owningclient or false
 end
 
 --[[
@@ -181,8 +194,14 @@ end
 function character_meta:SetAppearanceData(wArg1, wArg2)
 	if rain.util.countargs(wArg1, wArg2) > 1 then
 		self.data_appearance[wArg1] = wArg2
+		if (SV) then
+			self:SyncDataByKey(DATA_APPEARANCE, wArg1, wArg2)
+		end
 	else
 		self.data_appearance = wArg1
+		if (SV) then
+			self:SyncData(DATA_APPEARANCE, wArg1)
+		end
 	end
 end
 
@@ -196,8 +215,14 @@ end
 function character_meta:SetData(wArg1, wArg2)
 	if rain.util.countargs(wArg1, wArg2) > 1 then
 		self.data_character[wArg1] = wArg2
+		if (SV) then
+			self:SyncDataByKey(DATA_CHARACTER, wArg1, wArg2)
+		end
 	else
 		self.data_character = wArg1
+		if (SV) then
+			self:SyncData(DATA_CHARACTER, wArg1)
+		end
 	end
 end
 
@@ -211,8 +236,14 @@ end
 function character_meta:SetAdminOnlyData(wArg1, wArg2)
 	if rain.util.countargs(wArg1, wArg2) > 1 then
 		self.data_adminonly[wArg1] = wArg2
+		if (SV) then
+			self:SyncDataByKey(DATA_ADMINONLY, wArg1, wArg2)
+		end
 	else
 		self.data_adminonly = wArg1
+		if (SV) then
+			self:SyncData(DATA_ADMINONLY, wArg1)
+		end
 	end
 end
 
@@ -226,8 +257,14 @@ end
 function character_meta:SetInventoryData(wArg1, wArg2)
 	if rain.util.countargs(wArg1, wArg2) > 1 then
 		self.data_inventory[wArg1] = wArg2
+		if (SV) then
+			self:SyncDataByKey(DATA_INVENTORY, wArg1, wArg2)
+		end
 	else
 		self.data_inventory = wArg1
+		if (SV) then
+			self:SyncData(DATA_INVENTORY, wArg1)
+		end
 	end
 end
 
@@ -350,7 +387,7 @@ if (SERVER) then
 	util.AddNetworkString("rain.requestchardata")
 
 	net.Receive("rain.requestchardata", function()
-
+		-- add a request system for data here
 	end)
 
 	--[[

@@ -2,6 +2,10 @@ function rain:PlayerInitialSpawn(pClient)
 	rain.pdata.clientinitialspawn(pClient)
 end
 
+function rain:PlayerSpawn(pClient)
+	rain.state.playerspawn(pClient)
+end
+
 function rain:PlayerLoadout(pClient)
 
 	pClient:Give("rain_hands")

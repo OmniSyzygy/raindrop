@@ -11,43 +11,43 @@ rain.reptable = {}
 
 if (SV) then
 	function rain.net.WriteTinyInt(nInt)
-		net.WriteInt(nInt, 2)
+		net.WriteInt(nInt, 2 + 1)
 	end
 	
 	function rain.net.WriteNibbleInt(nInt)
-		net.WriteInt(nInt, 4)
+		net.WriteInt(nInt, 4 + 1)
 	end
 	
 	function rain.net.WriteByte(nInt)
-		net.WriteInt(nInt, 8)
+		net.WriteInt(nInt, 8 + 1)
 	end
 	
 	function rain.net.WriteShortInt(nInt)
-		net.WriteInt(nInt, 16)
+		net.WriteInt(nInt, 16 + 1)
 	end
 	
 	function rain.net.WriteLongInt(nInt)
-		net.WriteInt(nInt, 16)
+		net.WriteInt(nInt, 32 + 1)
 	end
 
 	function rain.net.WriteTinyUInt(nUInt)
-		net.WriteUInt(nUInt, 2)
+		net.WriteUInt(nUInt, 2 + 1)
 	end
 	
 	function rain.net.WriteNibbleUInt(nUInt)
-		net.WriteUInt(nUInt, 4)
+		net.WriteUInt(nUInt, 4 + 1)
 	end
 	
 	function rain.net.WriteUByte(nUInt)
-		net.WriteUInt(nUInt, 8)
+		net.WriteUInt(nUInt, 8 + 1)
 	end
 	
 	function rain.net.WriteShortUInt(nUInt)
-		net.WriteUInt(nUInt, 16)
+		net.WriteUInt(nUInt, 16 + 1)
 	end
 	
 	function rain.net.WriteLongUInt(nUInt)
-		net.WriteUInt(nUInt, 16)
+		net.WriteUInt(nUInt, 32 + 1)
 	end
 
 	function rain.net.WriteTable(tTable)
@@ -84,43 +84,43 @@ else
 	end
 
 	function rain.net.ReadTinyInt()
-		return net.ReadInt(2)
+		return net.ReadInt(2 + 1)
 	end
 
 	function rain.net.ReadNibbleInt()
-		return net.ReadInt(4)
+		return net.ReadInt(4 + 1)
 	end
 	
 	function rain.net.ReadByte()
-		return net.ReadInt(8)
+		return net.ReadInt(8 + 1)
 	end
 	
 	function rain.net.ReadShortInt()
-		return net.ReadInt(16)
+		return net.ReadInt(16 + 1)
 	end
 	
 	function rain.net.ReadLongInt()
-		return net.ReadInt(16)
+		return net.ReadInt(16 + 1)
 	end
 
 	function rain.net.ReadTinyUInt()
-		return net.ReadUInt(2)
+		return net.ReadUInt(2 + 1)
 	end
 	
 	function rain.net.ReadNibbleUInt()
-		return net.ReadUInt(4)
+		return net.ReadUInt(4 + 1)
 	end
 	
 	function rain.net.ReadUByte()
-		return net.ReadUInt(8)
+		return net.ReadUInt(8 + 1)
 	end
 	
 	function rain.net.ReadShortUInt()
-		return net.ReadUInt(16)
+		return net.ReadUInt(16 + 1)
 	end
 	
 	function rain.net.ReadLongUInt()
-		return net.ReadUInt(16)
+		return net.ReadUInt(32 + 1)
 	end
 
 	function rain.net.ReadWildcard()
