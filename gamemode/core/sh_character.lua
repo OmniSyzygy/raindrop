@@ -1,3 +1,14 @@
+--[[
+	Filename: sh_character.lua
+--]]
+
+-- enums for data types
+
+DATA_CHARACTER = 0
+DATA_APPEARANCE = 1
+DATA_INVENTORY = 2
+DATA_ADMINONLY = 3
+
 rain.character = {}
 
 if (SERVER) then
@@ -56,11 +67,42 @@ if (SERVER) then
 	
 	--[[
 		Name: Sync
-		Desc: Syncs this character to all players
+		Desc: Syncs this character to all players, in it's entirety. If a player is specified then it will network the data to that player only.
 	--]]
 	
-	function character_meta:Sync()
-	
+	util.AddNetworkString("rain.charsync")
+
+	function character_meta:Sync(pReceiver)
+		local TargetPlayers = player.GetAll()
+
+		if (pReceiver) then
+			TargetPlayers = {pReceiver}
+		else
+			for k, v in pairs(TargetPlayers) do
+				local data = {}
+
+				data.target = self:GetOwningClient()
+
+				if v:IsAdmin() then
+					data.adminonly = self:GetAdminOnlyData()
+				else
+					data.adminonly = {}
+				end
+
+				data.character = self:GetData()
+				data.appearance = self:GetAppearanceData()
+
+				if (v == self:GetOwningClient()) or v:IsAdmin() then
+					data.inventory = self:GetInventory()
+				else
+					data.inventory = {}
+				end
+
+				net.Start("rain.charsync")
+					rain.net.WriteWildcard(data)
+				net.Send(v)
+			end
+		end
 	end
 
 	--[[
@@ -69,20 +111,64 @@ if (SERVER) then
 		Desc: Syncs the key, in the given dataset, to all players (admin only data only gets networked to that specific player and admins.)
 	--]]
 
-	function character_meta:SyncByKey()
+	util.AddNetworkString("rain.charsyncdatabykey")
 
+	function character_meta:SyncByKey(enumDataType, sKey, tNewData)
+		for k, v in pairs(player.GetAll()) do
+			net.Start("rain.charsyncdatabykey")
+			rain.net.WriteTinyInt(enumDataType)
+			rain.net.WriteWildcard({target = self:GetOwningClient(), key = sKey, newdata = tNewData})
+
+			if enumDataType == DATA_ADMINONLY and v:IsAdmin() then
+				net.Send(v)
+			elseif enumDataType != DATA_ADMINONLY then
+				net.Send(v)
+			end
+		end
 	end
 
 	--[[
-		Name: Get Owning Player
+		Name: Sync Data
 		Category: Character
-		Desc: returns the client that owns this character
-	--]]
+		Desc: syncs an entire table of data
+	--]]	
 
-	function character_meta:GetOwningPlayer()
+	util.AddNetworkString("rain.charsyncdata")
 
+	function character_meta:SyncByKey(enumDataType, tNewData)
+		for k, v in pairs(player.GetAll()) do
+			net.Start("rain.charsyncdatabykey")
+			rain.net.WriteTinyInt(enumDataType)
+			rain.net.WriteWildcard({target = self:GetOwningClient(), newdata = tNewData})
+
+			if enumDataType == DATA_ADMINONLY and v:IsAdmin() then
+				net.Send(v)
+			elseif enumDataType != DATA_ADMINONLY then
+				net.Send(v)
+			end
+		end
 	end
 
+end
+
+--[[
+	Name: Get Owning Player
+	Category: Character
+	Desc: returns the client that owns this character
+--]]
+
+function character_meta:GetOwningClient()
+	return self.cm_owningclient
+end
+
+--[[
+	Name: Set Owning Player
+	Category: Character
+	Desc: sets the client that owns this character
+--]]
+
+function character_meta:SetOwningClient(pClient)
+	self.cm_owningclient = pClient
 end
 
 --[[
@@ -92,8 +178,12 @@ end
 		  A single argument means that it set the new appearance data to be equal to that data. The new data will be type checked to a table.
 --]]
 
-function character_meta:SetAppearanceData()
-
+function character_meta:SetAppearanceData(wArg1, wArg2)
+	if rain.util.countargs(wArg1, wArg2) > 1 then
+		self.data_appearance[wArg1] = wArg2
+	else
+		self.data_appearance = wArg1
+	end
 end
 
 --[[
@@ -103,8 +193,12 @@ end
 		  A single argument means that it set the new data to be equal to that data. The new data will be type checked to a table.
 --]]
 
-function character_meta:SetData()
-
+function character_meta:SetData(wArg1, wArg2)
+	if rain.util.countargs(wArg1, wArg2) > 1 then
+		self.data_character[wArg1] = wArg2
+	else
+		self.data_character = wArg1
+	end
 end
 
 --[[
@@ -114,8 +208,12 @@ end
 		  A single argument means that it set the new admin only data to be equal to that data. The new data will be type checked to a table.
 --]]
 
-function character_meta:SetAdminOnlyData()
-
+function character_meta:SetAdminOnlyData(wArg1, wArg2)
+	if rain.util.countargs(wArg1, wArg2) > 1 then
+		self.data_adminonly[wArg1] = wArg2
+	else
+		self.data_adminonly = wArg1
+	end
 end
 
 --[[
@@ -125,8 +223,12 @@ end
 		  A single argument means that it set the new inventory to be equal to that data. The new data will be type checked to a table.
 --]]
 
-function character_meta:SetInventoryData()
-
+function character_meta:SetInventoryData(wArg1, wArg2)
+	if rain.util.countargs(wArg1, wArg2) > 1 then
+		self.data_inventory[wArg1] = wArg2
+	else
+		self.data_inventory = wArg1
+	end
 end
 
 --[[
@@ -135,8 +237,12 @@ end
 	Desc: Gets the appearance data by a key, if no key is supplied the entire table is returned
 --]]
 
-function character_meta:GetAppearanceData()
-
+function character_meta:GetAppearanceData(sKey)
+	if (sKey) then
+		return self.data_appearance[sKey]
+	else
+		return self.data_appearance
+	end
 end
 
 --[[
@@ -145,8 +251,12 @@ end
 	Desc: Gets the character data by a key, if no key is supplied the entire table is returned
 --]]
 
-function character_meta:GetData()
-
+function character_meta:GetData(sKey)
+	if (sKey) then
+		return self.data_character(sKey)
+	else
+		return self.data_character
+	end
 end
 
 --[[
@@ -155,8 +265,12 @@ end
 	Desc: Gets the admin only data by a key, if no key is supplied the entire table is returned
 --]]
 
-function character_meta:GetAdminOnlyData()
-
+function character_meta:GetAdminOnlyData(sKey)
+	if (sKey) then
+		return self.data_adminonly[sKey]
+	else
+		return self.data_adminonly
+	end
 end
 
 --[[
@@ -166,12 +280,78 @@ end
 --]]
 
 function character_meta:GetInventory()
-
+	return self.data_inventory
 end
 
 character_meta.__index = character_meta
 
+if (CL) then
+
+	net.Receive("rain.charsync", function()
+		local charsyncdata = rain.net.ReadWildcard()
+		local target = charsyncdata.target
+		local adminonly = charsyncdata.adminonly
+		local character = charsyncdata.character
+		local appearance = charsyncdata.appearance
+		local inventory = charsyncdata.inventory
+
+		if target then
+			target.character = {}
+			setmetatable(target, character_meta)
+			target.character:SetOwningClient(target)
+
+			local char = target.character
+			char:SetAdminOnlyData()
+			char:SetAppearanceData()
+			char:SetData(character)
+			char:SetInventoryData(inventory)
+		end
+	end)
+
+	net.Receive("rain.charsyncdata", function()
+		local datatype = rain.net.ReadTinyInt(enumDataType)
+		local data = rain.net.ReadWildcard()
+
+		local target = data.target
+
+		if datatype == DATA_CHARACTER then
+			target:SetData(data.key, data.newdata)
+		elseif datatype == DATA_ADMINONLY then
+			target:SetAdminOnlyData(data.key, data.newdata)
+		elseif datatype == DATA_INVENTORY then
+			target:SetInventoryData(data.key, data.newdata)
+		elseif datatype == DATA_APPEARANCE
+			target:SetAppearanceData(data.key, data.newdata)
+		end
+	end)
+
+	net.Receive("rain.charsyncdatabykey", function()
+		local datatype = rain.net.ReadTinyInt(enumDataType)
+		local data = rain.net.ReadWildcard()
+
+		local target = data.target
+
+		if datatype == DATA_CHARACTER then
+			target:SetData(data.newdata)
+		elseif datatype == DATA_ADMINONLY then
+			target:SetAdminOnlyData(data.newdata)
+		elseif datatype == DATA_INVENTORY then
+			target:SetInventoryData(data.newdata)
+		elseif datatype == DATA_APPEARANCE
+			target:SetAppearanceData(data.newdata)
+		end
+	end)
+
+end
+
+
 if (SERVER) then
+
+	util.AddNetworkString("rain.requestchardata")
+
+	net.Receive("rain.requestchardata", function()
+
+	end)
 
 	--[[
 		Name: Create
@@ -262,15 +442,16 @@ if (SERVER) then
 
 							self.character = {}
 							self.character.charname = tResult.charname
-							self.character.data_character = tResult.data_character
-							self.character.data_appearance = tResult.data_appearance
-							self.character.data_adminonly = tResult.data_adminonly
-							self.character.data_inventory = tResult.data_inventory
+							self.character.data_character = pon.decode(tResult.data_character)
+							self.character.data_appearance = pon.decode(tResult.data_appearance)
+							self.character.data_adminonly = pon.decode(tResult.data_adminonly)
+							self.character.data_inventory = pon.decode(tResult.data_inventory)
 
 							rain.characterindex[nCharID] = self.character
 
 							setmetatable(self.character, character_meta)
 
+							self.character:SetOwningClient(self)
 							self.character:Sync()
 						end
 					end)
