@@ -79,7 +79,9 @@ else
 
 	net.Receive("rain.syncstate", function()
 		local NewState = rain.net.ReadTinyInt()
-		self:SetState(NewState)
+		if IsValid(LocalPlayer()) then
+			LocalPlayer():SetState(NewState)
+		end
 	end)
 
 end
