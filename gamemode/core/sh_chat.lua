@@ -1,7 +1,6 @@
 rain.chat = {}
 
 rain.chatbuffer = {}
-rain.chatcommandbuffer = {}
 
 -- chat type enums
 
@@ -102,19 +101,6 @@ rain.chat.add({sPrintName = "Whisper",
 
 function rain.chat.formatictext(pSpeaker, sText)
 	return pSpeaker:GetRPName()..' says "'..sText..'" '
-end
-
---[[
-	Name: AddChatCommand
-	Category: Chat
-	Desc: Adds a chat command, CanUse() is called with the client attempting to use the command being the argument, returning true/false
-	      Determines if the command can be ran by that person, OnUse() is called when the command is called by somebody who can use it
-	      OnFail() is called when the command cannot be run by the person attempting to call it.
-	      OnSuccess() is called when the command is ran by the person attempting to call it successfuly calls it.
---]]
-
-function rain.chat.addchatcommand(fnCanUse, fnOnUse, fnOnFail, fnOnSuccess)
-
 end
 
 --[[
