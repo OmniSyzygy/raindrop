@@ -296,7 +296,16 @@ if (SV) then
 end
 
 net.Receive("rain.chat.setchatinfo", function(len, pSender)
-	pSender:SetChatInfo(net.ReadBool(), rain.net.ReadNibbleUInt())
+	local bTyping, enumTypingText = net.ReadBool(), net.ReadUInt(5)
+
+	if (SV) then
+		pSender:SetChatInfo(bTyping, enumTypingText)
+	else
+		local target = net.ReadEntity()
+		if target != LocalPlayer() then
+			target:SetChatInfo(bTyping, enumTypingText)
+		end
+	end
 end)
 
 function rainclient:SetChatInfo(bTyping, enumTypingText)
@@ -308,9 +317,8 @@ function rainclient:SetChatInfo(bTyping, enumTypingText)
 
 			net.Start("rain.chat.setchatinfo")
 			net.WriteBool(bTyping)
-			rain.net.WriteNibbleUInt(enumTypingText)
+			net.WriteUInt(enumTypingText, 5)
 			net.SendToServer()
-			print("Updated Typing State")
 		else
 			self.typing = bTyping
 			self.texttype = enumTypingText
@@ -324,9 +332,10 @@ function rainclient:SetChatInfo(bTyping, enumTypingText)
 end
 
 function rainclient:SyncChatInfo()
-	net.Start("UpdateChatInfo")
-	net.WriteBool(self.chatinfo.typing)
-	rain.net.WriteNibbleUInt(self.chatinfo.texttype)
+	net.Start("rain.chat.setchatinfo")
+	net.WriteBool(self.typing)
+	net.WriteUInt(self.texttype, 5)
+	net.WriteEntity(self)
 	net.Broadcast()
 end
 
@@ -350,5 +359,25 @@ if (CL) then
 
 	function rain.chat.processchatstring(sText)
 		return sText
+	end
+
+	--[[
+		Name: Start Chat
+		Category: Chat
+		Desc: Called when the player opens their chatbox
+	--]]
+
+	function rain:StartChat()
+		LocalPlayer():SetChatInfo(true, 1)
+	end
+
+	--[[
+		Name: Finish Chat
+		Category: Chat
+		Desc: Called when the player finishes chatting
+	--]]
+
+	function rain:FinishChat()
+		LocalPlayer():SetChatInfo(false, 1)
 	end
 end
