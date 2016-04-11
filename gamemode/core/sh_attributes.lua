@@ -1,0 +1,3 @@
+--[[
+	sh_attributes.lua
+--]]
