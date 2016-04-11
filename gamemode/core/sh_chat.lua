@@ -1,6 +1,7 @@
 rain.chat = {}
 
 rain.chatbuffer = {}
+rain.chatcommandbuffer = {}
 
 -- chat type enums
 
@@ -9,6 +10,7 @@ CHAT_IC = 1
 CHAT_PM = 2
 CHAT_PDA = 3
 CHAT_ADMIN = 4
+CHAT_NOTIFY = 5
 
 TYPING_OOC = 0
 TYPING_IC = 1
@@ -26,7 +28,7 @@ rain.chat.typingstrings[TYPING_YELLING] = "yelling"
 rain.chat.typingstrings[TYPING_WHISPERING] = "whispering"
 
 
-rain.struct:RegisterStruct("ChatStruct", {nRadius = 1024, sFont = "Arial", sIcon = "default", prefix = "//"})
+rain.struct:RegisterStruct("ChatStruct", {nRadius = 1024, bGlobal = false, sFont = "Arial", sIcon = "default", wPrefix = "//", sPrintName = "default", enumType = CHAT_OOC, sPrintNameShort = "def"})
 
 --[[
 	Name: Add
@@ -34,12 +36,72 @@ rain.struct:RegisterStruct("ChatStruct", {nRadius = 1024, sFont = "Arial", sIcon
 	Desc: Add a type of chat to the chatbox
 --]]
 
-function rain.chat.add(tChatStruct, fnOnChat, fnFormatText)
-	if tChatStruct:IsStruct() then
-		if tChatStruct:Matches("ChatStruct") then
-			rain.chatbuffer[tChatStruct.prefix] = {struct = tChatStruct, OnChat = fnOnChat, FormatText = fnFormatText}
-		end
+function rain.chat.add(tChatStruct, fnFormatText, fnOnChat)
+	local tChatData = rain.struct:GetStruct("ChatStruct")
+
+	tChatData.nRadius = tChatStruct.nRadius or tChatData.nRadius
+	tChatData.bGlobal = tChatStruct.bGlobal or tChatData.bGlobal
+	tChatData.sFont = tChatStruct.sFont or tChatData.sFont
+	tChatData.sIcon = tChatStruct.sIcon or tChatData.sIcon
+	tChatData.wPrefix = tChatStruct.wPrefix or tChatData.wPrefix
+	tChatData.sPrintName = tChatStruct.sPrintName or tChatData.sPrintName
+	tChatData.sPrintNameShort = tChatStruct.sPrintNameShort or tChatStruct.sPrintNameShort
+	tChatData.enumType = tChatStruct.enumType or tChatData.enumType
+
+	local fnOnChat = fnOnChat or function(sText, pSpeaker) end
+
+	rain.chatbuffer[tChatData.wPrefix] = {struct = tChatData, OnChat = fnOnChat, FormatText = fnFormatText}
+end
+
+rain.chat.add({sPrintName = "Out Of Character",
+	nRadius = 0, 
+	enumType = CHAT_OOC,
+	bGlobal = true, 
+	wPrefix = "//", 
+	sPrintNameShort = "OOC"},
+	function(sText, pSpeaker)
+		return pSpeaker:Nick().." - [OOC]: "..sText
 	end
+)
+
+rain.chat.add({sPrintName = "Action",
+	nRadius = 1024, 
+	enumType = CHAT_IC,
+	wPrefix = "/me", 
+	sPrintNameShort = "me"},
+	function(sText, pSpeaker)
+		return pSpeaker:GetRPName().." "..sText
+	end
+)
+
+rain.chat.add({sPrintName = "Yell",
+	nRadius = 2048, 
+	enumType = CHAT_IC,
+	wPrefix = "/y", 
+	sPrintNameShort = "Yell"},
+	function(sText, pSpeaker)
+		return pSpeaker:GetRPName()..' yells "'..sText..'" '
+	end
+)
+
+rain.chat.add({sPrintName = "Whisper",
+	nRadius = 512, 
+	enumType = CHAT_IC,
+	wPrefix = "/w", 
+	sPrintNameShort = "Whisper"},
+	function(sText, pSpeaker)
+		return pSpeaker:GetRPName()..' whispers "'..sText..'" '
+	end
+)
+
+--[[
+	Name: Format IC Text
+	Category: Chat
+	Desc: Formats IC chat, this is because IC is the 'default' and doesn't fit anywhere into the system
+--]]
+
+function rain.chat.formatictext(pSpeaker, sText)
+	return pSpeaker:GetRPName()..' says "'..sText..'" '
 end
 
 --[[
@@ -62,7 +124,11 @@ end
 --]]
 
 function rain.chat.addinarea(vMin, vMax, enumType, sText)
-
+	for k, v in pairs(ents.FindInBox(vMin, xMax)) do
+		if v:IsPlayer() then
+			v:AddChat(enumType, sText)
+		end
+	end
 end
 
 --[[
@@ -94,23 +160,80 @@ function rain.chat.gettypingtext(enumTypingText)
 end
 
 --[[
+	Name: Broadcast
+	Category: Chat
+	Desc: Broadcasts chat to every connected player on the server
+--]]
+
+function rain.chat.broadcast(enumType, sText)
+	for k, v in pairs(player.GetAll()) do
+		v:AddChat(enumType, sText)
+	end
+end
+
+--[[
 	Name: Player Say
 	Category: Chat
 	Desc: Called when a player sends out a chat message
 --]]
 
 function rain:PlayerSay(pSender, sText, bTeamChat)
+	if !pSender:CanSay() then
+		return ""
+	end
+
 	if string.StartWith(sText, "/") then
-		-- do additional shit here
+		local expl = string.Explode(" ", sText)
+		local prefix = expl[1]
+		table.remove(expl, 1)
+		local toformat = string.Implode(" ", expl)
+
+		prefix = string.lower(prefix)
+
+		if rain.chatbuffer[prefix] then
+			local ChatType = rain.chatbuffer[prefix]
+			local ChatData = ChatType.struct
+
+			if ChatType.OnChat then
+				ChatType.OnChat(pSender)
+			end
+			PrintTable(ChatType)
+			local final = ChatType.FormatText(toformat, pSender)
+
+			if ChatData.bGlobal then
+				rain.chat.broadcast(ChatData.enumType, final)
+			else
+				rain.chat.addinradius(pSender:GetPos(), ChatData.nRadius, ChatData.enumType, final)
+			end
+		else
+			pSender:AddChat(CHAT_NOTIFY, "Invalid Command")
+			return ""
+		end
 	else
-		-- assume IC chat here
-		rain.chat.addinradius(pSender:GetPos(), 1024, 1, pSender:GetRPName()..": "..sText)
+		-- assume IC
+		rain.chat.addinradius(pSender:GetPos(), 1024, 1, rain.chat.formatictext(pSender, sText))
 	end
 
 	return "" -- always return nothing
 end
 
 local rainclient = FindMetaTable("Player")
+
+--[[
+	Name: Can Say
+	Category: Chat->PlayerMeta
+	Desc: returns true/false is a player can currently speak
+--]]
+
+function rainclient:CanSay()
+	if self:GetState() == STATE_MENU then
+		return false
+	elseif self:GetState() == STATE_LOADING then
+		return false
+	end
+
+	return true
+end
 
 --[[
 	Name: Add Chat
@@ -131,7 +254,7 @@ function rainclient:AddChat(enumType, sText)
 	local enumType = enumType or CHAT_IC
 
 	if (CL) then
-		chat.AddText(sText)
+		rain.chat.addchat(enumType, sText)
 	else
 		net.Start("rain.chat.addchat")
 		rain.net.WriteUByte(enumType)
@@ -141,13 +264,25 @@ function rainclient:AddChat(enumType, sText)
 end
 
 --[[
+	Name: Get Chatting
+	Category: Chat->PlayerMeta
+	Desc: Gets wether or not a player is chatting, which if they are it will call more expensive functions to dig up more information.
+--]]
+
+function rainclient:GetChatting()
+	return self.typing
+end
+
+--[[
 	Name: Get Chat Info
 	Category: Chat->PlayerMeta
 	Desc: Gets a players chat info, this is wether they are typing/not typing, the type of chat they're performing, etc.
 --]]
 
 function rainclient:GetChatInfo()
-
+	if self.chatinfo then
+		return self.typing, self.texttype
+	end
 end
 
 --[[
@@ -156,11 +291,46 @@ end
 	Desc: Sets the players chat info, this is called from client to the server hence why the variables are strictly type checked.
 --]]
 
-function rainclient:SetChatInfo(bTyping, enumTypingText)
-
+if (SV) then
+	util.AddNetworkString("rain.chat.setchatinfo")
 end
 
-if (CLIENT) then
+net.Receive("rain.chat.setchatinfo", function(len, pSender)
+	pSender:SetChatInfo(net.ReadBool(), rain.net.ReadNibbleUInt())
+end)
+
+function rainclient:SetChatInfo(bTyping, enumTypingText)
+	if (CL) then
+		if self == LocalPlayer() then
+			self.chatinfo = {}
+			self.chatinfo.typing = bTyping
+			self.chatinfo.texttype = enumTypingText
+
+			net.Start("rain.chat.setchatinfo")
+			net.WriteBool(bTyping)
+			rain.net.WriteNibbleUInt(enumTypingText)
+			net.SendToServer()
+			print("Updated Typing State")
+		else
+			self.typing = bTyping
+			self.texttype = enumTypingText
+		end
+	else
+		self.typing = bTyping
+		self.texttype = enumTypingText
+
+		self:SyncChatInfo()
+	end
+end
+
+function rainclient:SyncChatInfo()
+	net.Start("UpdateChatInfo")
+	net.WriteBool(self.chatinfo.typing)
+	rain.net.WriteNibbleUInt(self.chatinfo.texttype)
+	net.Broadcast()
+end
+
+if (CL) then
 
 	--[[
 		Name: Add Chat
@@ -168,8 +338,8 @@ if (CLIENT) then
 		Desc: Add some text to the chatbox, the text should be formatted on the server ahead of time.
 	--]]
 
-	function rain.chat.addchat(sText)
-
+	function rain.chat.addchat(enumChatType, sText)
+		chat.AddText(rain.chat.processchatstring(sText))
 	end
 
 	--[[
@@ -179,6 +349,6 @@ if (CLIENT) then
 	--]]
 
 	function rain.chat.processchatstring(sText)
-
+		return sText
 	end
 end

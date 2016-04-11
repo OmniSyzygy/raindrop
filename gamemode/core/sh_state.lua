@@ -29,6 +29,7 @@ if (SV) then
 		else
 			pClient:SetNoDraw(false)
 			rain:PlayerLoadout(pClient)
+			pClient:SetState(STATE_ALIVE)
 		end
 	end
 
