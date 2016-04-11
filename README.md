@@ -4,8 +4,6 @@ Welcome to the future.
 
 The three main goals of RAINDROP are:
 
-1. Innovate using smartly written and flexible code
-2. Revolutionize customization on all fronts
-3. Push the absolute limits of the source engine while attempting to maintain framerate, etc.
-
-The current objective is mysql and character intergration.
+1. Rapidly develop and iterate new features based on clean, readable, well documented code.
+2. Bring change that is seen as welcomed and accepted with open arms by all players.
+3. Push every limit possible with the source engine.
