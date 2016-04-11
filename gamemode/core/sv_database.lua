@@ -48,6 +48,8 @@ function rain.db.onconnectionsuccess()
 	queryObj:PrimaryKey("id")
 	queryObj:Execute()
 
+	rain.log.onconnectionsuccess()
+
 	timer.Create("rain.db.think", 1, 0, function()
 		mysql:Think()
 	end)
