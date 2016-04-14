@@ -354,7 +354,9 @@ if (CL) then
 	--]]
 
 	function rain:StartChat()
-		LocalPlayer():SetChatInfo(true, 1)
+		if LocalPlayer() and IsValid(LocalPlayer()) then
+			LocalPlayer():SetChatInfo(true, 1)
+		end
 	end
 
 	--[[
@@ -364,6 +366,8 @@ if (CL) then
 	--]]
 
 	function rain:FinishChat()
-		LocalPlayer():SetChatInfo(false, 1)
+		if LocalPlayer() and IsValid(LocalPlayer()) then
+			LocalPlayer():SetChatInfo(false, 1)
+		end
 	end
 end

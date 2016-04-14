@@ -18,6 +18,26 @@ end
 local character_meta = {}
 
 --[[
+	Name: To String
+	Category: Character
+	Desc: Called when the character is being printed as a string
+--]]
+
+function character_meta:__tostring()
+	return "Character - ID: "..self:GetCharID().."- NAME - "..self:GetName()
+end
+
+--[[
+	Name: EQ
+	Category: Character
+	Desc: Called when the character is being compared to another
+--]]
+
+function character_meta:__eq(cOtherChar)
+	return self:GetCharID() == self:GetCharID()
+end
+
+--[[
 	Name: Get Char ID
 	Category: Character
 	Desc: returns the current character id
@@ -334,6 +354,8 @@ function character_meta:GetInventory()
 end
 
 character_meta.__index = character_meta
+
+rain.util.registermetatable("rain.character", character_meta)
 
 if (CL) then
 

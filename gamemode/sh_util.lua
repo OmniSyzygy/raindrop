@@ -139,3 +139,13 @@ function rain.util.countargs(wArg1, wArg2, wArg3, wArg4, wArg5)
 	return 1
 
 end
+
+rain.meta = {}
+
+function rain.util.findmetatable(sKey)
+	return rain.meta[sKey]
+end
+
+function rain.util.registermetatable(sKey, tMetaTable)
+	rain.meta[sKey] = tMetaTable
+end
