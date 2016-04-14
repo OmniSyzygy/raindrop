@@ -307,9 +307,13 @@ end
 	Desc: Gets the appearance data by a key, if no key is supplied the entire table is returned
 --]]
 
-function character_meta:GetAppearanceData(sKey)
+function character_meta:GetAppearanceData(sKey, wDefault)
 	if (sKey) then
-		return self.data_appearance[sKey]
+		if self.data_appearance[sKey] then
+			return self.data_appearance[sKey]
+		else
+			return wDefault
+		end
 	else
 		return self.data_appearance
 	end
@@ -321,9 +325,13 @@ end
 	Desc: Gets the character data by a key, if no key is supplied the entire table is returned
 --]]
 
-function character_meta:GetData(sKey)
+function character_meta:GetData(sKey, wDefault)
 	if (sKey) then
-		return self.data_character(sKey)
+		if self.data_character[sKey] then
+			return self.data_character[sKey]
+		else
+			return wDefault
+		end
 	else
 		return self.data_character
 	end
@@ -335,9 +343,13 @@ end
 	Desc: Gets the admin only data by a key, if no key is supplied the entire table is returned
 --]]
 
-function character_meta:GetAdminOnlyData(sKey)
+function character_meta:GetAdminOnlyData(sKey, wDefault)
 	if (sKey) then
-		return self.data_adminonly[sKey]
+		if self.data_adminonly[sKey] then
+			return self.data_adminonly[sKey]
+		else
+			return wDefault
+		end
 	else
 		return self.data_adminonly
 	end
@@ -350,7 +362,7 @@ end
 --]]
 
 function character_meta:GetInventory()
-	return self.data_inventory
+	return self.data_inventory or {}
 end
 
 character_meta.__index = character_meta
