@@ -22,3 +22,17 @@ function rainclient:GetVisibleRPName()
 		return self.character:GetName()
 	end
 end
+
+--[[
+	Name: Get Character
+	Category: PlayerMeta
+	Desc: Returns the players current character, returns false if no character is found
+--]]
+
+function rainclient:GetCharacter()
+	if self.character then
+		return self.character
+	end
+
+	return false
+end

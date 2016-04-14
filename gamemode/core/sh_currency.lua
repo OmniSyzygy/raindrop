@@ -43,12 +43,33 @@ end
 
 local rainclient = FindMetaTable("Player")
 
-function rainclient:CanAfford(nPrice)
+function rainclient:CanAfford(nAmount)
+	local char = self:GetCharacter()
 
+	if self:CanAffordByCurrency(nAmount, "Master") then
+		return true, nAmount, "Master"
+	end
+
+	for CurrencyIndex, CurrencyData in pairs(rain.currencybuffer) do
+		local multiplier = nAmount * CurrencyData.Val
+		if self:CanAffordByCurrency(multiplier, CurrencyIndex) then
+			return true, multiplier, CurrencyIndex
+		end
+	end
+
+	return false
 end
 
-function rainclient:CanAffordByCurrency()
+function rainclient:CanAffordByCurrency(nAmount, sCurrency)
+	local char = self:GetCharacter()
 
+	if char then
+		local amount = self:GetCurrencyAmount(sCurrency)
+
+		return amount >= nAmount
+	end
+
+	return false
 end
 
 local rainchar = rain.character.getmeta()

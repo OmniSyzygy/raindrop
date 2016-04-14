@@ -23,6 +23,10 @@ function rain.flag.get(sFlag)
 end
 
 function rain.flag.playerspawn(pClient, cCharacter)
+	if !cCharacter then
+		return
+	end
+	
 	local flags = cCharacter:GetFlags(true)
 
 	for _, flag in pairs(flags) do
@@ -32,6 +36,10 @@ function rain.flag.playerspawn(pClient, cCharacter)
 end
 
 function rain.flag.dodeath(pClient, cCharacter)
+	if !cCharacter then
+		return
+	end
+	
 	local flags = cCharacter:GetFlags(true)
 
 	for _, flag in pairs(flags) do
