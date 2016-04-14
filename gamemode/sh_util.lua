@@ -145,7 +145,3 @@ rain.meta = {}
 function rain.util.findmetatable(sKey)
 	return rain.meta[sKey]
 end
-
-function rain.util.registermetatable(sKey, tMetaTable)
-	rain.meta[sKey] = tMetaTable
-end

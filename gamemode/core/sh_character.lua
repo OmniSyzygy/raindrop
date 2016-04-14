@@ -355,7 +355,17 @@ end
 
 character_meta.__index = character_meta
 
-rain.util.registermetatable("rain.character", character_meta)
+local RAIN_CHARMETA = character_meta
+
+--[[
+	Name: Get Meta
+	Category: Character
+	Desc: Returns the character meta table
+--]]
+
+function rain.character.getmeta()
+	return RAIN_CHARMETA
+end
 
 if (CL) then
 
