@@ -8,6 +8,7 @@ DATA_CHARACTER = 0
 DATA_APPEARANCE = 1
 DATA_INVENTORY = 2
 DATA_ADMINONLY = 3
+DATA_NAME = 4
 
 rain.character = {}
 
@@ -24,7 +25,7 @@ local character_meta = {}
 --]]
 
 function character_meta:__tostring()
-	return "Character - ID: "..self:GetCharID().."- NAME - "..self:GetName()
+	return "Character - ID: '"..self:GetCharID().."' - NAME: "..self:GetName()
 end
 
 --[[
@@ -67,7 +68,7 @@ function character_meta:GetCharacterData()
 	return self.data_character, self.data_appearance, self.data_adminonly, self.data_inventory
 end
 
-if (SERVER) then
+if (SV) then
 
 	--[[
 		Name: Save
@@ -95,6 +96,29 @@ if (SERVER) then
 		end
 					
 		SaveObj:Update("charname", self:GetName())
+		SaveObj:Execute()
+	end
+
+	function character_meta:SaveByKey(enumDataType, sNewData)
+		local SaveObj = mysql:Update("characters")
+		SaveObj:Where("id", self:GetCharID())
+
+		if sNewData and type(sNewData) == "table" then
+			sNewData = pon.encode(sNewData)
+		end
+
+		if enumDataType == DATA_CHARACTER then
+			SaveObj:Update("data_character", sNewData or pon.encode(self.data_character))
+		elseif enumDataType == DATA_APPEARANCE then
+			SaveObj:Update("data_appearance", sNewData or pon.encode(self.data_appearance))
+		elseif enumDataType == DATA_INVENTORY then
+			SaveObj:Update("data_inventory", sNewData or pon.encode(self.data_inventory))
+		elseif enumDataType == DATA_ADMINONLY then
+			SaveObj:Update("data_adminonly", sNewData or pon.encode(self.data_adminonly))
+		elseif enumDataType == DATA_NAME then
+			SaveObj:Update("charname", sNewData or self:GetName())
+		end
+
 		SaveObj:Execute()
 	end
 	
@@ -131,6 +155,9 @@ if (SERVER) then
 					data.inventory = {}
 				end
 
+				data.name = self:GetName()
+				data.id = self:GetCharID()
+
 				net.Start("rain.charsync")
 					rain.net.WriteTable(data)
 				net.Send(v)
@@ -142,11 +169,14 @@ if (SERVER) then
 		Name: Sync Data By Key
 		Category: Character
 		Desc: Syncs the key, in the given dataset, to all players (admin only data only gets networked to that specific player and admins.)
+		Also automatically saves any data sent over the network.
 	--]]
 
 	util.AddNetworkString("rain.charsyncdatabykey")
 
-	function character_meta:SyncDataByKey(enumDataType, sKey, tNewData)
+	function character_meta:SyncDataByKey(enumDataType, sKey, tNewData, bNoSave)
+		self:SaveByKey(enumDataType)
+
 		for k, v in pairs(player.GetAll()) do
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
@@ -164,11 +194,14 @@ if (SERVER) then
 		Name: Sync Data
 		Category: Character
 		Desc: syncs an entire table of data, only a specific table is networked.
+		Also automatically saves any data sent over the network.
 	--]]	
 
 	util.AddNetworkString("rain.charsyncdata")
 
-	function character_meta:SyncData(enumDataType, tNewData)
+	function character_meta:SyncData(enumDataType, tNewData, bNoSave)
+		self:SaveByKey(enumDataType)
+
 		for k, v in pairs(player.GetAll()) do
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
@@ -195,6 +228,11 @@ function character_meta:SetupDefaultDataFields()
 	self.data_inventory = {}
 	self.data_adminonly = {}
 	self.data_character = {}
+end
+
+function character_meta:SetNameAndID(sName, nID)
+	self.charname = sName
+	self.id = nID
 end
 
 --[[
@@ -388,6 +426,8 @@ if (CL) then
 		local character = charsyncdata.character
 		local appearance = charsyncdata.appearance
 		local inventory = charsyncdata.inventory
+		local name = charsyncdata.name
+		local id = charsyncdata.id
 
 		if target then
 			target.character = {}
@@ -396,18 +436,19 @@ if (CL) then
 
 			local char = target.character
 			char:SetupDefaultDataFields()
-			char:SetAdminOnlyData()
-			char:SetAppearanceData()
+			char:SetNameAndID(name, id)
+			char:SetAdminOnlyData(adminonly)
+			char:SetAppearanceData(appearance)
 			char:SetData(character)
 			char:SetInventoryData(inventory)
 		end
 	end)
 
-	net.Receive("rain.charsyncdata", function()
+	net.Receive("rain.charsyncdatabykey", function()
 		local datatype = rain.net.ReadTinyInt(enumDataType)
 		local data = rain.net.ReadTable()
 
-		local target = data.target
+		local target = data.target.character
 
 		if datatype == DATA_CHARACTER then
 			target:SetData(data.key, data.newdata)
@@ -420,11 +461,11 @@ if (CL) then
 		end
 	end)
 
-	net.Receive("rain.charsyncdatabykey", function()
+	net.Receive("rain.charsyncdata", function()
 		local datatype = rain.net.ReadTinyInt(enumDataType)
 		local data = rain.net.ReadTable()
 
-		local target = data.target
+		local target = data.target.character
 
 		if datatype == DATA_CHARACTER then
 			target:SetData(data.newdata)
@@ -536,7 +577,6 @@ if (SERVER) then
 							local tResult = wResult[1]
 
 							self.character = {}
-							self.character.charname = tResult.charname
 							self.character.data_character = pon.decode(tResult.data_character)
 							self.character.data_appearance = pon.decode(tResult.data_appearance)
 							self.character.data_adminonly = pon.decode(tResult.data_adminonly)
@@ -545,6 +585,8 @@ if (SERVER) then
 							rain.characterindex[nCharID] = self.character
 
 							setmetatable(self.character, character_meta)
+
+							self.character:SetNameAndID(tResult.charname, nCharID)
 
 							self.character:SetOwningClient(self)
 							self.character:Sync()

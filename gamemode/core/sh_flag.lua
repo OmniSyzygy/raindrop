@@ -43,15 +43,13 @@ end
 local charmeta = rain.character.getmeta()
 
 function charmeta:GetFlags(bTable)
-	if type(self.flags) != "string" then
-		self.flags = ""
-	end
+	local flags = self:GetAdminOnlyData("flags", "")
 
 	if !bTable then
-		return self.flags
+		return flags
 	end
 
-	return string.Explode("", self.flags)
+	return string.Explode("", flags)
 end
 
 function charmeta:HasFlag(sFlag)
@@ -67,9 +65,10 @@ function charmeta:HasFlag(sFlag)
 end
 
 function charmeta:AddFlag(sNewFlag)
-	self.flags = self.flags or ""
+	local flags = self:GetAdminOnlyData("flags", "")
+	flags = flags..sNewFlag
 
-	self.flags = self.flags..sNewFlag
+	self:SetAdminOnlyData("flags", flags)
 end
 
 function charmeta:GiveFlags(sFlags)
@@ -84,10 +83,15 @@ end
 
 function charmeta:RemoveFlags(sFlagsToRemove)
 	local flags = string.Explode("", sFlagsToRemove)
-	
+	local currentflags = self:GetAdminOnlyData("flags", "")
+
 	for _, flag in pairs(flags) do
-		self.flags = string.Replace(self.flags, flag, "")
+		if string.len(currentflags) > 0 then
+			currentflags = string.Replace(self.flags, flag, "")
+		end
 	end
+
+	self:SetAdminOnlyData("flags", currentflags)
 end
 
 if rain.dev then
