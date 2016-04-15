@@ -6,10 +6,12 @@ function rain:PlayerSpawn(pClient)
 	rain.state.playerspawn(pClient)
 	rain.flag.playerspawn(pClient, pClient.character)
 	rain.attributes.playerspawn(pClient)
+	rain.traits.playerspawn(pClient, pClient:GetCharacter())
 end
 
 function rain:PostPlayerDeath(pClient)
 	rain.flag.dodeath(pClient, pClient.character)
+	rain.traits.dodeath(pClient, pClient:GetCharacter())
 end
 
 function rain:PlayerLoadout(pClient)
