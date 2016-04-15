@@ -13,7 +13,7 @@ rain.currencybuffer = {}
 --]]
 
 function rain.currency.setupmaster(sPrintName, sPrintDesc, fnResolveCurrencyName)
-	rain.currency.master = {}
+	rain.currency.Master = {}
 	rain.currency.Master.PrintName = sPrintName
 	rain.currency.Master.PrintDesc = sPrintDesc
 	rain.currency.Master.ResolveCurrencyName = fnResolveCurrencyName
@@ -64,7 +64,7 @@ function rainclient:CanAffordByCurrency(nAmount, sCurrency)
 	local char = self:GetCharacter()
 
 	if char then
-		local amount = self:GetCurrencyAmount(sCurrency)
+		local amount = char:GetCurrencyAmount(sCurrency)
 
 		return amount >= nAmount
 	end
@@ -102,7 +102,7 @@ function rainchar:GetCurrencyAmount(sCurrency)
 	end
 end
 
-function rainchar:AddCurrency(nAmount, sCurrency)
+function rainchar:AddFunds(nAmount, sCurrency)
 	local currencies = self:GetAdminOnlyData("currency", {})
 	if !sCurrency then
 		sCurrency = "Master"
@@ -117,7 +117,7 @@ function rainchar:AddCurrency(nAmount, sCurrency)
 	self:SetAdminOnlyData("currency", currencies)
 end
 
-function rainchar:RemoveCurrency(nAmount, sCurrency)
+function rainchar:DeductFunds(nAmount, sCurrency)
 	local currencies = self:GetAdminOnlyData("currency", {})
 
 	if !sCurrency then
