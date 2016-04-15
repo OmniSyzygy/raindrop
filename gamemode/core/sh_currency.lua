@@ -3,8 +3,8 @@
 	Description: Raindrop has support for multiple currencies, there is a single 'primary' curreny and then secondary currencies.
 --]]
 
-rain.curreny = {}
-rain.currenybuffer = {}
+rain.currency = {}
+rain.currencybuffer = {}
 
 --[[
 	Name: Setup Master
@@ -12,7 +12,7 @@ rain.currenybuffer = {}
 	Desc: Sets up the master currency which is basically the primary currency used by the script
 --]]
 
-function rain.curreny.setupmaster(sPrintName, sPrintDesc, fnResolveCurrencyName)
+function rain.currency.setupmaster(sPrintName, sPrintDesc, fnResolveCurrencyName)
 	rain.currency.master = {}
 	rain.currency.Master.PrintName = sPrintName
 	rain.currency.Master.PrintDesc = sPrintDesc
@@ -25,16 +25,16 @@ end
 	Desc: Adds a currency, currency added via this function is considered a secondary currency.
 --]]
 
-function rain.curreny.add(sCurrenyName, sPrintName, sPrintDesc, fnResolveCurrencyName, nVal)
+function rain.currency.add(sCurrenyName, sPrintName, sPrintDesc, fnResolveCurrencyName, nVal)
 	rain.currencybuffer[sCurrencyName] = {PrintName = sPrintName, PrintDesc = sPrintDesc, ResolveCurrency = fnResolveCurrencyName, Val = nVal}
 end
 
-function rain.curreny.enabled()
+function rain.currency.enabled()
 	if rain.cfg.currency and rain.cfg.currency.enabled then
 		return false
 	end
 
-	if rain.curreny.master then
+	if rain.currency.master then
 		return true
 	end
 
@@ -130,3 +130,13 @@ function rainchar:RemoveCurrency(nAmount, sCurrency)
 
 	self:SetAdminOnlyData("currency", currencies)
 end
+
+rain.currency.setupmaster("Credits", "This is a test currency.", function(nAmount)
+	if nAmount == 0 then 
+		return "Credits"
+	elseif nAmount > 1 then 
+		return "Credits" 
+	elseif nAmount == 1 then 
+		return "Credit" 
+	end 
+end)
