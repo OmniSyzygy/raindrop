@@ -21,8 +21,7 @@ end
 
 function ENT:SetupDataTables()
 	
-	self:NetworkVar( "String", 0, "Item" );
-	self:NetworkVar( "String", 1, "Data" );
+	self:NetworkVar( "Number", 0, "ItemID" );
 	
 end
 

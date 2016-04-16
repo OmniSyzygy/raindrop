@@ -58,6 +58,12 @@ function rain.util.include(sFilePath)
 	end
 end
 
+function Sound(sPathToSound)
+	util.PreCacheSound(sPathToSound)
+
+	return sPathToSound
+end
+
 function rain.util.loadlibraries()
 	rain.util.include("libraries/ut_loadorder.lua")
 	
