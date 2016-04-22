@@ -1,6 +1,6 @@
 PANEL = {}
 
-tabs = {"ALL", "IC", "OOC", "PM", "HELP", "ADMIN", "DEV"}
+tabs = {"ALL", "IC", "OOC", "CSC", "PM", "HELP", "ADMIN", "DEV"}
 
 function PANEL:Init()
 	self.Organizer = vgui.Create("DPropertySheet", self)
