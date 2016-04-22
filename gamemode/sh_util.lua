@@ -59,7 +59,7 @@ function rain.util.include(sFilePath)
 end
 
 function Sound(sPathToSound)
-	util.PreCacheSound(sPathToSound)
+	util.PrecacheSound(sPathToSound)
 
 	return sPathToSound
 end

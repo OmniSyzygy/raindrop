@@ -95,6 +95,7 @@ end
 
 function item_meta:GetMoveSound()
 	return self.movesound or Sound(rain.cfg.items.movesound)
+end
 
 function item_meta:SetModel(sNewModelPath)
 	self.model = Model(sNewModelPath)

@@ -1,18 +1,44 @@
 body {
-      margin: 0px;
+  margin: 0px;
+  background-color: transparent;
 }
 
 html {
-  font: 15px Tahoma;
+  font-family: Tahoma,Helvetica,Arial,Verdana;
+  font-size: 14px;
   color: rgb(255, 0, 0);
-  text-shadow: 0px 0px 4px rgba(10,10,10,0.23);
+  text-shadow: 0px 0px 10px rgba(0,0,0,0.35);
+  -webkit-font-smoothing: antialiased;
+  font-smooth: always;
+  background-color: transparent;
 }
 
 .chatbox {
     //border:solid 4px rgb(50, 50, 50);
-    width: 500px;
-    height: 350px;
+    //width: 500px;
+    //height: 350px;
     margin: 0px;
+    display:block;
+    height: 250;
+    overflow: auto;
+}
+
+.textinput {
+  width: 650px;
+  border: 0px solid rgb(145, 145, 145);
+  -webkit-box-shadow: 
+    inset 0 0 6px  rgba(0,0,0,0.25),
+          0 0 6px rgba(0,0,0,0.25); 
+
+  color: rgb(240, 240, 240);
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-weight: 600;
+
+  background: -webkit-linear-gradient(115deg, rgb(90, 90, 90) 0%,rgb(75, 75, 75) 100%);
+}
+
+.textinput:focus {
+  outline: none;
 }
 
 .chatmessage {
@@ -20,16 +46,33 @@ html {
   padding-left: 4px;
   padding-right: 10px
   padding-bottom: 2px;
-}
-
-basemessage {
-  font: 15px Tahoma;
+  -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.4); 
+  background: -webkit-linear-gradient(115deg, rgb(90, 90, 90) 0%,rgb(75, 75, 75) 100%);
 }
 
 .sender {
-  color: rgb(255, 0, 0);
+  color: rgb(150, 150, 255);
+  -webkit-font-smoothing: antialiased;
+  font-weight: 600;
 }
 
 .message {
-  color: rgb(25, 25, 25);
+  color: rgb(150, 150, 255);
+  -webkit-font-smoothing: antialiased;
+  font-weight: 600;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+ 
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  background-color: rgb(145, 145, 145);
+}
+ 
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  background-color: rgb(90, 90, 90);
+
 }

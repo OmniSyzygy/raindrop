@@ -1,7 +1,7 @@
 var chatbox = chatbox || {};
 
 chatbox.AddMessage = function(Sender, Message, SenderStyle, MessageStyle){
-	var chatbox = document.getElementById("chatbox");
+	var chat = document.getElementById("chatbox");
   var chatmessage = document.createElement("div");
   
   chatmessage.className = "chatmessage";
@@ -23,11 +23,12 @@ chatbox.AddMessage = function(Sender, Message, SenderStyle, MessageStyle){
    chatmessage.innerHTML += "<span class = 'message' style = '" + MessageStyle + "' >" + Message + "</span>"
   }
   
-  chatbox.appendChild(chatmessage);
+  chat.appendChild(chatmessage);
+  chat.scrollTop = chat.scrollHeight;
 }
 
 chatbox.AddRawMessage = function(Message, MessageStyle){
-	var chatbox = document.getElementById("chatbox");
+	var chat = document.getElementById("chatbox");
   var chatmessage = document.createElement("div");
   
   chatmessage.className = "chatmessage";
@@ -36,5 +37,6 @@ chatbox.AddRawMessage = function(Message, MessageStyle){
   	chatmessage.innerHTML = Message
   }
   
-  chatbox.appendChild(chatmessage);
+  chat.appendChild(chatmessage);
+  chat.scrollTop = chat.scrollHeight;
 }

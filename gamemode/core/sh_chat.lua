@@ -327,6 +327,28 @@ end
 
 if (CL) then
 
+	--chatbox = chatbox or nil
+	--function rain.chat.getchatbox()
+	--	if chatbox and !IsValid(chatbox) then
+	--		chatbox:Remove()
+	--	end
+
+	--	chatbox = chatbox or vgui.Create("RD_Chatbox")
+
+	--	chatbox:SetPos(150, ScrH() - 500)
+	--	chatbox:SetSize(500, 350)
+
+	--	return chatbox
+	--end
+
+	concommand.Add("TestChat", function()
+		chatbox = vgui.Create("RD_Chatbox")
+
+		chatbox:SetPos(150, ScrH() - 500)
+		chatbox:SetSize(650, 350 + 22)
+		chatbox:MakePopup()
+	end)
+
 	--[[
 		Name: Add Chat
 		Category: Chat
@@ -357,6 +379,12 @@ if (CL) then
 		if LocalPlayer() and IsValid(LocalPlayer()) then
 			LocalPlayer():SetChatInfo(true, 1)
 		end
+
+		--if !rain.chat.getchatbox():IsOpen() then
+		--	rain.chat.getchatbox():Open()
+		--end
+
+		--return true
 	end
 
 	--[[
