@@ -1,20 +1,30 @@
 PANEL = {}
 
+tabs = {"ALL", "IC", "OOC", "PM", "HELP", "ADMIN", "DEV"}
+
 function PANEL:Init()
-	self.HTMLPanel = vgui.Create("RD_HTMLPanel", self)
-	--self.HTMLPanel:Dock(FILL)
-	self.HTMLPanel:LoadHTMLComponent("chatbox")
-	self.HTMLPanel:SetPos(0, 22)
-	self.HTMLPanel:SetSize(650, 350)
-	for i = 1, 25 do
-		self.HTMLPanel:RunJavascript('chatbox.AddMessage("johnny guitar", "hello world! '..tostring(i)..'")')
+	self.Organizer = vgui.Create("DPropertySheet", self)
+	self.Organizer:Dock(FILL)
+
+	for _, sheet in pairs(tabs) do
+		self.HTMLPanel = vgui.Create("RD_HTMLPanel", self.Organizer)
+		self.HTMLPanel:LoadHTMLComponent("chatbox")
+		self.HTMLPanel:SetSize(650, 250)
+		for i = 1, 50 do
+			self.HTMLPanel:RunJavascript('chatbox.AddMessage("johnny guitar", "😂")')
+		end
+	
+		self.Organizer:AddSheet(sheet, self.HTMLPanel, "icon16/tick.png")
 	end
+
+	self:SetTitle("")
+	self:ShowCloseButton(false)
 
 	self.chatopen = false
 
 	self.chatinput = vgui.Create("DTextEntry", self)
-	self.chatinput:SetPos(0, 275)
-	self.chatinput:SetSize(650, 24)
+	self.chatinput:SetPos(13, 312)
+	self.chatinput:SetSize(624, 24)
 	self.chatinput:RequestFocus()
 
 	self.chatinput.OnEnter = function()
@@ -22,6 +32,8 @@ function PANEL:Init()
 
 		self.chatinput:SetText("")
 		self.chatinput:RequestFocus()
+
+		self:CloseChat()
 	end
 end
 

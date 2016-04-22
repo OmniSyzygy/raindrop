@@ -345,7 +345,7 @@ if (CL) then
 		chatbox = vgui.Create("RD_Chatbox")
 
 		chatbox:SetPos(150, ScrH() - 500)
-		chatbox:SetSize(650, 350 + 32)
+		chatbox:SetSize(650, 316 + 32)
 		chatbox:MakePopup()
 	end)
 
