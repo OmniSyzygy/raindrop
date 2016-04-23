@@ -65,31 +65,49 @@ function PANEL:Init()
 	local midbar = vgui.Create("DPanel", mid)
 	midbar:SetSize(450, mid:GetTall())
 	midbar:SetPos((mid:GetWide()/2) - (midbar:GetWide()/2))
+	midbar.Paint = function(p, w, h)
+		rain.skin.paintpanel(w, h, p, Color(0, 0, 0, 50))
+	end
 
 	local newchar = vgui.Create("DButton", midbar)
 	newchar:Dock(TOP)
 	newchar:SetTall(72)
 	newchar:SetText("Create Character")
+	newchar.Paint = function(p, w, h)
+		rain.skin.paintbutton(w, h, p, Color(0, 0, 0, 50))
+	end
 
 	local deletechar = vgui.Create("DButton", midbar)
 	deletechar:Dock(TOP)
 	deletechar:SetTall(72)
 	deletechar:SetText("Delete Character")
+	deletechar.Paint = function(p, w, h)
+		rain.skin.paintbutton(w, h, p, Color(0, 0, 0, 50))
+	end
 
 	local loadchar = vgui.Create("DButton", midbar)
 	loadchar:Dock(TOP)
 	loadchar:SetTall(72)
 	loadchar:SetText("Load Character")
+	loadchar.Paint = function(p, w, h)
+		rain.skin.paintbutton(w, h, p, Color(0, 0, 0, 50))
+	end
 
 	local exit = vgui.Create("DButton", midbar)
 	exit:Dock(BOTTOM)
 	exit:SetTall(72)
 	exit:SetText("Exit")
+	exit.Paint = function(p, w, h)
+		rain.skin.paintbutton(w, h, p, Color(0, 0, 0, 50))
+	end
 
 	local setting = vgui.Create("DButton", midbar)
 	setting:Dock(BOTTOM)
 	setting:SetTall(72)
 	setting:SetText("Settings")
+	setting.Paint = function(p, w, h)
+		rain.skin.paintbutton(w, h, p, Color(0, 0, 0, 50))
+	end
 end
 
 function PANEL:Paint()
