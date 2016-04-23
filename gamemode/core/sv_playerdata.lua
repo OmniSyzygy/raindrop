@@ -10,7 +10,9 @@ rain.lastsyncindex = rain.lastsyncindex or {}
 --]]
 
 function rain.pdata.clientinitialspawn(pClient)
-	if !pClient.rain then
+	pClient:LoadData()
+
+	if !pClient.data then
 		local QueryObj = mysql:Select("players")
 		QueryObj:Where("steam_id64", pClient:SteamID64())
 		QueryObj:Callback(function(result, status, lastID)
@@ -36,6 +38,7 @@ function rain.pdata.clientinitialspawn(pClient)
 				InsertObj:Callback(function(result, status, lastID)
 					rain.util.log("inserted "..pClient:Name().." into the database.", "DB")
 					rain.pdata.updateloggeddata(pClient)
+					pClient:LoadData()
 				end)
 				InsertObj:Execute()
 			end

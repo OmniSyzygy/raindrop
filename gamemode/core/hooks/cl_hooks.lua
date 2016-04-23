@@ -173,3 +173,13 @@ function rain:DrawAmmoCounter(nAlpha)
 
 	end
 end
+
+local LocalPlayerValid = false
+
+function rain:Think()
+	if LocalPlayer() and IsValid(LocalPlayer()) and !LocalPlayerValid then
+		LocalPlayerValid = true
+		local ui = vgui.Create("RD_MainMenu")
+		ui:MakePopup()
+	end
+end

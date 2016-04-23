@@ -74,31 +74,50 @@ function PANEL:Init()
 	newchar:Dock(TOP)
 	newchar:SetTall(72)
 	newchar:SetText("Create Character")
+	newchar.DoClick = function()
+		print("go to char create menu")
+	end
 
-	local deletechar = vgui.Create("RD_MenuButton", midbar)
-	deletechar:Dock(TOP)
-	deletechar:SetTall(72)
-	deletechar:SetText("Delete Character")
 
 	local loadchar = vgui.Create("RD_MenuButton", midbar)
 	loadchar:Dock(TOP)
 	loadchar:SetTall(72)
 	loadchar:SetText("Load Character")
+	loadchar.DoClick = function()
+		self:CloseMenu()
+		local ui = vgui.Create("RD_Charselect")
+		ui:MakePopup()
+	end
+
+	local deletechar = vgui.Create("RD_MenuButton", midbar)
+	deletechar:Dock(TOP)
+	deletechar:SetTall(72)
+	deletechar:SetText("Delete Character")
+	deletechar.DoClick = function()
+
+	end
 
 	local exit = vgui.Create("RD_MenuButton", midbar)
 	exit:Dock(BOTTOM)
 	exit:SetTall(72)
 	exit:SetText("Exit")
+	exit.DoClick = function()
+		self:Remove()
+		--RunConsoleCommand("disconnect")
+	end
 
 	local setting = vgui.Create("RD_MenuButton", midbar)
 	setting:Dock(BOTTOM)
 	setting:SetTall(72)
 	setting:SetText("Settings")
-
 end
 
 function PANEL:Paint()
 	DrawBlurRect(0, 0, self:GetWide(), self:GetTall(), 5, 2)
 end
 
-derma.DefineControl("RD_MainMenu", "", PANEL, "DFrame")
+function PANEL:CloseMenu()
+	self:Remove()
+end
+
+derma.DefineControl("RD_MainMenu", "", PANEL, "DPanel")
