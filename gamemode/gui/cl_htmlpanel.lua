@@ -1,4 +1,4 @@
-PANEL = {}
+local PANEL = {}
 
 function PANEL:LoadHTMLComponent(sElement)
 	local sPathToWebFolder = "gamemodes/raindrop/gamemode/gui/html/"..sElement
@@ -8,8 +8,6 @@ function PANEL:LoadHTMLComponent(sElement)
 	local HTML = file.Read(sPathToWebFolder.."/home.html", "GAME") -- path to the HTML file
 
 	self:SetHTML("<head><style media='screen' type='text/css'>"..CSS.."</style>".."<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script><script>"..JS.."</script></head>"..HTML)
-
-	print(JS, CSS, HTML)
 end
 
 derma.DefineControl("RD_HTMLPanel", "", PANEL, "DHTML")
