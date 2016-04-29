@@ -48,6 +48,25 @@ function PANEL:Init()
 		local w, h = midbar:GetSize()
 		rain.skin.paintpanel(w, h, bottom, Color(0,0,0,60))
 	end
+
+	for k, character in pairs(rain.pdata.getcharacters()) do
+		local charbutton = vgui.Create("RD_MenuButton", midbar)
+		charbutton:Dock(TOP)
+		charbutton:SetText(character.charname)
+		charbutton.DoClick = function()
+			print(character.id)
+			rain.character.loadcharacter(character.id)	
+		end
+	end
+
+	local back = vgui.Create("RD_MenuButton", midbar)
+	back:Dock(BOTTOM)
+	back:SetText("Back")
+	back.DoClick = function()
+		self:Remove()
+		local menu = vgui.Create("RD_MainMenu")
+		menu:MakePopup()
+	end
 end
 
 function PANEL:Paint()

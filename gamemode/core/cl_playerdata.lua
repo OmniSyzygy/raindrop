@@ -1,13 +1,13 @@
 rain.pdata = {}
 rain.menudata = rain.menudata or false
-rain.localcharacters = rain.localcharacters or {}
+rain.menucharacters = rain.menucharacters or {}
 
 --[[
 	Retrieves the players characters once they've been loaded from the server
 --]]
 
 function rain.pdata.getcharacters()
-	return rain.localcharacters
+	return rain.menucharacters
 end
 
 --[[
@@ -28,7 +28,7 @@ end
 
 local function receivemenudata(nLen)
 	local data = rain.net.ReadTable()
-	rain.localcharacters = data
+	rain.menucharacters = data
 
 	PrintTable(data)
 

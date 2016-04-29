@@ -480,13 +480,23 @@ if (CL) then
 
 end
 
+if (CL) then
+	function rain.character.loadcharacter(charid)
+		net.Start("rain.loadcharacter")
+		rain.net.WriteLongInt(charid)
+		net.SendToServer()
+	end
+end
 
-if (SERVER) then
 
-	util.AddNetworkString("rain.requestchardata")
+if (SV) then
 
-	net.Receive("rain.requestchardata", function()
-		-- add a request system for data here
+	util.AddNetworkString("rain.loadcharacter")
+	net.Receive("rain.loadcharacter", function(nLen, pClient)
+		local charid = rain.net.ReadLongInt()
+		if charid then
+			pClient:LoadCharacter(charid)
+		end
 	end)
 
 	--[[
@@ -590,12 +600,6 @@ if (SERVER) then
 		end
 	end
 
-	util.AddNetworkString("RequestLoadCharacter")
-	net.Receive("RequestLoadCharacter", function(nLen, pClient)
-		local charid = rain.net.ReadShortUInt()
-		pClient:LoadCharacter(charid)
-	end)
-
 	--[[
 		Name: Load Character
 		Desc: Loads a character, then sets the clients current character to the new character.
@@ -631,6 +635,8 @@ if (SERVER) then
 							self.character:SetNameAndID(tResult.charname, nCharID)
 							self.character:SetOwningClient(self)
 							self.character:Sync()
+
+							self:Spawn()
 						end
 					end)
 					LoadCharObj:Execute()
