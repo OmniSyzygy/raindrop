@@ -168,8 +168,6 @@ local rainclient = FindMetaTable("Player")
 
 function rainclient:AddCharacter(nCharID)
 	table.insert(self.data.characters, nCharID)
-	print(self.data.characters)
-	PrintTable(self.data.characters)
 	self:SaveData()
 	self:SyncDataByKey("characters")
 end
@@ -183,6 +181,41 @@ function rainclient:RemoveCharacter(nCharID)
 	table.RemoveByValue(self.data.characters, nCharID)
 	self:SaveData()
 	self:SyncDataByKey("characters")
+end
+
+--[[
+	Name: Get Characters
+	Desc: Gets all owned character ID's, returns a blank table if nothing useful is found in the character data.
+--]]
+
+function rainclient:GetCharacters()
+	if self.data then
+		return self.data.characters or {}
+	end
+
+	return {}
+end
+
+--[[
+	Name: Load Main Menu Data
+	Desc: Loads all of the players characters to rainclient.loaddata then calls rainclient:OnMenuDataLoaded()
+--]]
+
+function rainclient:LoadMainMenuData()
+	self.menudata = false
+	self:LoadCharactersForSelection()
+end
+
+--[[
+	Name: On Menu Data Loaded
+	Desc: Called when a player has all of his characters loaded into rainclient.loaddata
+--]]
+
+util.AddNetworkString("SyncMenuData")
+function rainclient:OnMenuDataLoaded()
+	net.Start("SyncMenuData")
+	rain.net.WriteTable(self.loaddata)
+	net.Send(self)
 end
 
 --[[
@@ -242,6 +275,8 @@ function rainclient:LoadData()
 			self.data.client_data = pon.decode(tResult.client_data)
 			self.data.last_ip = tResult.last_ip
 			self.data.steam_name_history = pon.decode(tResult.steam_name_history)
+
+			self:LoadMainMenuData()
 		end
 	end)
 	LoadObj:Execute()

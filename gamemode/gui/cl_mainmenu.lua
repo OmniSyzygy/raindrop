@@ -82,11 +82,18 @@ function PANEL:Init()
 	local loadchar = vgui.Create("RD_MenuButton", midbar)
 	loadchar:Dock(TOP)
 	loadchar:SetTall(72)
-	loadchar:SetText("Load Character")
+	loadchar:SetText("")
 	loadchar.DoClick = function()
 		self:CloseMenu()
 		local ui = vgui.Create("RD_Charselect")
 		ui:MakePopup()
+	end
+	loadchar.Think = function()
+		if !rain.pdata.canloadcharacters() then
+			loadchar:SetText("Loading...")
+		else
+			loadchar:SetText("Load Character")
+		end
 	end
 
 	local deletechar = vgui.Create("RD_MenuButton", midbar)

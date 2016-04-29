@@ -40,6 +40,14 @@ function PANEL:Init()
 	gamemodetitle:SetContentAlignment(5)
 	gamemodetitle:SetText(text)
 	gamemodetitle:SetFont("TitleFont")
+
+	local midbar = vgui.Create("DPanel", mid)
+	midbar:SetSize(450, mid:GetTall())
+	midbar:SetPos((mid:GetWide()/2) - (midbar:GetWide()/2))
+	midbar.Paint = function()
+		local w, h = midbar:GetSize()
+		rain.skin.paintpanel(w, h, bottom, Color(0,0,0,60))
+	end
 end
 
 function PANEL:Paint()

@@ -7,12 +7,14 @@ rain.state = {}
 
 -- enums for state
 
-STATE_LOADING = 0
-STATE_MENU = 1
-STATE_ALIVE = 2
-STATE_DEAD = 3
-STATE_KO = 4
-STATE_AFK = 5
+STATE_LOADING = 0 --  this is before the player has any data loaded
+STATE_MENU = 1 -- main menu state
+STATE_ALIVE = 2 -- when the player is alive and in the world
+STATE_ALIVE_OOC = 3 -- when the player is alive but OOC IE in observer
+STATE_OBSERVER = 4 -- when a player is in observer
+STATE_DEAD = 5 -- when a player is data
+STATE_KO = 6 -- when a player is knocked out
+STATE_AFK = 7 -- when a player is AFK
 
 if (SV) then
 	--[[

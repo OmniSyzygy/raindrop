@@ -555,6 +555,48 @@ if (SERVER) then
 	local rainclient = FindMetaTable("Player")
 
 	--[[
+		Name: Load Characters For Selection
+		Category: Character
+		Desc: Loads all available characters and sends it to the client. 
+	--]]
+
+	function rainclient:LoadCharactersForSelection()
+		local chars = self:GetCharacters()
+
+		PrintTable(chars)
+
+		for k, v in pairs(chars) do
+			local LoadObj = mysql:Select("characters")
+			LoadObj:Where("id", tostring(v))
+			LoadObj:Callback(function(wResult, sStatus, nLastID)
+				PrintTable(wResult)
+				if (type(wResult) == "table") and (#wResult > 0) then
+					local tResult = wResult[1]
+					tResult.data_character = pon.decode(tResult.data_character or "{}")
+					tResult.data_appearance = pon.decode(tResult.data_appearance or "{}")
+					tResult.data_adminonly = pon.decode(tResult.data_adminonly or "{}")
+					tResult.data_inventory = pon.decode(tResult.data_inventory or "{}")
+
+					self.loaddata = self.loaddata or {}
+					table.insert(self.loaddata, tResult)
+
+					if k == #chars then
+						self.menudata = true
+						self:OnMenuDataLoaded()
+					end
+				end
+			end)
+			LoadObj:Execute()
+		end
+	end
+
+	util.AddNetworkString("RequestLoadCharacter")
+	net.Receive("RequestLoadCharacter", function(nLen, pClient)
+		local charid = rain.net.ReadShortUInt()
+		pClient:LoadCharacter(charid)
+	end)
+
+	--[[
 		Name: Load Character
 		Desc: Loads a character, then sets the clients current character to the new character.
 	--]]
@@ -587,7 +629,6 @@ if (SERVER) then
 							setmetatable(self.character, character_meta)
 
 							self.character:SetNameAndID(tResult.charname, nCharID)
-
 							self.character:SetOwningClient(self)
 							self.character:Sync()
 						end
