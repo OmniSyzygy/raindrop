@@ -55,7 +55,8 @@ function PANEL:Init()
 		charbutton:SetText(character.charname)
 		charbutton.DoClick = function()
 			print(character.id)
-			rain.character.loadcharacter(character.id)	
+			rain.character.loadcharacter(character.id)
+			self:Remove()
 		end
 	end
 

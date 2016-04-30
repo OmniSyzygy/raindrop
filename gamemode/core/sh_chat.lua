@@ -341,13 +341,51 @@ if (CL) then
 	--	return chatbox
 	--end
 
-	concommand.Add("TestChat", function()
-		chatbox = vgui.Create("RD_Chatbox")
+	function rain.chat.enableinput()
+		if LocalPlayer() and IsValid(LocalPlayer()) then
+			LocalPlayer():SetChatInfo(true, 1)
+		end
 
-		chatbox:SetPos(150, ScrH() - 500)
-		chatbox:SetSize(650, 316 + 32)
-		chatbox:MakePopup()
-	end)
+		local chatcontainer = vgui.Create("EditablePanel")
+		chatcontainer:SetPos(10, ScrH() - 34)
+		chatcontainer:SetSize(650, 24)
+		
+		local chatinput = vgui.Create("DTextEntry", chatcontainer)
+		chatinput:Dock(FILL)
+		
+		chatinput.OnEnter = function()
+			if chatinput:GetValue() != "" then
+				chatbox:AddChat(LocalPlayer():GetVisibleRPName(), chatinput:GetValue())
+			end
+
+			hook.Run("FinishChat")
+			chatinput:Remove()
+			chatcontainer:Remove()
+			gui.EnableScreenClicker(false)
+		end
+		
+		chatcontainer:MakePopup()
+		chatinput:RequestFocus()
+	end
+
+	--[[
+		Name: Client Player Spawn
+		Category: Chat
+		Desc: Called when the player spawns and sets up the chatbox. This is a recursion protected function.
+	--]]
+
+	chatinitialized = chatinitialized or false
+	chatbox = chatbox or nil
+
+	local function clientspawn()
+		if !chatinitialized then
+			chatinitialized = true
+			chatbox = vgui.Create("RD_Chatbox")
+			chatbox:SetPos(10, ScrH() - (288 + 32 + 4))
+			chatbox:SetSize(650, 286)
+		end
+	end
+	net.Receive("rain.clientspawn", clientspawn)
 
 	--[[
 		Name: Add Chat
@@ -376,15 +414,20 @@ if (CL) then
 	--]]
 
 	function rain:StartChat()
-		if LocalPlayer() and IsValid(LocalPlayer()) then
-			LocalPlayer():SetChatInfo(true, 1)
+		return true
+	end
+
+
+	function rain:PlayerBindPress(pClient, sBind, bPressed)
+		if bPressed and string.find(string.lower(sBind), "messagemode") then
+			rain.chat.enableinput()
+
+			return true
 		end
+	end
 
-		--if !rain.chat.getchatbox():IsOpen() then
-		--	rain.chat.getchatbox():Open()
-		--end
-
-		--return true
+	function rain:OnPlayerChat()
+		return true
 	end
 
 	--[[

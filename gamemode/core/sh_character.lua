@@ -496,7 +496,7 @@ if (SV) then
 		local charid = rain.net.ReadLongInt()
 		if charid then
 			pClient:LoadCharacter(charid)
-		end
+		end 
 	end)
 
 	--[[

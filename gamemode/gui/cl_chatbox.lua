@@ -1,56 +1,38 @@
 PANEL = {}
-
-tabs = {"ALL", "IC", "OOC", "CSC", "PM", "HELP", "ADMIN", "DEV"}
-
 function PANEL:Init()
+	self.tabs = {"ALL", "IC", "OOC", "PM", "HELP", "ADMIN", "DEV"}
+
 	self.Organizer = vgui.Create("DPropertySheet", self)
 	self.Organizer:Dock(FILL)
-
-	for _, sheet in pairs(tabs) do
-		self.HTMLPanel = vgui.Create("RD_HTMLPanel", self.Organizer)
-		self.HTMLPanel:LoadHTMLComponent("chatbox")
-		self.HTMLPanel:SetSize(650, 250)
-		for i = 1, 50 do
-			self.HTMLPanel:RunJavascript('chatbox.AddMessage("johnny guitar", "😂")')
-		end
+	self.chattabs = {}
+	for i, sheet in pairs(self.tabs) do
+		self.chattabs[i] = vgui.Create("RD_HTMLPanel", self.Organizer)
+		self.chattabs[i]:LoadHTMLComponent("chatbox")
+		self.chattabs[i]:SetSize(650, 250)
 	
-		self.Organizer:AddSheet(sheet, self.HTMLPanel, "icon16/tick.png")
+		self.Organizer:AddSheet(self.tabs[i], self.chattabs[i], "icon16/tick.png")
+	end
+end
+
+function PANEL:GetAllTabs()
+	local ret = {}
+	for k, v in pairs(self.tabs) do
+		table.insert(ret, k)
 	end
 
-	self:SetTitle("")
-	self:ShowCloseButton(false)
+	return ret
+end
 
-	self.chatopen = false
+function PANEL:AddChat(sSender, sNewChat, tTabs)
+	local tTabs = tTabs or self:GetAllTabs()
 
-	self.chatinput = vgui.Create("DTextEntry", self)
-	self.chatinput:SetPos(13, 312)
-	self.chatinput:SetSize(624, 24)
-	self.chatinput:RequestFocus()
-
-	self.chatinput.OnEnter = function()
-		self.HTMLPanel:RunJavascript('chatbox.AddMessage("johnny guitar", "'..string.JavascriptSafe(tostring(self.chatinput:GetValue()))..'")')
-
-		self.chatinput:SetText("")
-		self.chatinput:RequestFocus()
-
-		self:CloseChat()
-	end
+	for k, v in pairs(tTabs) do
+		self.chattabs[v]:RunJavascript("chatbox.AddMessage('"..sSender.."', '"..sNewChat.."')")
+	end	
 end
 
 function PANEL:Paint()
 
 end
 
-function PANEL:OpenChat()
-	self.chatopen = true
-end
-
-function PANEL:CloseChat()
-	self.chatopen = false
-end
-
-function PANEL:IsChatOpen()
-	return self.chatopen 
-end
-
-derma.DefineControl("RD_Chatbox", "", PANEL, "DFrame")
+derma.DefineControl("RD_Chatbox", "", PANEL, "DPanel")

@@ -262,6 +262,15 @@ function rain.net.ReadWildcard()
 end
 
 if (SV) then
+	util.AddNetworkString("rain.clientspawn")
+
+	function rain.net.clientplayerspawn(pClient)
+		net.Start("rain.clientspawn")
+		net.Send(pClient)
+	end
+end
+
+if (SV) then
 	util.AddNetworkString("rain.repvar.setup")
 	util.AddNetworkString("rain.repvar.update")
 
