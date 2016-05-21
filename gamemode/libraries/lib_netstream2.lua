@@ -12,12 +12,6 @@
 
 local type, error, pcall, pairs, _player = type, error, pcall, pairs, player;
 
-if (!pon) then
-	include("sh_pon.lua");
-end;
-
-AddCSLuaFile();
-
 netstream = netstream or {};
 netstream.stored = netstream.stored or {};
 

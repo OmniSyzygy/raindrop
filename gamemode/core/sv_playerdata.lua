@@ -204,6 +204,7 @@ end
 function rainclient:LoadMainMenuData()
 	self.menudata = false
 	self:LoadCharactersForSelection()
+//	self:OnMenuDataLoaded()
 end
 
 --[[
@@ -214,7 +215,7 @@ end
 util.AddNetworkString("SyncMenuData")
 function rainclient:OnMenuDataLoaded()
 	net.Start("SyncMenuData")
-	rain.net.WriteTable(self.loaddata)
+		rain.net.WriteTable(self.loaddata)
 	net.Send(self)
 end
 

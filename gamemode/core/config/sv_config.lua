@@ -6,5 +6,3 @@ rain.cfg.db.username = "root"		-- username for the DB
 rain.cfg.db.password = ""			-- password for the DB
 rain.cfg.db.database = "rain"		-- the name of the DB within the mysql server
 rain.cfg.db.port = 3306				-- the port of the mysql server, default is 3306
-
-rain.cfg.db.module = "tmysql4" 		--sqlite, mysqloo, tmysql4. !sqlite is not fully supported but may work!
