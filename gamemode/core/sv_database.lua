@@ -1,7 +1,7 @@
 rain.db = {}
 
 function rain.db.connect(sAddress, sUsername, sPassword, sDatabase, nPort)
-	mysql:SetModule(rain.cfg.db.module)
+	mysql:SetModule("tmysql4")
 	mysql:Connect(sAddress, sUsername, sPassword, sDatabase, nPort)
 end
 

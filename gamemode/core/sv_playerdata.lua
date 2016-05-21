@@ -204,7 +204,7 @@ end
 function rainclient:LoadMainMenuData()
 	self.menudata = false
 	self:LoadCharactersForSelection()
-	self:OnMenuDataLoaded()
+//	self:OnMenuDataLoaded()
 end
 
 --[[
@@ -212,12 +212,11 @@ end
 	Desc: Called when a player has all of his characters loaded into rainclient.loaddata
 --]]
 
---util.AddNetworkString("SyncMenuData")
+util.AddNetworkString("SyncMenuData")
 function rainclient:OnMenuDataLoaded()
---	net.Start("SyncMenuData")
---	rain.net.WriteTable(self.loaddata)
---	net.Send(self)
-	netstream.Start(self, "SyncMenuData", self.loaddata);
+	net.Start("SyncMenuData")
+		rain.net.WriteTable(self.loaddata)
+	net.Send(self)
 end
 
 --[[
