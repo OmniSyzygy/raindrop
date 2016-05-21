@@ -78,39 +78,42 @@ function PANEL:Init()
 		print("go to char create menu")
 	end
 
+	local chars = rain.pdata.getcharacters();
 
-	local loadchar = vgui.Create("RD_MenuButton", midbar)
-	loadchar:Dock(TOP)
-	loadchar:SetTall(72)
-	loadchar:SetText("")
-	loadchar.DoClick = function()
-		self:CloseMenu()
-		local ui = vgui.Create("RD_Charselect")
-		ui:MakePopup()
-	end
-	loadchar.Think = function()
-		if !rain.pdata.canloadcharacters() then
-			loadchar:SetText("Loading...")
-		else
-			loadchar:SetText("Load Character")
+	if (chars and #chars > 0) then
+		local loadchar = vgui.Create("RD_MenuButton", midbar)
+		loadchar:Dock(TOP)
+		loadchar:SetTall(72)
+		loadchar:SetText("")
+		loadchar.DoClick = function()
+			self:CloseMenu()
+
+			local ui = vgui.Create("RD_Charselect")
+			ui:MakePopup()
 		end
-	end
+		loadchar.Think = function()
+			if !rain.pdata.canloadcharacters() then
+				loadchar:SetText("Loading...")
+			elseif (chars and #chars > 0) then
+				loadchar:SetText("Load Character")
+			end
+		end
 
-	local deletechar = vgui.Create("RD_MenuButton", midbar)
-	deletechar:Dock(TOP)
-	deletechar:SetTall(72)
-	deletechar:SetText("Delete Character")
-	deletechar.DoClick = function()
-
-	end
+		local deletechar = vgui.Create("RD_MenuButton", midbar)
+		deletechar:Dock(TOP)
+		deletechar:SetTall(72)
+		deletechar:SetText("Delete Character")
+		deletechar.DoClick = function()
+		end
+	end;
 
 	local exit = vgui.Create("RD_MenuButton", midbar)
 	exit:Dock(BOTTOM)
 	exit:SetTall(72)
 	exit:SetText("Exit")
 	exit.DoClick = function()
-		self:Remove()
-		--RunConsoleCommand("disconnect")
+	//	self:Remove()
+		RunConsoleCommand("disconnect")
 	end
 
 	local setting = vgui.Create("RD_MenuButton", midbar)

@@ -174,6 +174,7 @@ function rain:DrawAmmoCounter(nAlpha)
 	end
 end
 
+--[[
 local LocalPlayerValid = false
 
 function rain:Think()
@@ -183,3 +184,16 @@ function rain:Think()
 		ui:MakePopup()
 	end
 end
+--]]
+
+function rain:InitPostEntity()
+	rain:OnClientInitialized();
+end;
+
+function rain:OnClientInitialized()
+//	rain.chat.clientspawn()
+
+	local ui = vgui.Create("RD_MainMenu");
+
+	ui:MakePopup();
+end;

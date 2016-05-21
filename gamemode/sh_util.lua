@@ -32,30 +32,21 @@ function rain.util.rawinclude(sFilePath)
 end
 
 function rain.util.include(sFilePath)
-	local explode = string.Explode("/", sFilePath)
-	local filename = explode[#explode]
-	explode[#explode] = nil
-	local filepath = string.Implode("/", explode)
-	filepath = filepath.."/"..filename
+	if (!SV and string.find(sFilePath, "sv_")) then
+		return;
+	end;
 
-	if string.StartWith(filename, "sv_") then
-		if SV then
-			rain.util.rawinclude(filepath)
-		end
-	elseif string.StartWith(filename, "sh_") or string.StartWith(filename, "lib_") or string.StartWith(filename, "ut_") then
-		if SV then
-			rain.util.rawinclude(filepath)
-			AddCSLuaFile(filepath)
-		elseif CL then
-			rain.util.rawinclude(filepath)
-		end
-	elseif string.StartWith(filename, "cl_") then
-		if SV then
-			AddCSLuaFile(filepath)
-		elseif CL then
-			rain.util.rawinclude(filepath)
-		end
-	end
+	if (SV and (string.find(sFilePath, "sh_") or string.find(sFilePath, "lib_") or string.find(sFilePath, "ut_"))) then
+		AddCSLuaFile(sFilePath);
+	end;
+
+	if (SV and string.find(sFilePath, "cl_")) then
+		AddCSLuaFile(sFilePath);
+
+		return;
+	end;
+
+	rain.util.rawinclude(sFilePath);
 end
 
 function Sound(sPathToSound)
@@ -68,7 +59,7 @@ function rain.util.loadlibraries()
 	rain.util.include("libraries/ut_loadorder.lua")
 	
 	for _, lib in pairs(rain.util.loadorder) do
-		rain.util.include("libraries/"..lib..".lua")
+		rain.util.include("raindrop/gamemode/libraries/"..lib..".lua")
 	end
 end
 
@@ -78,7 +69,7 @@ end
 --]]
 
 function rain.util.dir(sFolderPath)
-	return "gamemodes/raindrop/gamemode/"..sFolderPath, "GAME"
+	return "raindrop/gamemode/"..sFolderPath, "LUA"
 end
 
 --[[
@@ -88,14 +79,8 @@ end
 
 function rain.util.loadfolder(sFolderPath)
 	local sFolderPath = sFolderPath.."/"
-
 	local a, b = rain.util.dir(sFolderPath)
-
-	if !file.Exists(a, b) then
-		return
-	end
-
-	local files = file.Find(a.."*.lua", b) 
+	local files = file.Find(a.."*.lua", b)
 
 	for _, file in pairs(files) do
 		rain.util.include(sFolderPath..file)
@@ -109,6 +94,7 @@ end
 
 function rain.util.loadraindrop()
 	rain.util.include("ut_loadorder.lua")
+
 	for _, folder in pairs(rain.util.loadorder) do
 		rain.util.loadfolder(folder)
 	end

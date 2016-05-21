@@ -377,7 +377,7 @@ if (CL) then
 	chatinitialized = chatinitialized or false
 	chatbox = chatbox or nil
 
-	local function clientspawn()
+	function rain.chat.clientspawn()
 		if !chatinitialized then
 			chatinitialized = true
 			chatbox = vgui.Create("RD_Chatbox")
@@ -385,7 +385,6 @@ if (CL) then
 			chatbox:SetSize(650, 286)
 		end
 	end
-	net.Receive("rain.clientspawn", clientspawn)
 
 	--[[
 		Name: Add Chat

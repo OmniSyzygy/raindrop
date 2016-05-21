@@ -26,13 +26,19 @@ function rain.pdata.canloadcharacters()
 	return rain.menudata
 end
 
-local function receivemenudata(nLen)
-	local data = rain.net.ReadTable()
+--[[
+local function receivemenudata(data)
+--	local data = rain.net.ReadTable()
 	rain.menucharacters = data
 
 	PrintTable(data)
 
 	rain.pdata.onreceivecharacters()
 end
+--]]
 
-net.Receive("SyncMenuData", receivemenudata)
+netstream.Hook("SyncMenuData", function(data)
+	rain.menucharacters = data
+
+	rain.pdata.onreceivecharacters()
+end);
