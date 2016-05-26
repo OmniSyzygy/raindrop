@@ -9,21 +9,25 @@ function PANEL:Init()
 
 	topbar:Dock(TOP)
 	topbar:SetSize(ScrW(), ScrH()*0.2)
-	topbar.Paint = function()
-		local w, h = topbar:GetSize()
-		rain.skin.paintpanel(w, h, topbar, Color(0, 0, 0, 250))
+--	topbar.Paint = function(w, h)
+	function topbar:Paint(w, h)
+--		local w, h = topbar:GetSize()
+	--	rain.skin.paintpanel(w, h, topbar, Color(0, 0, 0, 250))
+		rain.skin.paintpanel(w, h, self, Color(0, 0, 0, 250))
 	end
 	mid:Dock(TOP)
 	mid:SetSize(ScrW(), ScrH()*0.7)
-	mid.Paint = function()
-		local w, h = mid:GetSize()
-		rain.skin.paintpanel(w, h, mid, Color(0, 0, 0, 220))
+--	mid.Paint = function(w, h)
+	function mid:Paint(w, h)
+--		local w, h = mid:GetSize()
+		rain.skin.paintpanel(w, h, self, Color(0, 0, 0, 220))
 	end
 	bottom:Dock(TOP)
 	bottom:SetSize(ScrW(), ScrH()*0.1)
-	bottom.Paint = function()
-		local w, h = bottom:GetSize()
-		rain.skin.paintpanel(w, h, bottom, Color(0, 0, 0, 250))
+--	bottom.Paint = function(w, h)
+	function bottom:Paint(w, h)
+	--	local w, h = bottom:GetSize()
+		rain.skin.paintpanel(w, h, self, Color(0, 0, 0, 250))
 	end
 
 	surface.CreateFont("TitleFont", {
@@ -75,7 +79,10 @@ function PANEL:Init()
 	newchar:SetTall(72)
 	newchar:SetText("Create Character")
 	newchar.DoClick = function()
-		print("go to char create menu")
+		self:CloseMenu();
+
+		rain.MainMenuUI = vgui.Create("RD_CharCreation");
+		rain.MainMenuUI:MakePopup();
 	end
 
 	local chars = rain.pdata.getcharacters();
@@ -122,8 +129,8 @@ function PANEL:Init()
 	setting:SetText("Settings")
 end
 
-function PANEL:Paint()
-	DrawBlurRect(0, 0, self:GetWide(), self:GetTall(), 5, 2)
+function PANEL:Paint(w, h)
+	DrawBlurRect(0, 0, w, h, 5, 2)
 end
 
 function PANEL:CloseMenu()
