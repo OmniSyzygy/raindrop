@@ -85,9 +85,8 @@ function PANEL:Init()
 		rain.MainMenuUI:MakePopup();
 	end
 
-	local chars = rain.pdata.getcharacters();
-
-	if (chars and #chars > 0) then
+--	if (chars and #chars > 0) then
+		--]]
 		local loadchar = vgui.Create("RD_MenuButton", midbar)
 		loadchar:Dock(TOP)
 		loadchar:SetTall(72)
@@ -101,7 +100,8 @@ function PANEL:Init()
 		loadchar.Think = function()
 			if !rain.pdata.canloadcharacters() then
 				loadchar:SetText("Loading...")
-			elseif (chars and #chars > 0) then
+	--		elseif (chars and #chars > 0) then
+			else
 				loadchar:SetText("Load Character")
 			end
 		end
@@ -111,8 +111,12 @@ function PANEL:Init()
 		deletechar:SetTall(72)
 		deletechar:SetText("Delete Character")
 		deletechar.DoClick = function()
+			self:CloseMenu();
+
+			local ui = vgui.Create("RD_CharDelete");
+			ui:MakePopup();
 		end
-	end;
+--	end;
 
 	local exit = vgui.Create("RD_MenuButton", midbar)
 	exit:Dock(BOTTOM)
