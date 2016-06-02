@@ -7,7 +7,7 @@ function rain:PlayerSpawn(pClient)
 	rain.flag.playerspawn(pClient, pClient.character)
 	rain.attributes.playerspawn(pClient)
 	rain.traits.playerspawn(pClient, pClient:GetCharacter())
-//	rain.net.clientplayerspawn(pClient)
+	rain.character.playerspawn(pClient, pClient:GetCharacter())
 end
 
 function rain:PostPlayerDeath(pClient)

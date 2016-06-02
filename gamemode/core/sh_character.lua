@@ -246,6 +246,13 @@ if (SV) then
 		end
 	end
 
+	util.AddNetworkString("rain.charcreate");
+
+	net.Receive("rain.charcreate", function(len, ply)
+		local charData = rain.net.ReadTable();
+
+		rain.character.create(ply, charData.data, charData.appearance);
+	end);
 end
 
 --[[
@@ -573,6 +580,9 @@ if (SV) then
 		InsertObj:Execute()
 	end
 
+	function rain.character.remove(pOwningClient, nCharacterID)
+	end;
+
 	--[[
 		Name: Sync
 		Category: Character
@@ -592,6 +602,13 @@ if (SV) then
 	function rain.character.syncindex()
 		-- this will be written once I figure out some networking backend stuff
 	end
+
+	function rain.character.playerspawn(pClient, tCharacter)
+		local appearTable = tCharacter.data_appearance;
+
+		pClient:SetModel(appearTable.model);
+		pClient:SetSkin(appearTable.skin);
+	end;
 
 	local rainclient = FindMetaTable("Player")
 

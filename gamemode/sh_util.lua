@@ -5,6 +5,20 @@ SV = SERVER
 
 rain.util = {}
 
+function COSerp(fraction, origin, target)
+	local fraction2 = (1 - math.cos(fraction * math.pi)) / 2;
+
+	return origin * (1 - fraction2) + (target * fraction2);
+end;
+
+function COSerpVector(fraction, origin, target)
+	local x = COSerp(fraction, origin.x, target.x);
+	local y = COSerp(fraction, origin.y, target.y);
+	local z = COSerp(fraction, origin.z, target.z);
+
+	return Vector(x, y, z);
+end;
+
 function rain.util.log(sText, sTag)
 
 	if !sTag then
@@ -28,7 +42,10 @@ end
 
 function rain.util.rawinclude(sFilePath)
 	include(sFilePath)
-	rain.util.log(sFilePath, "loaded file")
+
+	if (rain.dev) then
+		rain.util.log(sFilePath, "loaded file");
+	end;
 end
 
 function rain.util.include(sFilePath)

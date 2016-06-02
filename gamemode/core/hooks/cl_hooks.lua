@@ -112,6 +112,45 @@ function rain:HUDPaint()
 	end
 end
 
+--[[
+	Quick little code to animate the cursor until an animated texture can be made.
+--]]
+local cursorMats = {};
+local curMat = 1;
+
+for i = 1, 8 do
+	cursorMats[i] = Material("stalker/animcursor/cursor_0"..i..".png");
+end;
+
+timer.Create("AnimCursor", 0.05, 0, function()
+	curMat = curMat + 1
+
+	if (curMat == 9) then
+		curMat = 1;
+	end;
+end);
+
+--[[ 
+	Draw the STALKER cursor. This NEEDS to be after everything else, so the
+	cursor will draw over other elements and not be drawn under them.
+--]]
+function rain:DrawOverlay()
+	if (vgui.CursorVisible()) then
+		local hoverPanel = vgui.GetHoveredPanel();
+
+		if (hoverPanel) then
+			hoverPanel:SetCursor("blank");
+		end;
+
+		local x, y = input.GetCursorPos();
+		local w, h = 64, 64;
+
+		surface.SetDrawColor(255, 255, 255, 255);
+		surface.SetMaterial(cursorMats[curMat]);
+		surface.DrawTexturedRect(x, y, w, h);
+	end;
+end;
+
 local NextFlash = CurTime()
 local FlashDelay = 0.3
 local CurrentlyFlashed = false
@@ -193,7 +232,7 @@ end;
 function rain:OnClientInitialized()
 //	rain.chat.clientspawn()
 
-	local ui = vgui.Create("RD_MainMenu");
+	rain.MainMenuUI = vgui.Create("RD_MainMenu");
 
-	ui:MakePopup();
+	rain.MainMenuUI:MakePopup();
 end;
