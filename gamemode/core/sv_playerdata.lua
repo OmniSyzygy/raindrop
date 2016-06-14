@@ -198,13 +198,12 @@ end
 
 --[[
 	Name: Load Main Menu Data
-	Desc: Loads all of the players characters to rainclient.loaddata then calls rainclient:OnMenuDataLoaded()
+	Desc: Loads all of the players characters to rainclient.loaddata.
 --]]
 
 function rainclient:LoadMainMenuData()
 	self.menudata = false
 	self:LoadCharactersForSelection()
-//	self:OnMenuDataLoaded()
 end
 
 --[[

@@ -27,10 +27,8 @@ function rain.pdata.canloadcharacters()
 end
 
 net.Receive("SyncMenuData", function(nLen)
-	local data = rain.net.ReadTable()
-	rain.menucharacters = data
+	local data = rain.net.ReadTable();
 
-	PrintTable(data)
-
-	rain.pdata.onreceivecharacters()
+	rain.menucharacters = data;
+	rain.pdata.onreceivecharacters();
 end);

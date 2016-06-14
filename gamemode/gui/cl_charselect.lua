@@ -54,9 +54,10 @@ function PANEL:Init()
 		charbutton:Dock(TOP)
 		charbutton:SetText(character.charname)
 		charbutton.DoClick = function()
-			print(character.id)
-			rain.character.loadcharacter(character.id)
-			self:Remove()
+			rain.character.loadcharacter(character.id);
+			rain.sound:StopMenuMusic();
+
+			self:Remove();
 		end
 	end
 
@@ -64,9 +65,10 @@ function PANEL:Init()
 	back:Dock(BOTTOM)
 	back:SetText("Back")
 	back.DoClick = function()
-		self:Remove()
-		local menu = vgui.Create("RD_MainMenu")
-		menu:MakePopup()
+		self:Remove();
+
+		local menu = vgui.Create("RD_MainMenu");
+		menu:MakePopup();
 	end
 end
 
