@@ -1,3 +1,9 @@
+surface.CreateFont("RD.CategoryButtonFont", {
+	font = "Constantia",
+	size = 25,
+	weight = 100
+})
+
 local VIEW_FULL = 0;
 local VIEW_FACE = 1;
 local VIEW_WEAPON = 2;
@@ -59,18 +65,6 @@ for k, v in pairs(files) do
 		table.insert(availableModels, "models/cakez/rxstalker/stalker_neutral/"..v);
 	end;
 end;
-
---[[
-for i = 1, 18 do
-	local number = i;
-
-	if (number < 10) then
-		number = "0"..number;
-	end;
-
-	table.insert(availableModels, "models/tnb/citizens/male_"..number..".mdl");
-end;
---]]
 
 local PANEL = {};
 
@@ -213,12 +207,10 @@ end;
 	Local variables needed for lerp.
 --]]
 local posLerpStart;
-local posLerpProgress;
 local posLerpTarget;
 local posLerpOrigin;
 
 local lookLerpStart;
-local lookLerpProgress;
 local lookLerpTarget;
 local lookLerpOrigin;
 
@@ -227,14 +219,12 @@ local lerpDuration = 0.5;
 
 function PANEL:LerpSetCamPos(vPos)
 	posLerpStart = CurTime();
-	posLerpProgress = 0;
 	posLerpTarget = vPos;
 	posLerpOrigin = self:GetCamPos();
 end;
 
 function PANEL:LerpSetLookAt(vPos)
 	lookLerpStart = CurTime();
-	lookLerpProgress = 0;
 	lookLerpTarget = vPos;
 	lookLerpOrigin = self:GetLookAt();
 end;
@@ -534,6 +524,7 @@ function PANEL:RefreshCategories()
 			button:SetPos(x, self:GetTall() * 0.05);
 			button:SetText(v.name);
 			button:SetTextColor(lightGray);
+			button:SetFont("RD.CategoryButtonFont");
 
 			function button:Paint(w, h)
 				if (parent.activeMenu and parent.activeMenu:GetName() == v.menu) then
@@ -1083,13 +1074,13 @@ function PANEL:Init()
 
 	self.nameLabel = vgui.Create("DLabel", self);
 	self.nameLabel:SetPos(self.nameBack.x, nameY - self:GetTall() * 0.07);
-	self.nameLabel:SetFont("RD.MenuButtonFont");
+	self.nameLabel:SetFont("RD.CategoryButtonFont");
 	self.nameLabel:SetText("Name:");
 
 	self.nameEntry = vgui.Create("RD_TextEntry", self);
 	self.nameEntry:SetSize(self:GetWide() * 0.8, self:GetTall() * 0.125);
 	self.nameEntry:SetPos(self:GetWide() * 0.5 - self.nameEntry:GetWide() * 0.5, nameY);
-	self.nameEntry:SetFont("RD.MenuButtonFont");
+	self.nameEntry:SetFont("RD.CategoryButtonFont");
 	self.nameEntry:SetTextColor(lightGray);
 	self.nameEntry:SetDrawBackground(false);
 	self.nameEntry:SetUpdateOnType(true);
@@ -1207,6 +1198,7 @@ function PANEL:Init()
 		button:SetPos(self:GetWide() * 0.01 + offset, self:GetTall() * 0.5 - button:GetTall() * 0.5);
 		button:SetText(v.name);
 		button:SetTextColor(lightGray);
+		button:SetFont("RD.CategoryButtonFont");
 
 		function button:Paint(w, h)
 			if (parent.activeMenu and parent.activeMenu:GetName() == v.menu) then

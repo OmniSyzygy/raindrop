@@ -573,10 +573,12 @@ if (SV) then
 	end
 
 	function rain.character.playerspawn(pClient, tCharacter)
-		local appearTable = tCharacter.data_appearance;
+		if (istable(tCharacter)) then
+			local appearTable = tCharacter.data_appearance;
 
-		pClient:SetModel(appearTable.model);
-		pClient:SetSkin(appearTable.skin);
+			pClient:SetModel(appearTable.model);
+			pClient:SetSkin(appearTable.skin);
+		end;
 	end;
 
 	local rainclient = FindMetaTable("Player")
@@ -589,8 +591,6 @@ if (SV) then
 
 	function rainclient:LoadCharactersForSelection()
 		local chars = self:GetCharacters()
-
-		PrintTable(chars)
 
 		for k, v in pairs(chars) do
 			local LoadObj = mysql:Select("characters")
