@@ -42,7 +42,7 @@ function rain:TranslateActivity(client, act)
 	local weapon = client.GetActiveWeapon(client)
 
 	if (class == "player") then
-		if (IsValid(weapon) and !client.isWepRaised(client) and client.OnGround(client)) then
+		if (IsValid(weapon) and client.OnGround(client)) then
 			if (stringFind(model, "zombie")) then
 				local tree = rain.anim.zombie
 
