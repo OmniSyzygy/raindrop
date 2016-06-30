@@ -67,8 +67,8 @@ function PANEL:Init()
 	back.DoClick = function()
 		self:Remove();
 
-		local menu = vgui.Create("RD_MainMenu");
-		menu:MakePopup();
+		rain.MainMenuUI = vgui.Create("RD_MainMenu");
+		rain.MainMenuUI:MakePopup();
 	end
 end
 
