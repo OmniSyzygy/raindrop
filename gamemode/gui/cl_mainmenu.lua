@@ -35,6 +35,7 @@ local selectMat = Material("stalker/ui_selector2.png");
 -- Precached Colors
 local colorWhite = Color(255, 255, 255);
 local colorBlack = Color(0, 0, 0);
+local colorGray = Color(100, 100, 100);
 
 local colorText = colorBlack;
 
@@ -114,21 +115,25 @@ function PANEL:Init()
 	local loadchar = vgui.Create("RD_MenuButton", self)
 	loadchar:SetSize(buttonW, buttonH);
 	loadchar:SetPos(buttonX, buttonY);
-	loadchar:SetTextColor(colorText);
-	loadchar:SetText("")
+
+	loadchar:SetText("Load Character")
 	loadchar.DoClick = function()
 		self:CloseMenu()
 
-		local ui = vgui.Create("RD_Charselect")
-		ui:MakePopup()
+		rain.MainMenuUI = vgui.Create("RD_Charselect")
+		rain.MainMenuUI:MakePopup()
 	end
 
 	function loadchar:Think()
-		if !rain.pdata.canloadcharacters() then
-			loadchar:SetText("Loading...")
-		else
-			loadchar:SetText("Load Character")
-		end
+		local chars = rain.pdata.getcharacters();
+
+		if (!chars or #chars == 0) then
+			loadchar:SetTextColor(colorGray);
+			loadchar:SetDisabled(true);
+		elseif (rain.pdata.canloadcharacters()) then
+			loadchar:SetTextColor(colorText);
+			loadchar:SetDisabled(false);
+		end;
 
 		if (self:IsHovered() and selectorY != self.y - selectorOffset and lerpTarget != self.y - selectorOffset) then
 			PANEL:SetSelectorY(self.y);
@@ -140,16 +145,26 @@ function PANEL:Init()
 	local deletechar = vgui.Create("RD_MenuButton", self)
 	deletechar:SetSize(buttonW, buttonH);
 	deletechar:SetPos(buttonX, buttonY);
-	deletechar:SetTextColor(colorText);
+
 	deletechar:SetText("Delete Character")
 	deletechar.DoClick = function()
 		self:CloseMenu();
 
-		local ui = vgui.Create("RD_CharDelete");
-		ui:MakePopup();
+		rain.MainMenuUI = vgui.Create("RD_CharDelete");
+		rain.MainMenuUI:MakePopup();
 	end
 
 	function deletechar:Think()
+		local chars = rain.pdata.getcharacters();
+		
+		if (!chars or #chars == 0) then
+			deletechar:SetTextColor(colorGray);
+			deletechar:SetDisabled(true);
+		elseif (rain.pdata.canloadcharacters()) then
+			deletechar:SetTextColor(colorText);
+			deletechar:SetDisabled(false);
+		end;
+
 		if (self:IsHovered() and selectorY != self.y - selectorOffset and lerpTarget != self.y - selectorOffset) then
 			PANEL:SetSelectorY(self.y);
 		end;

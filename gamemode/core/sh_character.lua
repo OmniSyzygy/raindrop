@@ -253,6 +253,14 @@ if (SV) then
 
 		rain.character.create(ply, charData.data, charData.appearance);
 	end);
+
+	util.AddNetworkString("rain.chardelete");
+
+	net.Receive("rain.chardelete", function(len, ply)
+		local charID = rain.net.ReadShortInt();
+
+		rain.character.remove(ply, charID);
+	end);
 end
 
 --[[
@@ -516,16 +524,12 @@ if (CL) then
 		end
 	end)
 
-end
-
-if (CL) then
 	function rain.character.loadcharacter(charid)
 		net.Start("rain.loadcharacter")
-		rain.net.WriteLongInt(charid)
+			rain.net.WriteLongInt(charid)
 		net.SendToServer()
 	end
 end
-
 
 if (SV) then
 
@@ -576,11 +580,37 @@ if (SV) then
 		InsertObj:Insert("data_inventory", inventory)
 		InsertObj:Callback(function(result, status, lastID)
 			pOwningClient:AddCharacter(lastID)
+
+			local charTable = {};
+			charTable.charname = name;
+			charTable.id = lastID;
+			charTable.data_character = chardata or {};
+			charTable.data_appearance = appearance or {};
+			charTable.data_adminonly = {};
+			charTable.data_inventory = inventory or {};
+
+			pOwningClient.loaddata = pOwningClient.loaddata or {}
+			table.insert(pOwningClient.loaddata, charTable);
+
+			net.Start("SyncMenuData");
+				rain.net.WriteTable(pOwningClient.loaddata);
+			net.Send(pOwningClient);
 		end)
 		InsertObj:Execute()
 	end
 
-	function rain.character.remove(pOwningClient, nCharacterID)
+	--[[
+		Name: Remove
+		Category: Character
+		Desc: Removes a single character
+	--]]
+
+	function rain.character.remove(pOwner, charID)
+		local delObj = mysql:Delete("characters");
+			delObj:Where("id", charID);
+		delObj:Execute();
+
+		pOwner:RemoveCharacter(charID);
 	end;
 
 	--[[
