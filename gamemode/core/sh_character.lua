@@ -29,6 +29,37 @@ function character_meta:__tostring()
 end
 
 --[[
+	Name: Apply Appearance
+	Category: Character
+	Desc: Applies the appearance to a character.
+--]]
+
+function character_meta:ApplyAppearance()
+	local faceid = self:GetFaceID()
+
+end
+
+--[[
+	Name: Get Face ID
+	Category: Character
+	Desc: Gets the characters Face ID, if called on the client it returns the cached FaceID.
+--]]
+
+function character_meta:GetFaceID()
+
+end
+
+--[[
+	Name: Get Eye ID
+	Category: Character
+	Desc: Gets the characters eye ID, if called on the client it returns the cached material.
+--]]
+
+function character_meta:GetEyeID()
+
+end
+
+--[[
 	Name: EQ
 	Category: Character
 	Desc: Called when the character is being compared to another

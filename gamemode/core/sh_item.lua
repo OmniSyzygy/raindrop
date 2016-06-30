@@ -9,6 +9,25 @@ rain.itemsavequeue = {} -- this is the item save queue
 
 local item_meta = {}
 
+-- tier enums
+
+TIER_WORN = 1 -- (White)
+TIER_STANDARD = 2 -- (Green)
+TIER_SPECIALIZED = 3 -- (Blue)
+TIER_SUPERIOR = 4 -- (Purple)
+TIER_HIGHEND = 5 -- (Gold)
+TIER_GEARSET = 6 -- (Turqoise)
+
+-- WoW style tier enums that go off of color (I do prefer using these)
+
+TIER_WHITE = 1
+TIER_GREEN = 2
+TIER_BLUE = 3
+TIER_PURPLE = 4
+TIER_GOLD = 5
+TIER_SET = 6
+
+
 function item_meta:GetID()
 	return self.id or 0
 end
@@ -175,6 +194,14 @@ function item_meta:DestroyItem()
 	end
 end
 
+function item_meta:SetBaseItem(sNewBase)
+	self.ItemBase = sNewBase or false
+end
+
+function item_meta:GetBaseItem()
+	return self.ItemBase
+end
+
 item_meta.__index = item_meta
 local RAIN_ITEMMETA = item_meta
 
@@ -215,16 +242,23 @@ if (SV) then
 	end
 end
 
+-- constructs and returns a new item object
+
+function rain.item:New(sItemBase)
+	local itemObj = {}
+	return itemObj
+end
+
 local rainchar = rain.character.getmeta()
 
-function rainchar:DropItem(nItemID)
+function rainchar:DropItem(objItem)
 
 end
 
-function rainchar:AddItem(nItemID)
+function rainchar:AddItem(objItem)
 
 end
 
-function rainchar:CreateAndAddItem(nItemID)
+function rainchar:CreateAndAddItem(objItem)
 
 end

@@ -1,0 +1,5 @@
+rain.flag.register("1", "Technician Level 1", "Level 1 technician capable of repairing basic things.")
+rain.flag.register("2", "Technician Level 2", "Level 2 technician capable of repairing advanced things and crafting basic things.")
+rain.flag.register("3", "Technician Level 3", "Level 3 technician capable of repairing complex things and crafting advanced things.")
+rain.flag.register("W", "Technician NATO", "Specializes a technician to only work with NATO weapons and gear.")
+rain.flag.register("E", "Technician Warsaw", "Specializes a technician to work with Warsaw Pact weapons and gear.")
