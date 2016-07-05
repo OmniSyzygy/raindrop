@@ -1,7 +1,7 @@
 rain.db = {}
 
 function rain.db.connect(sAddress, sUsername, sPassword, sDatabase, nPort)
-	mysql:SetModule("tmysql4")
+	mysql:SetModule(rain.cfg.db.module)
 	mysql:Connect(sAddress, sUsername, sPassword, sDatabase, nPort)
 end
 
@@ -47,7 +47,7 @@ function rain.db.onconnectionsuccess()
 	queryObj:Create("worlddata", "VARCHAR(256) NOT NULL") -- data such as the pos, angs, and any additional info needed to spawn the item
 	queryObj:PrimaryKey("id")
 	queryObj:Execute()
-
+	
 	rain.log.onconnectionsuccess()
 
 	timer.Create("rain.db.think", 1, 0, function()

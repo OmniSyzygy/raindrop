@@ -73,6 +73,16 @@ function rain.log.admin(sText)
 end
 
 --[[
+	Name: Levels
+	Category: Log
+	Desc: Saves a levels log to the mysql db for review later on
+--]]
+
+function rain.log.levels(sText)
+	rain.log.savelog(sText, "LEVELS")
+end
+
+--[[
 	Name: Error
 	Category: Log
 	Desc: Saves a log to console if devmode is on, to the db if devmode is off
@@ -89,13 +99,14 @@ end
 --]]
 
 function rain.log.savelog(sText, sTag)
-
+	
 	rain.util.log(tostring(sText), "LOG - "..sTag)
 
 	local InsertObj = mysql:Insert("logs")
-	InsertObj:Insert("time", tostring(os.time()))
+	InsertObj:Insert("time", tostring(util.DateStamp()))
 	InsertObj:Insert("tag", tostring(sTag))
 	InsertObj:Insert("logdata", tostring(sText))
+	InsertObj:Execute()
 end
 
 --[[
