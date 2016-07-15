@@ -12,7 +12,9 @@ local colorBlack = Color(50, 50, 50, 250);
 local lightWhite = Color(150, 150, 150, 100);
 local colorWhite = Color(255, 255, 255, 255);
 local colorGray = Color(170, 170, 170, 255);
+local colorRed = Color(255, 0, 0, 255);
 local lightGray = Color(200, 200, 200, 255);
+
 
 local panelBackMat = Material("stalker/ui_hint_wnd.png");
 
@@ -205,9 +207,7 @@ function PANEL:SetView(nView)
 	local check = viewCheck[nView];
 
 	if (check) then
-	--	timer.Simple(0.3, function()
-			check(self);
-	--	end);
+		check(self);
 	end;
 end;
 
@@ -1165,27 +1165,21 @@ function PANEL:Paint(w, h)
 end;
 
 vgui.Register("RD_CreationInfo", PANEL, "DPanel");
---[[
+
 local PANEL = {};
 
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
 	local parent = self:GetParent();
 
-	self:SetSize(scrW * 0.30, scrH * 0.5);
-	self:SetPos(scrW * 0.65, scrH * 0.1);
+	self:SetSize(scrW * 0.20, scrH * 0.5);
+	self:SetPos(scrW * 0.7, scrH * 0.2);
 
 	parent.modelPanel:SetView(VIEW_FULL);
 
-	local confirmLabel = vgui.Create("DLabel", self);
-
-	confirmLabel:SetSize(self:GetWide(), self:GetTall() * 0.9);
-	confirmLabel:SetContentAlignment(5);
-	confirmLabel:SetAutoStretchVertical(true);
-	confirmLabel:SetFont("RD.MenuButtonFont");
-	confirmLabel:SetMultiline(true);
-	confirmLabel:SetText("Are you sure you want to finish creating this character?");
-	confirmLabel:SetPos(self:GetWide() * 0.5 - confirmLabel:GetWide() * 0.5, self:GetTall() * 0.5, - confirmLabel:GetTall() * 0.5);
+	local modelIcon = vgui.Create("SpawnIcon", self);
+	modelIcon:SetPos(self:GetWide() * 0.1, self:GetTall() * 0.28);
+	modelIcon:SetModel(parent.creationData.appearance.model);
 
 	local button = vgui.Create("RD_CreationImageButton", self);
 
@@ -1210,10 +1204,34 @@ function PANEL:Paint(w, h)
 	surface.SetDrawColor(255, 255, 255, 255);
 	surface.SetMaterial(panelBackMat);
 	surface.DrawTexturedRect(0, 0, w, h);
+
+	local charData = self:GetParent().creationData;
+	local name = charData.data.Name;
+	local nameColor = lightGray;
+
+	if (!name or name == "") then
+		name = "Please enter a name!";
+		nameColor = colorRed;
+	end;
+
+	draw.SimpleText("Name: ", "RD.MenuButtonFont", w * 0.1, h * 0.1, lightGray, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+	draw.SimpleText(name, "RD.MenuButtonFont", w * 0.1, h * 0.15, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+
+	draw.SimpleText("Model: ", "RD.MenuButtonFont", w * 0.1, h * 0.25, lightGray, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+
+	local model = charData.appearance.model;
+
+	if (!model or model == "") then
+		draw.SimpleText("No model selected!", "RD.MenuButtonFont", w * 0.1, h * 0.30, colorRed, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+	end;
+
+--	draw.SimpleText(charData.appearance.model, "RD.MenuButtonFont", w * 0.1, h * 0.25, lightGray, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+
+--	draw.SimpleText("Review", "RD.MenuButtonFont", w * 0.5, h * 0.8, lightGray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
 end;
 
 vgui.Register("RD_CreationFinish", PANEL, "DPanel");
---]]
+
 local buttonList = {
 	{
 		menu = "RD_CreationBody",
@@ -1300,6 +1318,7 @@ function PANEL:Init()
 
 		function button:DoClick()
 			if (v.menu and v.menu != "") then
+				--[[
 				if (v.name == "Finish") then
 					--	Add checks here for valid information being entered.
 					
@@ -1314,7 +1333,7 @@ function PANEL:Init()
 					
 					return;
 				end;
-
+				--]]
 				local lastMenu;
 
 				if (parent.activeMenu) then
