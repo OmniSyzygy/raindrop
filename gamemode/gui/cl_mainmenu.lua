@@ -231,7 +231,7 @@ function PANEL:Init()
 	exit:SetSize(buttonW, buttonH);
 	exit:SetPos(buttonX, buttonY);
 	exit:SetTextColor(colorText);
-	exit:SetText("Exit")
+	exit:SetText("Disconnect")
 	exit.DoClick = function()
 		RunConsoleCommand("disconnect")
 	end
@@ -241,6 +241,25 @@ function PANEL:Init()
 			PANEL:SetSelectorY(self.y);
 		end;
 	end
+	
+	buttonY = buttonY + buttonOffset;
+
+	--[[
+	local quit = vgui.Create("RD_MenuButton", self)
+	quit:SetSize(buttonW, buttonH);
+	quit:SetPos(buttonX, buttonY);
+	quit:SetTextColor(colorText);
+	quit:SetText("Exit to Desktop")
+	quit.DoClick = function()
+		RunConsoleCommand("quit")
+	end
+
+	function quit:Think()
+		if (self:IsHovered() and selectorY != self.y - selectorOffset and lerpTarget != self.y - selectorOffset) then
+			PANEL:SetSelectorY(self.y);
+		end;
+	end
+	--]]
 end
 
 function PANEL:SetSelectorY(y)

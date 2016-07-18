@@ -1,3 +1,13 @@
+-- Enumeration
+HUD_STALKER_COP = 1;
+HUD_CLOCKWORK = 2;
+HUD_NUTSCRIPT = 3;
+HUD_COMBINECONTROL = 4;
+HUD_MINIMUM = 5;
+HUD_3D = 6;
+HUD_SANDBOX = 7;
+
+CreateClientConVar("RD_HUD_TYPE", HUD_STALKER_COP);
 
 local tHeadBobTarget = {}
 tHeadBobTarget[1] = {v = Vector(-0.15,0.1,0.45), a = Angle(-0.25,-0.25,0)}
@@ -115,10 +125,16 @@ local compassMat = Material("stalker/hud_radar_compass.png");
 local statusMat = Material("stalker/hud_status.png");
 local healthMat = Material("stalker/hud_status_health.png", "noclamp");
 local stamMat = Material("stalker/hud_status_stam.png", "noclamp");
+local barMat = Material("stalker/hud_3d_health.png", "noclamp");
 
 local colorWhite = Color(255, 255, 255, 255);
 local colorYellow = Color(239, 158, 14, 255);
 local fadedYellow = Color(239, 158, 14, 100);
+local colorBlue = Color(0, 50, 150, 255);
+local colorGreen = Color(0, 150, 0, 255);
+local colorGray = Color(50, 50, 50, 150);
+local colorBlack = Color(0, 0, 0, 125);
+local colorRed = Color(255, 0, 0, 255);
 
 surface.CreateFont("RD.HUDLarge", {
 	font = "GraffitiOne",
@@ -136,6 +152,12 @@ surface.CreateFont("RD.HUDSmall", {
 	font = "Arial",
 	size = 20,
 	weight = 500
+});
+
+surface.CreateFont("RD.3DHUDNormal", {
+	font = "Arial",
+	size = 30,
+	weight = 1000
 });
 
 --[[
@@ -331,19 +353,208 @@ local function DrawCoPHUD(localPlayer, scrW, scrH)
 	DrawMinimap();
 end;
 
+local function DrawClockworkHUD(localPlayer, scrW, scrH)
+	local barX, barY, barW, barH = scrW * 0.01, scrH * 0.01, scrW * 0.3, 12;
+
+	-- Health Bar.
+	local fraction = localPlayer:Health() / localPlayer:GetMaxHealth();
+
+	surface.SetDrawColor(colorBlack);
+	surface.DrawRect(barX, barY, barW, barH);
+	surface.SetDrawColor(colorRed);
+	surface.DrawRect(barX + 2, barY + 2, (barW - 4) * fraction, barH - 4);
+	barY = barY + barH + 14;
+
+	-- Armor Bar.
+	local fraction = localPlayer:Armor() / 100;
+
+	if (fraction > 0) then
+		surface.SetDrawColor(colorBlack);
+		surface.DrawRect(barX, barY, barW, barH);
+		surface.SetDrawColor(colorBlue);
+		surface.DrawRect(barX + 2, barY + 2, (barW - 4) * fraction, barH - 4);
+		barY = barY + barH + 14;
+	end;
+
+	-- Stamina Bar Placeholder.
+	local fraction = 1;
+
+	if (fraction < 0.75) then
+		surface.SetDrawColor(colorBlack);
+		surface.DrawRect(barX, barY, barW, barH);
+		surface.SetDrawColor(colorGreen);
+		surface.DrawRect(barX + 2, barY + 2, (barW - 4) * fraction, barH - 4);
+		barY = barY + barH + 14;
+	end;
+end;
+
+local blur = Material("pp/blurscreen")
+
+local function Draw3DHUD(localPlayer, scrW, scrH)
+	local eyePos = localPlayer:EyePos();
+	local eyeAngles = localPlayer:EyeAngles();
+	local viewmodel = localPlayer:GetViewModel(0);
+	local attachmentIndex = viewmodel:LookupAttachment("muzzle")		
+	local attachment = viewmodel:GetAttachment(attachmentIndex);
+	local position = eyePos + (eyeAngles:Right() * 10) + (eyeAngles:Forward() * -20);
+				
+	if (attachment) then
+		position = attachment.Pos - viewmodel:GetRight() * 10;
+	end;
+
+	position = position + eyeAngles:Forward() * 225;
+	position = position + eyeAngles:Right() * -275;
+	position = position + eyeAngles:Up() * -75;
+
+	eyeAngles:RotateAroundAxis(eyeAngles:Forward(), 90);
+	eyeAngles:RotateAroundAxis(eyeAngles:Right(), 25);
+
+	render.ClearStencil()
+	render.SetStencilEnable(true)
+	render.SetStencilCompareFunction(STENCIL_ALWAYS)
+	render.SetStencilPassOperation(STENCIL_REPLACE)
+	render.SetStencilFailOperation(STENCIL_KEEP)
+	render.SetStencilZFailOperation(STENCIL_KEEP)
+	render.SetStencilWriteMask(254)
+	render.SetStencilTestMask(254)
+	render.SetStencilReferenceValue(45)
+
+	local ammoW, ammoH = 55, 60;
+
+	cam.Start3D();
+		cam.Start3D2D(position, eyeAngles, 0.5);
+			draw.RoundedBox(0, 0, 0, ammoW, ammoH, colorGray);
+		cam.End3D2D();
+	cam.End3D();
+
+	render.SetStencilCompareFunction(STENCIL_EQUAL)
+
+	render.SetMaterial(blur);
+	render.DrawScreenQuad();
+	render.SetStencilEnable(false);
+
+	cam.Start3D();
+		cam.Start3D2D(position, eyeAngles, 0.5);
+			local activeWep = localPlayer:GetActiveWeapon();
+
+			draw.RoundedBox(0, 0, 0, ammoW, ammoH, colorGray);
+
+			--Ammo Indicator
+			if (IsValid(activeWep)) then
+				local clip1 = activeWep:Clip1();
+				local extraAmmo = localPlayer:GetAmmoCount(activeWep:GetPrimaryAmmoType());
+
+				if ((clip1 and clip1 > 0) or (extraAmmo and extraAmmo > 0)) then
+					
+					if (clip1 >= 0) then		
+						draw.SimpleText(clip1, "RD.HUDNormal", ammoW * 0.5, ammoH * 0.30, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
+					end;
+
+					draw.SimpleText(extraAmmo, "RD.HUDNormal", ammoW * 0.5, ammoH * 0.70, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
+				end;
+			end;
+
+			local fraction = localPlayer:Health() / localPlayer:GetMaxHealth();
+			local healthX, healthY = 60, 10;
+			local barW, barH = 124, 17;
+			
+			surface.SetDrawColor(colorBlack);
+			surface.SetMaterial(barMat);
+			surface.DrawTexturedRect(healthX, healthY, barW, barH);
+
+			surface.SetDrawColor(colorYellow);
+			surface.SetMaterial(barMat);
+			surface.DrawTexturedRectUV(healthX, healthY, barW * fraction, barH, 0, 0, fraction, 0);
+
+			fraction = localPlayer:Armor() / 100; healthY = 35;
+			
+			surface.SetDrawColor(colorBlack);
+			surface.SetMaterial(barMat);
+			surface.DrawTexturedRect(healthX, healthY, barW, barH);
+
+			if (fraction > 0) then
+				surface.SetDrawColor(colorBlue);
+				surface.SetMaterial(barMat);
+				surface.DrawTexturedRectUV(healthX, healthY, barW * fraction, barH, 0, 0, fraction, 0);
+			end;
+
+			-- Stamina placeholder.
+			fraction = 0.75; healthY = 62; barH = 5; barW = 185;
+			
+			if (fraction < 1) then
+				surface.SetDrawColor(colorBlack);
+				surface.DrawRect(0, healthY, barW, barH);
+
+				surface.SetDrawColor(colorGreen);
+				surface.DrawRect(0, healthY, barW * fraction, barH);
+			end;
+
+		cam.End3D2D();
+	cam.End3D();
+
+	DrawMinimap();
+end;
+
+local hudCheck = {
+	[HUD_STALKER_COP] = DrawCoPHUD,
+	[HUD_CLOCKWORK] = DrawClockworkHUD,
+	[HUD_3D] = Draw3DHUD
+};
+
+//local CHOSEN_HUD = HUD_3D;
+//local CHOSEN_HUD = HUD_CLOCKWORK;
+//local CHOSEN_HUD = HUD_STALKER_COP;
+//local CHOSEN_HUD = HUD_SANDBOX;
+
 function rain:HUDPaint()
 	local localPlayer = LocalPlayer();
 
 	if localPlayer:GetState() == STATE_ALIVE and localPlayer:Alive() then
 		local scrW, scrH = ScrW(), ScrH();
+		local chosenHUD = hudCheck[GetConVar("RD_HUD_TYPE"):GetInt() or HUD_STALKER_COP];
 
-		DrawCoPHUD(localPlayer, scrW, scrH);
+		if (chosenHUD) then
+			chosenHUD(localPlayer, scrW, scrH);
+		end;
 	end;
 end;
+
+function rain:HUDShouldDraw(sName)
+	if self.cfg.HiddenUIElements[sName] and GetConVar("RD_HUD_TYPE"):GetInt() != HUD_SANDBOX then
+		return false
+	else
+		return true
+	end
+end
 
 function rain:PreDrawSkyBox()
 	if (rendering_map) then
 		return true;
+	end;
+end;
+
+function rain:PreRender()
+	local showDefault = false;
+	local isVisible = gui.IsGameUIVisible();
+
+	if (gui.IsConsoleVisible()) then
+		showDefault = true;
+	end;
+
+	if (showDefault and !isVisible) then
+		showDefault = false;
+	end;
+
+	if (isVisible and !showDefault and LocalPlayer():GetCharacter()) then
+		gui.HideGameUI();
+
+		if (rain.MainMenuUI) then
+			rain.MainMenuUI:Remove();
+			rain.MainMenuUI = nil;
+		else
+			rain.MainMenuUI = vgui.Create("RD_MainMenu");
+			rain.MainMenuUI:MakePopup();
+		end;
 	end;
 end;
 

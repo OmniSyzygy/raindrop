@@ -218,6 +218,31 @@ local themeSettings = {
 			["Clear Sky"] = MENU_CLEARSKY,
 			["Call of Pripyat"] = MENU_CALLOFPRIPYAT
 		}
+	},
+	{
+		name = "HUD Style",
+		settingType = "RD_ComboBoxSetting",
+		callback = function(panel, choices)
+			panel = panel:GetComboBox();
+
+			for k, v in pairs(choices) do
+				panel:AddChoice(k);
+
+				if (v == GetConVar("RD_HUD_TYPE"):GetInt()) then
+					panel:SetText(k);
+				end;
+			end;
+
+			function panel:OnSelect(index, value)
+				return GetConVar("RD_HUD_TYPE"):SetInt(choices[value]);
+			end;
+		end,
+		choices = {
+			["S.T.A.L.K.E.R."] = HUD_STALKER_COP,
+			["Time Dilation"] = HUD_CLOCKWORK,
+			["Multiplication"] = HUD_3D,
+			["Sandbox"] = HUD_SANDBOX
+		}
 	}
 };
 
