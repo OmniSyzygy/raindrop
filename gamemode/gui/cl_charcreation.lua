@@ -15,7 +15,6 @@ local colorGray = Color(170, 170, 170, 255);
 local colorRed = Color(255, 0, 0, 255);
 local lightGray = Color(200, 200, 200, 255);
 
-
 local panelBackMat = Material("stalker/ui_hint_wnd.png");
 
 local categoryButton = Material("stalker/ui_category_button.png");
@@ -1168,6 +1167,14 @@ vgui.Register("RD_CreationInfo", PANEL, "DPanel");
 
 local PANEL = {};
 
+local function CheckInfo(info)
+	if (!info.data.Name or info.data.Name == "" or !info.appearance.model) then
+		return false;
+	end;
+
+	return true;
+end;
+
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
 	local parent = self:GetParent();
@@ -1181,22 +1188,22 @@ function PANEL:Init()
 	modelIcon:SetPos(self:GetWide() * 0.1, self:GetTall() * 0.28);
 	modelIcon:SetModel(parent.creationData.appearance.model);
 
-	local button = vgui.Create("RD_CreationImageButton", self);
+	if (CheckInfo(parent.creationData)) then
+		local button = vgui.Create("RD_CreationImageButton", self);
 
-	button:SetPos(self:GetWide() * 0.5 - button:GetWide() * 0.5, self:GetTall() * 0.935);
-	button:SetText("Create");
+		button:SetPos(self:GetWide() * 0.5 - button:GetWide() * 0.5, self:GetTall() * 0.935);
+		button:SetText("Create");
 
-	function button:DoClick()
-		--	Add checks here for valid information being entered.
-		
-		net.Start("rain.charcreate")
-			rain.net.WriteTable(parent.creationData);
-		net.SendToServer();
+		function button:DoClick()
+			net.Start("rain.charcreate")
+				rain.net.WriteTable(parent.creationData);
+			net.SendToServer();
 
-		parent:Remove();
+			parent:Remove();
 
-		rain.MainMenuUI = vgui.Create("RD_MainMenu");
-		rain.MainMenuUI:MakePopup();
+			rain.MainMenuUI = vgui.Create("RD_MainMenu");
+			rain.MainMenuUI:MakePopup();
+		end;
 	end;
 end;
 
