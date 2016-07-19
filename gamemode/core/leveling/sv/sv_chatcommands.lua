@@ -1,0 +1,1 @@
+rain.cc.addchatcommand("test")
