@@ -139,11 +139,17 @@ function outfit_base:OnDamageTaken(sBone, objDamageInfo)
 	local nDamageAmount = objDamageInfo:GetDamage()
 	local enumDamageType = objDamageInfo:GetDamageType()
 
+	
+end
+
+-- event for when the clothing is removed
+function outfit_base:OnRemove()
 
 end
 
+-- event for when the clothing is worn
 function outfit_base:OnWear()
-	
+
 end
 
 -- returns the new players model, this should only be used for suits that override everything, returns false
