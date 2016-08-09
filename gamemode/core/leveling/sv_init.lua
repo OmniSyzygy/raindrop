@@ -12,26 +12,26 @@ include('raindrop/gamemode/core/leveling/sv/sv_modules.lua')
 include('raindrop/gamemode/core/leveling/sv/sv_rewards.lua')
 include('raindrop/gamemode/core/leveling/sv/sv_chatcommands.lua')
 
-/*
+--[[
 	UI
-*/
+--]]
 
 include('raindrop/gamemode/core/leveling/cl/include.lua')
 
-/*
+--[[
 	PERKS
-*/
+--]]
 
 RaindropLoadPerks()
 
-/*
+--[[
 	MODULES
-*/
+--]]
 
 RaindropLoadModules()
 
-/*
+--[[
 	REWARDS
-*/
+--]]
 
 RaindropLoadRewards()
