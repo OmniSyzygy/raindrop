@@ -246,21 +246,21 @@ if (SV) then
 		end
 	end
 
-	util.AddNetworkString("rain.charcreate");
+	util.AddNetworkString("rain.charcreate")
 
 	net.Receive("rain.charcreate", function(len, ply)
-		local charData = rain.net.ReadTable();
+		local charData = rain.net.ReadTable()
 
-		rain.character.create(ply, charData.data, charData.appearance);
-	end);
+		rain.character.create(ply, charData.data, charData.appearance)
+	end)
 
-	util.AddNetworkString("rain.chardelete");
+	util.AddNetworkString("rain.chardelete")
 
 	net.Receive("rain.chardelete", function(len, ply)
-		local charID = rain.net.ReadShortInt();
+		local charID = rain.net.ReadShortInt()
 
-		rain.character.remove(ply, charID);
-	end);
+		rain.character.remove(ply, charID)
+	end)
 end
 
 --[[
@@ -581,20 +581,20 @@ if (SV) then
 		InsertObj:Callback(function(result, status, lastID)
 			pOwningClient:AddCharacter(lastID)
 
-			local charTable = {};
-			charTable.charname = name;
-			charTable.id = lastID;
-			charTable.data_character = chardata or {};
-			charTable.data_appearance = appearance or {};
-			charTable.data_adminonly = {};
-			charTable.data_inventory = inventory or {};
+			local charTable = {}
+			charTable.charname = name
+			charTable.id = lastID
+			charTable.data_character = chardata or {}
+			charTable.data_appearance = appearance or {}
+			charTable.data_adminonly = {}
+			charTable.data_inventory = inventory or {}
 
 			pOwningClient.loaddata = pOwningClient.loaddata or {}
-			table.insert(pOwningClient.loaddata, charTable);
+			table.insert(pOwningClient.loaddata, charTable)
 
-			net.Start("SyncMenuData");
-				rain.net.WriteTable(pOwningClient.loaddata);
-			net.Send(pOwningClient);
+			net.Start("SyncMenuData")
+				rain.net.WriteTable(pOwningClient.loaddata)
+			net.Send(pOwningClient)
 		end)
 		InsertObj:Execute()
 	end
@@ -606,12 +606,12 @@ if (SV) then
 	--]]
 
 	function rain.character.remove(pOwner, charID)
-		local delObj = mysql:Delete("characters");
-			delObj:Where("id", charID);
-		delObj:Execute();
+		local delObj = mysql:Delete("characters")
+			delObj:Where("id", charID)
+		delObj:Execute()
 
-		pOwner:RemoveCharacter(charID);
-	end;
+		pOwner:RemoveCharacter(charID)
+	end
 
 	--[[
 		Name: Sync
@@ -635,12 +635,12 @@ if (SV) then
 
 	function rain.character.playerspawn(pClient, tCharacter)
 		if (istable(tCharacter)) then
-			local appearTable = tCharacter.data_appearance;
+			local appearTable = tCharacter.data_appearance
 
-			pClient:SetModel(appearTable.model);
-			pClient:SetSkin(appearTable.skin);
-		end;
-	end;
+			pClient:SetModel(appearTable.model)
+			pClient:SetSkin(appearTable.skin)
+		end
+	end
 
 	local rainclient = FindMetaTable("Player")
 
