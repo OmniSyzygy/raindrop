@@ -415,7 +415,7 @@ local bodyButtonList = {
 
 			return false
 		end
-	}//,
+	}--,
 	--[[
 	{
 		name = "Bodygroups",
@@ -427,7 +427,7 @@ local bodyButtonList = {
 
 			return false
 		end
-	}//,
+	}--,
 		
 	{
 		name = "Shape",
@@ -893,7 +893,7 @@ function PANEL:Init()
 		local spawnIcon = vgui.Create("SpawnIcon", self)
 		local nSkin = parent.creationData.appearance.skin
 		
-//		spawnIcon:SetModel(sPath, nSkin, )
+--		spawnIcon:SetModel(sPath, nSkin, )
 		spawnIcon.model = sPath
 
 		function spawnIcon:DoClick()

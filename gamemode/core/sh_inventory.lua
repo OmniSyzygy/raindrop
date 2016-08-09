@@ -34,7 +34,7 @@ function net.Replicate(Authority, Received)
 	end
 end
 
-local meta = FindMetaTable( "Player" );
+local meta = FindMetaTable( "Player" )
 
 --[[
 	Function: Create Inventory
@@ -61,7 +61,7 @@ end
 --]]
 
 local function GetInventorySize(Inventory)
-	local width, height = #Inventory, #Inventory[1];
+	local width, height = #Inventory, #Inventory[1]
 
 	return width, height
 end
@@ -360,8 +360,8 @@ end
 
 if (CLIENT) then
 
-	local CurrentTooltip = CurrentTooltip or nil;
-	local ToolTipTimer = CurTime();
+	local CurrentTooltip = CurrentTooltip or nil
+	local ToolTipTimer = CurTime()
 
 	--[[
 		Function: UpdateToolTipTime
@@ -616,7 +616,7 @@ if (CLIENT) then
 			end
 		end
 
-		return InventoryPanel;
+		return InventoryPanel
 	end
 
 	function meta:OpenContainer(Container)
@@ -680,7 +680,7 @@ end
 
 function meta:LoadItemsFromString( str )
 
-	self:SetupInventory(GAMEMODE.InventorySizeX, GAMEMODE.InventorySizeY);
+	self:SetupInventory(GAMEMODE.InventorySizeX, GAMEMODE.InventorySizeY)
 
 	local SaveData = {}
 
@@ -980,8 +980,8 @@ end
 --]]
 
 function meta:SaveInventory()
-	local str = pon.encode( self.Inventory );
-	self:UpdateCharacterField( "Inventory", str );
+	local str = pon.encode( self.Inventory )
+	self:UpdateCharacterField( "Inventory", str )
 end
 
 --[[
@@ -1220,8 +1220,8 @@ function meta:InsertItemEasy(ItemID, data)
 		self:InsertItemAt(PosX, PosY, ItemID, data)
 
 		if (SERVER) then
-			GAMEMODE:LogItems( "[G] " .. self:VisibleRPName() .. " obtained item " .. ItemID .. ".", self );
-			GAMEMODE:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self );
+			GAMEMODE:LogItems( "[G] " .. self:VisibleRPName() .. " obtained item " .. ItemID .. ".", self )
+			GAMEMODE:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
 		end
 	end
 end
@@ -1232,10 +1232,10 @@ end
 --]]
 
 function meta:GetInventorySize()
-	local inventory = self.Inventory;
-	local width, height = #inventory, #inventory[1];
+	local inventory = self.Inventory
+	local width, height = #inventory, #inventory[1]
 
-	return width, height;
+	return width, height
 end
 
 --[[

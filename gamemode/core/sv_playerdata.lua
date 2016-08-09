@@ -184,15 +184,15 @@ function rainclient:RemoveCharacter(nCharID)
 
 	for k, character in pairs(self.loaddata) do
 		if (character.id == nCharID) then
-			self.loaddata[k] = nil;
+			self.loaddata[k] = nil
 
-			net.Start("SyncMenuData");
-				rain.net.WriteTable(self.loaddata);
-			net.Send(self);
+			net.Start("SyncMenuData")
+				rain.net.WriteTable(self.loaddata)
+			net.Send(self)
 
-			break;
-		end;
-	end;
+			break
+		end
+	end
 end
 
 --[[
@@ -256,11 +256,11 @@ end
 	Desc: Syncs a clients data in its entirety
 --]]
 
-util.AddNetworkString("SyncPlayerData");
+util.AddNetworkString("SyncPlayerData")
 function rainclient:SyncData()
-	net.Start("SyncPlayerData");
-		rain.net.WriteTable(self.data);
-	net.Send(rainclient);
+	net.Start("SyncPlayerData")
+		rain.net.WriteTable(self.data)
+	net.Send(rainclient)
 end
 
 --[[
@@ -269,10 +269,10 @@ end
 --]]
 
 function rainclient:SyncDataByKey(sKey)
-	net.Start("SyncPlayerData");
-		net.WriteString(sKey);
-		rain.net.WriteTable(self.data[sKey]);
-	net.Send(self);
+	net.Start("SyncPlayerData")
+		net.WriteString(sKey)
+		rain.net.WriteTable(self.data[sKey])
+	net.Send(self)
 end
 
 --[[

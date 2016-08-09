@@ -2,20 +2,20 @@ surface.CreateFont("RD.DeleteFont", {
 	font = "Constantia",
 	size = 30,
 	weight = 0
-});
+})
 
-local panelMat = Material("stalker/ui_hint_wnd_no_tab.png");
-local confirmMat = Material("stalker/ui_button_confirm.png");
-local confirmDownMat = Material("stalker/ui_button_confirm_down.png");
-local cancelMat = Material("stalker/ui_button_cancel.png");
-local cancelDownMat = Material("stalker/ui_button_cancel_down.png");
+local panelMat = Material("stalker/ui_hint_wnd_no_tab.png")
+local confirmMat = Material("stalker/ui_button_confirm.png")
+local confirmDownMat = Material("stalker/ui_button_confirm_down.png")
+local cancelMat = Material("stalker/ui_button_cancel.png")
+local cancelDownMat = Material("stalker/ui_button_cancel_down.png")
 
-local colorWhite = Color(255, 255, 255, 255);
+local colorWhite = Color(255, 255, 255, 255)
 
 local PANEL = {}
 
 function PANEL:Init()
-	local scrW, scrH = ScrW(), ScrH();
+	local scrW, scrH = ScrW(), ScrH()
 
 	local topbar = vgui.Create("DPanel", self)
 	local mid = vgui.Create("DPanel", self)
@@ -69,49 +69,49 @@ function PANEL:Init()
 		local charbutton = vgui.Create("RD_MenuButton", midbar)
 		charbutton:Dock(TOP)
 		charbutton:SetText(character.charname)
-		charbutton.charID = character.id;
+		charbutton.charID = character.id
 		charbutton.DoClick = function()
 			if (self.confirm) then
-				self.confirm:Remove();
-			end;
+				self.confirm:Remove()
+			end
 
-			self.confirm = vgui.Create("DPanel", self);
-			self.confirm:SetSize(scrW * 0.2, scrH * 0.15);
-			self.confirm:SetPos((scrW * 0.5) - (self.confirm:GetWide() * 0.5), (scrH * 0.5) - (self.confirm:GetTall() * 0.5));
+			self.confirm = vgui.Create("DPanel", self)
+			self.confirm:SetSize(scrW * 0.2, scrH * 0.15)
+			self.confirm:SetPos((scrW * 0.5) - (self.confirm:GetWide() * 0.5), (scrH * 0.5) - (self.confirm:GetTall() * 0.5))
 
 			function self.confirm:Paint(w, h)
-				surface.SetDrawColor(colorWhite);
-				surface.SetMaterial(panelMat);
-				surface.DrawTexturedRect(0, 0, w, h);
+				surface.SetDrawColor(colorWhite)
+				surface.SetMaterial(panelMat)
+				surface.DrawTexturedRect(0, 0, w, h)
 				
-				draw.DrawText("Delete this character?", "RD.DeleteFont", w * 0.5, h * 0.15, colorWhite, TEXT_ALIGN_CENTER);
-				draw.DrawText(character.charname, "RD.DeleteFont", w * 0.5, h * 0.37, colorWhite, TEXT_ALIGN_CENTER);
-			end;
+				draw.DrawText("Delete this character?", "RD.DeleteFont", w * 0.5, h * 0.15, colorWhite, TEXT_ALIGN_CENTER)
+				draw.DrawText(character.charname, "RD.DeleteFont", w * 0.5, h * 0.37, colorWhite, TEXT_ALIGN_CENTER)
+			end
 
-			local yes = vgui.Create("RD_CreationImageButton", self.confirm);
+			local yes = vgui.Create("RD_CreationImageButton", self.confirm)
 
-			yes:SetSize(self.confirm:GetWide() * 0.3, self.confirm:GetTall() * 0.25);
-			yes:SetPos((self.confirm:GetWide() * 0.3) - (yes:GetWide() * 0.5), (self.confirm:GetTall() * 0.9) - yes:GetTall());
-			yes.image = confirmMat;
-			yes.downImage = confirmDownMat;
+			yes:SetSize(self.confirm:GetWide() * 0.3, self.confirm:GetTall() * 0.25)
+			yes:SetPos((self.confirm:GetWide() * 0.3) - (yes:GetWide() * 0.5), (self.confirm:GetTall() * 0.9) - yes:GetTall())
+			yes.image = confirmMat
+			yes.downImage = confirmDownMat
 
 			yes.DoClick = function()
 				net.Start("rain.chardelete")
-					rain.net.WriteShortInt(character.id);
-				net.SendToServer();
-			end;
+					rain.net.WriteShortInt(character.id)
+				net.SendToServer()
+			end
 
-			local no = vgui.Create("RD_CreationImageButton", self.confirm);
+			local no = vgui.Create("RD_CreationImageButton", self.confirm)
 
-			no:SetSize(self.confirm:GetWide() * 0.3, self.confirm:GetTall() * 0.25);
-			no:SetPos((self.confirm:GetWide() * 0.7) - (no:GetWide() * 0.5), (self.confirm:GetTall() * 0.9) - no:GetTall());
-			no.image = cancelMat;
-			no.downImage = cancelDownMat;
+			no:SetSize(self.confirm:GetWide() * 0.3, self.confirm:GetTall() * 0.25)
+			no:SetPos((self.confirm:GetWide() * 0.7) - (no:GetWide() * 0.5), (self.confirm:GetTall() * 0.9) - no:GetTall())
+			no.image = cancelMat
+			no.downImage = cancelDownMat
 
 			no.DoClick = function()
-				self.confirm:Remove();
-				self.confirm = nil;
-			end;
+				self.confirm:Remove()
+				self.confirm = nil
+			end
 		end
 	end
 

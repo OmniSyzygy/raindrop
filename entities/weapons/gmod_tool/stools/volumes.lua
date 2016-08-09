@@ -1,20 +1,20 @@
-TOOL.ClientConVar[ "type" ] = "AreaTrigger";
-TOOL.ClientConVar[ "min" ] = "0 0 0";
-TOOL.ClientConVar[ "max" ] = "0 0 0";
+TOOL.ClientConVar[ "type" ] = "AreaTrigger"
+TOOL.ClientConVar[ "min" ] = "0 0 0"
+TOOL.ClientConVar[ "max" ] = "0 0 0"
 
-TOOL.Category		= "Teardrop";
-TOOL.Name			= "#Volumes";
-TOOL.Command		= nil;
-TOOL.ConfigName		= "";
+TOOL.Category		= "Teardrop"
+TOOL.Name			= "#Volumes"
+TOOL.Command		= nil
+TOOL.ConfigName		= ""
 
 if( CLIENT ) then
 	language.Add("#Volumes", "Volume")
-	language.Add( "tool.volumes.name", "Volume" );
-	language.Add( "tool.volumes.desc", "Used for creating volumes that have multiple applications." );
-	language.Add( "tool_volumes_desc", "Used for creating volumes that have multiple applications." );
-	language.Add( "tool.volumes.0", "Add a min, then a max, then click again to send to the server to save it, rightclick to reset. Right click near a min point to delete the volume. Reload to toggle between radial or box." );
-	language.Add( "tool.volumes.1", "Add the max point or hit reload to reset." );
-	language.Add( "tool.volumes.2", "Click anywhere to save the volume to the server, if you don't like it hit reload to reset it." );
+	language.Add( "tool.volumes.name", "Volume" )
+	language.Add( "tool.volumes.desc", "Used for creating volumes that have multiple applications." )
+	language.Add( "tool_volumes_desc", "Used for creating volumes that have multiple applications." )
+	language.Add( "tool.volumes.0", "Add a min, then a max, then click again to send to the server to save it, rightclick to reset. Right click near a min point to delete the volume. Reload to toggle between radial or box." )
+	language.Add( "tool.volumes.1", "Add the max point or hit reload to reset." )
+	language.Add( "tool.volumes.2", "Click anywhere to save the volume to the server, if you don't like it hit reload to reset it." )
 end
 
 local STAGE_PLACEMIN = 0
@@ -28,7 +28,7 @@ TOOL.progresstable[STAGE_SENDTOSERVER] = "Send data?"
 
 function TOOL:LeftClick( tr )
 	
-	return true;
+	return true
 
 end
 

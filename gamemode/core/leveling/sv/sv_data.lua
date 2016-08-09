@@ -6,7 +6,7 @@
 		queryObj:Create("xp", "INT NOT NULL") -- last known ip addresses
 		queryObj:Unique("steam_id64")
 		queryObj:Execute()
-		mysql:RawQuery("CREATE TABLE IF NOT EXISTS levels(steam_id64 VARCHAR(32) NOT NULL, steam_name VARCHAR(32) NOT NULL,level int NOT NULL,xp int NOT NULL,UNIQUE(steam_id64));")
+		mysql:RawQuery("CREATE TABLE IF NOT EXISTS levels(steam_id64 VARCHAR(32) NOT NULL, steam_name VARCHAR(32) NOT NULL,level int NOT NULL,xp int NOT NULL,UNIQUE(steam_id64))")
 	end
 	hook.Add("DatabaseConnected", "Raindrop:DataBaseConnected", onConnected)
 
@@ -15,7 +15,7 @@
 	hook.Add("DatabaseConnectionFailed", "Raindrop:DatabaseConnectionFailed", onConnectionFailed)
 
 	function Raindrop.retrievePlayerLevelXP(ply, callback)
-		mysql:RawQuery("SELECT level,xp FROM levels WHERE steam_id64 = " .. SQLStr(ply:SteamID64()) .. ";", function (r) callback(r) end)
+		mysql:RawQuery("SELECT level,xp FROM levels WHERE steam_id64 = " .. SQLStr(ply:SteamID64()) .. "", function (r) callback(r) end)
 	end
 
 	function Raindrop.createPlayerLevelData(ply)

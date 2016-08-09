@@ -3,7 +3,7 @@ Raindrop = {}
 Raindrop.Perks = {}
 Raindrop.ActivePerks = {}
 
-// Includes
+-- Includes
 
 include('raindrop/gamemode/core/leveling/cl/cl_perks.lua')
 include('raindrop/gamemode/core/leveling/cl/cl_net.lua')

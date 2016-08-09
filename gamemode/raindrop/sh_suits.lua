@@ -109,7 +109,7 @@ outfit_base.ApplyDamageToSuit = true
 outfit_base.DamageToSuitHealthRatio = 0.5
 
 -- List of DMG Enumerations that the suit protects against, it uses a small struct that contains the DMG Enum and a DT and a DR value for it, the DR and DT values will be optimized away if the suit is set to not use them.
--- The entire list can be found here: http://wiki.garrysmod.com/page/Enums/DMG
+-- The entire list can be found here: http:--wiki.garrysmod.com/page/Enums/DMG
 -- NEVER make a suit protect against generic damage, it will make it so players gain DR/DT from random shit!
 
 -- Wether or not the suit protects every part of your body
@@ -172,15 +172,13 @@ function outfit_base:OnDamageTaken(sBone, objDamageInfo)
 end
 
 function outfit_base:GetDamageResistance(nDamage, nDR)
-
+	return nDamage * math.min(nDR, 0.85)
 end
 
-function outfit_base:GetDamageThreshold(nDamage, nDT)
+function outfit_base:GetDamageThreshold(nDamage, nDT, nDR)
+	local nDR = nDR or 0.0
 
-end
-
-function outfit_base:GetDamageResistanceThreshold(nDamage, nDR, nDT)
-
+	return math.max(nDamage - nDT, self:GetDamageResistance(nDamage, nDR) * 0.2)
 end
 
 -- event for when the clothing is removed
@@ -231,7 +229,7 @@ function outfit_base:GetItemHealth()
 end
 
 function outfit_base:SetItemHealth(nNewHealth)
-	self.Health = nNewHealth;
+	self.Health = nNewHealth
 end
 
 function outfit_base:SetUseDT(bNewDT)

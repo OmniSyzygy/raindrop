@@ -423,7 +423,7 @@ local function BigVortexThink(self)
 				if v:GetPos():Distance( self.VortexPos ) < self.KillRadius then
 					if v:IsPlayer() then
 						if v:Alive() then
-							//v.Inventory = {}
+							--v.Inventory = {}
 							v:SetModel( "models/shells/shell_9mm.mdl" )
 							v:Kill()
 						end
@@ -838,7 +838,7 @@ local function DamageInit(self)
 				renderamt=alpha,
 				rendercolor=color,
 			}
-			sprite:KeyValueTable(kv);
+			sprite:KeyValueTable(kv)
 			sprite:Spawn()
 			sprite:Activate()
 			sprite:SetParent(self.Entity)
@@ -1085,7 +1085,7 @@ local function DeathFogThink(self)
 					
 					local tr = util.TraceLine( trace )
 					
-					if tr.Entity == v then//and not v:HasItem( "models/items/combine_rifle_cartridge01.mdl" ) then
+					if tr.Entity == v then--and not v:HasItem( "models/items/combine_rifle_cartridge01.mdl" ) then
 						v.CoughTimer = v.CoughTimer or 0
 						if v.CoughTimer < CurTime() then
 							v:EmitSound( table.Random( self.Coughs ) )
@@ -2104,17 +2104,17 @@ local function WhirlgigThink(self)
 			
             local dir = v:GetPos() - self:GetPos()
 			local force = 35	
-			local distance = dir:Length()			// The distance the phys object is from the ent
-			local maxdistance = 300				// The max distance 
+			local distance = dir:Length()			-- The distance the phys object is from the ent
+			local maxdistance = 300				-- The max distance 
 		
-			// Lessen the force from a distance
+			-- Lessen the force from a distance
 			
 			local ratio = math.Clamp( (1 - (distance/maxdistance)), 0, 1 )
 			
-			// Set up the 'real' force and the offset of the force
+			-- Set up the 'real' force and the offset of the force
 			local vForce = -1*dir * (force * ratio)
 			
-			// Apply it!
+			-- Apply it!
 			v:GetPhysicsObject():ApplyForceOffset( vForce, dir )
 						
 		end
@@ -2189,60 +2189,60 @@ rain:RegisterAnomaly("Whirlgig", {"EWhirlgig"})
 rain:RegisterElement("EWhirlgig", WhirlgigInit, WhirlgigThink, WhirlgigDraw)
 
 local function ElectroInit(self)
-	self.ShockSound = "";
+	self.ShockSound = ""
 	
-	self.Radius = 300;
+	self.Radius = 300
 	
-	self.DoTime = 0;
-	self.WaitTime = 3;
+	self.DoTime = 0
+	self.WaitTime = 3
 	
-	self.Particles = { "electrical_arc_01", "electrical_arc_01_parent", "electrical_arc_01_system", "st_elmos_fire", "st_elmos_fire_cp0", "striderbuster_break_lightning" };
+	self.Particles = { "electrical_arc_01", "electrical_arc_01_parent", "electrical_arc_01_system", "st_elmos_fire", "st_elmos_fire_cp0", "striderbuster_break_lightning" }
 	
-	self:SetMoveType(MOVETYPE_NONE);
-	self:SetSolid(SOLID_NONE);
+	self:SetMoveType(MOVETYPE_NONE)
+	self:SetSolid(SOLID_NONE)
 	
-	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER);
-	self:SetNotSolid(true);
-	self:DrawShadow(false);
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+	self:SetNotSolid(true)
+	self:DrawShadow(false)
 	
-	self:SetModel("models/dav0r/hoverball.mdl");
+	self:SetModel("models/dav0r/hoverball.mdl")
 	
 	for _, particle in next, self.Particles do
-		PrecacheParticleSystem(particle);
+		PrecacheParticleSystem(particle)
 	end
 
 end
 
 local function ElectroThink(self)
-	local nearbyPlayers = ents.FindByClass("player");
+	local nearbyPlayers = ents.FindByClass("player")
 	
 	for k, v in pairs(nearbyPlayers) do
 		if (IsValid(v) and v:IsPlayer() and v:Alive()) then
-			local dist = v:GetPos():Distance(self:GetPos());
-			if (dist > self.Radius) then continue; end // skip players outside of the radius
+			local dist = v:GetPos():Distance(self:GetPos())
+			if (dist > self.Radius) then continue end -- skip players outside of the radius
 			if (self.DoTime < CurTime()) then
 				
 				if (SERVER) then
-					local shock = DamageInfo();
-					shock:SetDamage(10);
-					shock:SetDamageType(DMG_SHOCK);
-					shock:SetAttacker(v);
+					local shock = DamageInfo()
+					shock:SetDamage(10)
+					shock:SetDamageType(DMG_SHOCK)
+					shock:SetAttacker(v)
 					if (IsValid(v) and v:IsPlayer() and v:Alive()) then
-						v:TakeDamageInfo(shock);
+						v:TakeDamageInfo(shock)
 					end
 				end
 				
 				for _, particle in pairs(self.Particles) do
-					ParticleEffect(particle, self:GetPos(), Angle(0, 0, 0));
+					ParticleEffect(particle, self:GetPos(), Angle(0, 0, 0))
 				end
 				
-				self.DoTime = CurTime() + self.WaitTime;
+				self.DoTime = CurTime() + self.WaitTime
 			end
 		end
 	end
 	
-	self:NextThink(CurTime());
-	return true;
+	self:NextThink(CurTime())
+	return true
 end
 
 rain:RegisterAnomaly("Electro", {"EElectro"})

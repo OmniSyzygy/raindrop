@@ -25,7 +25,7 @@ surface.CreateFont( "rainChat_16", {
 	antialias = true,
 } )
 
---// Prevents errors if the script runs too early, which it will
+---- Prevents errors if the script runs too early, which it will
 if not GAMEMODE then
 	hook.Remove("Initialize", "rainChat_init")
 	hook.Add("Initialize", "rainChat_init", function()
@@ -35,7 +35,7 @@ if not GAMEMODE then
 	return
 end
 
---// Builds the chatbox but doesn't display it
+---- Builds the chatbox but doesn't display it
 function rainChat.buildBox()
 	rainChat.frame = vgui.Create("DFrame")
 	rainChat.frame:SetSize( 625, 300 )
@@ -246,7 +246,7 @@ function rainChat.buildBox()
 	rainChat.hideBox()
 end
 
---// Hides the chat box but not the messages
+---- Hides the chat box but not the messages
 function rainChat.hideBox()
 	rainChat.frame.Paint = function() end
 	rainChat.chatLog.Paint = function() end
@@ -286,7 +286,7 @@ function rainChat.hideBox()
 	gamemode.Call( "ChatTextChanged", "" )
 end
 
---// Shows the chat box
+---- Shows the chat box
 function rainChat.showBox()
 	-- Draw the chat box again
 	rainChat.frame.Paint = rainChat.oldPaint
@@ -317,7 +317,7 @@ function rainChat.showBox()
 	gamemode.Call("StartChat")
 end
 
---// Opens the settings panel
+---- Opens the settings panel
 function rainChat.openSettings()
 	rainChat.hideBox()
 	
@@ -408,8 +408,8 @@ function rainChat.openSettings()
 	end
 end
 
---// Panel based blur function by Chessnut from NutScript
-local blur = Material( "pp/blurscreen" ); -- In place of Material outside of hook
+---- Panel based blur function by Chessnut from NutScript
+local blur = Material( "pp/blurscreen" ) -- In place of Material outside of hook
 function rainChat.blur( panel, layers, density, alpha )
 	-- Its a scientifically proven fact that blur improves a script
 	local x, y = panel:LocalToScreen(0, 0)
@@ -428,7 +428,7 @@ end
 
 local oldAddText = chat.AddText
 
---// Overwrite chat.AddText to detour it into my chatbox
+---- Overwrite chat.AddText to detour it into my chatbox
 function chat.AddText(...)
 	if not rainChat.chatLog then
 		rainChat.buildBox()
@@ -472,7 +472,7 @@ function chat.AddText(...)
 --	oldAddText(unpack(msg))
 end
 
---// Write any server notifications
+---- Write any server notifications
 hook.Remove( "ChatText", "rainChat_joinleave")
 hook.Add( "ChatText", "rainChat_joinleave", function( index, name, text, type )
 	if not rainChat.chatLog then
@@ -488,7 +488,7 @@ hook.Add( "ChatText", "rainChat_joinleave", function( index, name, text, type )
 	end
 end)
 
---// Stops the default chat box from being opened
+---- Stops the default chat box from being opened
 hook.Remove("PlayerBindPress", "rainChat_hijackbind")
 hook.Add("PlayerBindPress", "rainChat_hijackbind", function(ply, bind, pressed)
 	if string.sub( bind, 1, 11 ) == "messagemode" then
@@ -510,7 +510,7 @@ hook.Add("PlayerBindPress", "rainChat_hijackbind", function(ply, bind, pressed)
 	end
 end)
 
---// Hide the default chat too in case that pops up
+---- Hide the default chat too in case that pops up
 hook.Remove("HUDShouldDraw", "rainChat_hidedefault")
 hook.Add("HUDShouldDraw", "rainChat_hidedefault", function( name )
 	if name == "CHudChat" then
@@ -518,7 +518,7 @@ hook.Add("HUDShouldDraw", "rainChat_hidedefault", function( name )
 	end
 end)
 
- --// Modify the Chatbox for align.
+ ---- Modify the Chatbox for align.
 local oldGetChatBoxPos = chat.GetChatBoxPos
 function chat.GetChatBoxPos()
 	return rainChat.frame:GetPos()

@@ -1,6 +1,6 @@
 PANEL = {}
 
-AccessorFunc(PANEL, "m_ToolTipText", "ToolTipText");
+AccessorFunc(PANEL, "m_ToolTipText", "ToolTipText")
 
 local minheight = 256
 

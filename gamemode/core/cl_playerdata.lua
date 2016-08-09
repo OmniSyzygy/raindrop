@@ -1,6 +1,6 @@
-rain.pdata = rain.pdata or {};
-rain.pdata.cache = rain.pdata.cache or {};
-rain.pdata.characters = rain.pdata.characters or {};
+rain.pdata = rain.pdata or {}
+rain.pdata.cache = rain.pdata.cache or {}
+rain.pdata.characters = rain.pdata.characters or {}
 rain.menudata = rain.menudata or false
 
 --[[
@@ -8,7 +8,7 @@ rain.menudata = rain.menudata or false
 --]]
 
 function rain.pdata.getcharacters()
-	return rain.pdata.characters or {};
+	return rain.pdata.characters or {}
 end
 
 --[[
@@ -28,26 +28,26 @@ function rain.pdata.canloadcharacters()
 end
 
 net.Receive("SyncMenuData", function(nLen)
-	local data = rain.net.ReadTable();
+	local data = rain.net.ReadTable()
 
-	rain.pdata.characters = data;
-	rain.pdata.onreceivecharacters();
+	rain.pdata.characters = data
+	rain.pdata.onreceivecharacters()
 
 	if (rain.MainMenuUI and rain.MainMenuUI:GetName() == "RD_CharDelete") then
-		rain.MainMenuUI:Remove();
+		rain.MainMenuUI:Remove()
 
-		rain.MainMenuUI = vgui.Create("RD_CharDelete");
-		rain.MainMenuUI:MakePopup();
-	end;
-end);
+		rain.MainMenuUI = vgui.Create("RD_CharDelete")
+		rain.MainMenuUI:MakePopup()
+	end
+end)
 
 net.Receive("SyncPlayerData", function(nLen)
-	local key = net.ReadString();
-	local data = rain.net.ReadTable();
+	local key = net.ReadString()
+	local data = rain.net.ReadTable()
 
 	if (key and key != "") then
-		rain.pdata.cache[key] = data;
+		rain.pdata.cache[key] = data
 	else
-		rain.pdata.cache = data;
-	end;
-end);
+		rain.pdata.cache = data
+	end
+end)

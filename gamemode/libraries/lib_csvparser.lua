@@ -264,7 +264,7 @@ end
 ------------------------------------------------------------------------------
 
 local separator_candidates = { ",", "\t", "|" }
-local guess_separator_params = { record_limit = 8; }
+local guess_separator_params = { record_limit = 8 }
 
 
 local function try_separator(buffer, sep, f)
@@ -509,8 +509,8 @@ buffer_mt.__index = buffer_mt
 --  @return a file object
 local function use(
   buffer,           -- ?string|file|buffer: the buffer to read from.  If it's:
-                    --   - a string, read from that;
-                    --   - a file, turn it into a file_buffer;
+                    --   - a string, read from that
+                    --   - a file, turn it into a file_buffer
                     --   - nil, read from stdin
                     -- otherwise assume it's already a a buffer.
   parameters)       -- ?table: parameters controlling reading the file.
