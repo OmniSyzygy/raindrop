@@ -1,4 +1,4 @@
-rain.suits = {}
+rain.clothings = {}
 local pmeta = FindMetaTable("Player")
 
 -- 'enumerations' for the bones
@@ -35,14 +35,14 @@ end
 
 -- this is called by the inventory item when a player wants to wear an outfit
 function pmeta:WearOutfit(objItem)
-	local objSuit = objItem:GetSuit() -- returns a string specifying the suit of clothing
+	local objClothing = objItem:GetClothing() -- returns a string specifying the clothing of clothing
 
-	local tSuitData = self:GetCharacter():GetAppearanceData("Clothing", {})
-	tSuitData[objSuit:GetUniqueID()] = true
-	self:GetCharacter():SetAppearanceData(Suits, tSuitData)
+	local tClothingData = self:GetCharacter():GetAppearanceData("Clothing", {})
+	tClothingData[objClothing:GetUniqueID()] = true
+	self:GetCharacter():SetAppearanceData(Clothings, tClothingData)
 	self:UpdateAppearance()
 
-	objSuit:OnWear()
+	objClothing:OnWear()
 
 	-- call event
 	self:OnWearOutfit()
@@ -56,23 +56,23 @@ end
 
 -- this is called by the inventory item when a player wants to remove an outfit
 function pmeta:RemoveOutfit(objItem)
-	local objSuit = objItem:GetSuit()
+	local objClothing = objItem:GetClothing()
 
-	local tSuitData = self:GetCharacter():GetAppearanceData("Clothing", {})
-	tSuitData[objSuit:GetUniqueID()] = nil
-	self:GetCharacter():SetAppearanceData(Suits, tSuitData)
+	local tClothingData = self:GetCharacter():GetAppearanceData("Clothing", {})
+	tClothingData[objClothing:GetUniqueID()] = nil
+	self:GetCharacter():SetAppearanceData(Clothings, tClothingData)
 	self:UpdateAppearance()
 
 	-- call event
 	self:OnRemoveOutfit()
 end
 
--- overridable event for when you put a suit on
+-- overridable event for when you put a clothing on
 function pmeta:OnWearOutfit(bSuccess, objItem)
 
 end
 
--- override event for when you remove a suit
+-- override event for when you remove a clothing
 function pmeta:OnRemoveOutfit(bSuccess, objItem)
 
 end
@@ -87,38 +87,35 @@ function pmeta:GetOutfits()
 end
 
 -- Get the damage multiplier per bone
-function rain.suits.GetDamageMultiplier(sBone)
+function rain.clothings.GetDamageMultiplier(sBone)
 	return rain.cfg.dammul[sBone]
 end
 
-local outfit_base = {}
+local clothing_base = {}
 
 -- Damage Resistance
-outfit_base.DR = 0.0 -- overall DR of the suit, this is added to protected bones DR value
-outfit_base.UseDR = false
+clothing_base.DR = 0.0 -- overall DR of the clothing, this is added to protected bones DR value
+clothing_base.UseDR = false
 
 -- Damage Threshold
-outfit_base.DT = 0.0 -- overall DT of the suit, this is added to protected bones DT value
-outfit_base.UseDT = false
+clothing_base.DT = 0.0 -- overall DT of the clothing, this is added to protected bones DT value
+clothing_base.UseDT = false
 
--- Suit Health
-outfit_base.Health = 1.0
+-- Clothing Health
+clothing_base.Health = 1.0
 
-outfit_base.ApplyDamageToSuit = true
+clothing_base.ApplyDamageToClothing = true
 
-outfit_base.DamageToSuitHealthRatio = 0.5
+clothing_base.DamageToClothingHealthRatio = 0.5
 
--- List of DMG Enumerations that the suit protects against, it uses a small struct that contains the DMG Enum and a DT and a DR value for it, the DR and DT values will be optimized away if the suit is set to not use them.
+-- List of DMG Enumerations that the clothing protects against, it uses a small struct that contains the DMG Enum and a DT and a DR value for it, the DR and DT values will be optimized away if the clothing is set to not use them.
 -- The entire list can be found here: http:--wiki.garrysmod.com/page/Enums/DMG
--- NEVER make a suit protect against generic damage, it will make it so players gain DR/DT from random shit!
+-- NEVER make a clothing protect against generic damage, it will make it so players gain DR/DT from random shit!
 
--- Wether or not the suit protects every part of your body
-outfit_base.ProtectEverything = false
+-- Bones that are protected by the clothing
+clothing_base.ProtectedAreas = {}
 
--- Bones that are protected by the suit
-outfit_base.ProtectedAreas = {}
-
-function outfit_base:AddProtectedBone(sBone, nDTValue, nDRValue, tDamageTypes)
+function clothing_base:AddProtectedBone(sBone, nDTValue, nDRValue, tDamageTypes)
 	tDamageTypes = tDamageTypes or {DMG_BULLET, DMG_BUCKSHOT} -- defaults to protecting from gunfire only
 
 	if self:GetUseDR() and self:GetUseDT() then
@@ -130,11 +127,11 @@ function outfit_base:AddProtectedBone(sBone, nDTValue, nDRValue, tDamageTypes)
 	end
 end
 
-function outfit_base:RemoveProtectedBone(sBone)
+function clothing_base:RemoveProtectedBone(sBone)
 	self.ProtectedAreas[sBone] = nil
 end
 
-function outfit_base:BoneIsProtected(sBone)
+function clothing_base:BoneIsProtected(sBone)
 	for bone, _ in pairs(ProtectedAreas) do
 		if bone == sBone then
 			return true
@@ -144,8 +141,8 @@ function outfit_base:BoneIsProtected(sBone)
 	return false
 end
 
--- called whenever a suit takes damage, only lowers the suit health by default.
-function outfit_base:OnDamageTaken(sBone, objDamageInfo)
+-- called whenever a clothing takes damage, only lowers the clothing health by default.
+function clothing_base:OnDamageTaken(sBone, objDamageInfo)
 	local sBone, objDamageInfo = sBone, objDamageInfo -- make sure that these exist in memory everywhere in the function
 	if type(sBone) != "string" then -- if sBone isn't passed, assign it's value to objDamageInfo and make sBone be equal to the pelvis
 		objDamageInfo = sBone
@@ -158,61 +155,79 @@ function outfit_base:OnDamageTaken(sBone, objDamageInfo)
 	local nDamageAmount = objDamageInfo:GetDamage()
 	local enumDamageType = objDamageInfo:GetDamageType()
 
-	local nDamageModifier = 1.0
+	local nNewDamage = nDamageAmount
 
 	if self:BoneIsProtected(sBone) then
-		if self:GetUseDR() and self:GetUseDT() then
-			
-		elseif self:GetUseDR() and !self:GetUseDT() then
-			
-		elseif self:GetUseDT() and !self:GetUseDT() then
-			
+		local nDamage, nDR, nDT, tDamageTypes = self:GetBoneProtectionData(sBone)
+
+		if tDamageTypes[enumDamageType] then
+			if self:GetUseDR() and self:GetUseDT() then
+				nNewDamage = self:GetDamageThreshold(nDamageAmount, nDT, nDR)
+			elseif self:GetUseDR() and !self:GetUseDT() then
+				nNewDamage = self:GetDamageResistance(nDamage, nDR)
+			elseif self:GetUseDT() and !self:GetUseDR() then
+				nNewDamage = self:GetDamageThreshold(nDamageAmount, nDT)
+			else
+				nNewDamage = self:GetDamageResistance(nDamageAmount, nDR)
+			end
 		end
+	end
+
+	if self:GetClothingTakesDamage() then
+		local nClothingHealth = self:Get
 	end
 end
 
-function outfit_base:GetDamageResistance(nDamage, nDR)
+function clothing_base:GetClothingDamageRatio()
+	return clothing_base.DamageToClothingHealthRatio
+end
+
+function clothing_base:GetClothingTakesDamage()
+	return clothing_base.ApplyDamageToClothing
+end
+
+function clothing_base:GetDamageResistance(nDamage, nDR)
 	return nDamage * math.min(nDR, 0.85)
 end
 
-function outfit_base:GetDamageThreshold(nDamage, nDT, nDR)
+function clothing_base:GetDamageThreshold(nDamage, nDT, nDR)
 	local nDR = nDR or 0.0
 
 	return math.max(nDamage - nDT, self:GetDamageResistance(nDamage, nDR) * 0.2)
 end
 
 -- event for when the clothing is removed
-function outfit_base:OnRemove()
+function clothing_base:OnRemove()
 
 end
 
 -- event for when the clothing is worn
-function outfit_base:OnWear()
+function clothing_base:OnWear()
 
 end
 
--- returns the new players model, this should only be used for suits that override everything, returns false
-function outfit_base:GetPlayerModel()
+-- returns the new players model, this should only be used for clothings that override everything, returns false
+function clothing_base:GetPlayerModel()
 	return self.OverrideModel or false
 end
 
-function outfit_base:SetOverrideModel(sModel)
+function clothing_base:SetOverrideModel(sModel)
 	self.OverrideModel = sModel
 end
 
-function outfit_base:RemoveOverrideModel()
+function clothing_base:RemoveOverrideModel()
 	self.OverrideModel = nil
 end
 
-function outfit_base:GetDamageThreshold()
+function clothing_base:GetDamageThreshold()
 	return self.DT
 end
 
-function outfit_base:SetDamageThreshold(nNewDamageThreshold)
+function clothing_base:SetDamageThreshold(nNewDamageThreshold)
 	self.DT = nNewDamageThreshold
 end
 
-function outfit_base:SetDamageResistance(nNewDamageResistance)
+function clothing_base:SetDamageResistance(nNewDamageResistance)
 	if nNewDamageResistance > 1.0 then
 		nNewDamageResistance = nNewDamageResistance / 100.0
 	end
@@ -220,32 +235,32 @@ function outfit_base:SetDamageResistance(nNewDamageResistance)
 	self.DR = nNewDamageResistance
 end
 
-function outfit_base:GetDamageResistance()
+function clothing_base:GetDamageResistance()
 	return self.DR = 0.0
 end
 
-function outfit_base:GetItemHealth()
+function clothing_base:GetClothingHealth()
 	return self.Health or 1.0
 end
 
-function outfit_base:SetItemHealth(nNewHealth)
+function clothing_base:SetItemHealth(nNewHealth)
 	self.Health = nNewHealth
 end
 
-function outfit_base:SetUseDT(bNewDT)
+function clothing_base:SetUseDT(bNewDT)
 	self.UseDT = bNewDT
 end
 
-function outfit_base:GetUseDT()
+function clothing_base:GetUseDT()
 	return self.UseDT
 end
 
-function outfit_base:SetUseDR(bNewDT)
+function clothing_base:SetUseDR(bNewDT)
 	self.UseDR = bNewDT
 end
 
-function outfit_base:GetUseDR()
+function clothing_base:GetUseDR()
 	return self.UseDR
 end
 
-outfit_base.__index = outfit_base
+clothing_base.__index = clothing_base
