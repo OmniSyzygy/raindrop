@@ -174,7 +174,9 @@ function clothing_base:OnDamageTaken(sBone, objDamageInfo)
 	end
 
 	if self:GetClothingTakesDamage() then
-		local nClothingHealth = self:Get
+		local nHealth = self:GetClothingHealth() * 100
+
+		self:SetClothingHealth(math.clamp(nHealth - nNewDamage, 0, 1) / 100)
 	end
 end
 
@@ -243,7 +245,7 @@ function clothing_base:GetClothingHealth()
 	return self.Health or 1.0
 end
 
-function clothing_base:SetItemHealth(nNewHealth)
+function clothing_base:SetClothingHealth(nNewHealth)
 	self.Health = nNewHealth
 end
 
