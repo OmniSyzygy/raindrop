@@ -62,7 +62,7 @@ do
 			cacheSize = cacheSize + 1;
 			cache[ tbl ] = cacheSize;
 		end
-		-- CALCULATE COMPONENT SIZES
+		-- Get COMPONENT SIZES
 		local nSize = #tbl;
 		local kvSize = count( tbl ) - nSize;
 

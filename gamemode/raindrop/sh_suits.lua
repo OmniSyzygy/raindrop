@@ -23,13 +23,13 @@ BONE_R_HAND			=	"ValveBiped.Bip01_R_Hand"
 
 -- called whenever a player takes damage
 function pmeta:OnDamageTaken(sBone, objDamageInfo)
-	local nDamage = self:CalculateDamageTaken(sBone, objDamageInfo)
+	local nDamage = self:GetDamageTaken(sBone, objDamageInfo)
 
 	return true, nDamage -- apply the damage, and specify how much
 end
 
--- goes through the players clothing and calculates how much damage they would take
-function pmeta:CalculateDamageTaken(sBone, objDamageInfo)
+-- goes through the players clothing and Gets how much damage they would take
+function pmeta:GetDamageTaken(sBone, objDamageInfo)
 	for _, Outfits in pairs(self:GetOutfits())
 end
 
@@ -57,6 +57,11 @@ end
 -- this is called by the inventory item when a player wants to remove an outfit
 function pmeta:RemoveOutfit(objItem)
 	local objSuit = objItem:GetSuit()
+
+	local tSuitData = self:GetCharacter():GetAppearanceData("Clothing", {})
+	tSuitData[objSuit:GetUniqueID()] = nil
+	self:GetCharacter():SetAppearanceData(Suits, tSuitData)
+	self:UpdateAppearance()
 
 	-- call event
 	self:OnRemoveOutfit()
@@ -89,15 +94,19 @@ end
 local outfit_base = {}
 
 -- Damage Resistance
-outfit_base.DR = 0.0
+outfit_base.DR = 0.0 -- overall DR of the suit, this is added to protected bones DR value
 outfit_base.UseDR = false
 
 -- Damage Threshold
-outfit_base.DT = 0.0
+outfit_base.DT = 0.0 -- overall DT of the suit, this is added to protected bones DT value
 outfit_base.UseDT = false
 
 -- Suit Health
 outfit_base.Health = 1.0
+
+outfit_base.ApplyDamageToSuit = true
+
+outfit_base.DamageToSuitHealthRatio = 0.5
 
 -- List of DMG Enumerations that the suit protects against, it uses a small struct that contains the DMG Enum and a DT and a DR value for it, the DR and DT values will be optimized away if the suit is set to not use them.
 -- The entire list can be found here: http://wiki.garrysmod.com/page/Enums/DMG
@@ -125,6 +134,16 @@ function outfit_base:RemoveProtectedBone(sBone)
 	self.ProtectedAreas[sBone] = nil
 end
 
+function outfit_base:BoneIsProtected(sBone)
+	for bone, _ in pairs(ProtectedAreas) do
+		if bone == sBone then
+			return true
+		end
+	end
+
+	return false
+end
+
 -- called whenever a suit takes damage, only lowers the suit health by default.
 function outfit_base:OnDamageTaken(sBone, objDamageInfo)
 	local sBone, objDamageInfo = sBone, objDamageInfo -- make sure that these exist in memory everywhere in the function
@@ -139,7 +158,29 @@ function outfit_base:OnDamageTaken(sBone, objDamageInfo)
 	local nDamageAmount = objDamageInfo:GetDamage()
 	local enumDamageType = objDamageInfo:GetDamageType()
 
-	
+	local nDamageModifier = 1.0
+
+	if self:BoneIsProtected(sBone) then
+		if self:GetUseDR() and self:GetUseDT() then
+			
+		elseif self:GetUseDR() and !self:GetUseDT() then
+			
+		elseif self:GetUseDT() and !self:GetUseDT() then
+			
+		end
+	end
+end
+
+function outfit_base:GetDamageResistance(nDamage, nDR)
+
+end
+
+function outfit_base:GetDamageThreshold(nDamage, nDT)
+
+end
+
+function outfit_base:GetDamageResistanceThreshold(nDamage, nDR, nDT)
+
 end
 
 -- event for when the clothing is removed
