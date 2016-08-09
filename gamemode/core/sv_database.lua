@@ -50,7 +50,9 @@ function rain.db.onconnectionsuccess()
 	
 	rain.log.onconnectionsuccess()
 
-	timer.Create("rain.db.think", 1, 0, function()
+	local nCachedTime = rain.cfg.db.thinktime
+
+	timer.Create("rain.db.think", nCachedTime, 0, function()
 		mysql:Think()
 	end)
 end
