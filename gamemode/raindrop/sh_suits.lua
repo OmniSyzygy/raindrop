@@ -1,7 +1,7 @@
 rain.suits = {}
 local pmeta = FindMetaTable("Player")
 
--- enumerations for the bones
+-- 'enumerations' for the bones
 
 BONE_PELVIS 		=	"ValveBiped.Bip01_Pelvis"
 BONE_L_THIGH		=	"ValveBiped.Bip01_L_Thigh"
@@ -37,8 +37,21 @@ end
 function pmeta:WearOutfit(objItem)
 	local objSuit = objItem:GetSuit() -- returns a string specifying the suit of clothing
 
+	local tSuitData = self:GetCharacter():GetAppearanceData("Clothing", {})
+	tSuitData[objSuit:GetUniqueID()] = true
+	self:GetCharacter():SetAppearanceData(Suits, tSuitData)
+	self:UpdateAppearance()
+
+	objSuit:OnWear()
+
 	-- call event
 	self:OnWearOutfit()
+end
+
+-- this is called every time that the player wears or removes clothing
+function pmeta:UpdateAppearance()
+
+	self:OnAppearanceUpdated()
 end
 
 -- this is called by the inventory item when a player wants to remove an outfit
@@ -56,6 +69,11 @@ end
 
 -- override event for when you remove a suit
 function pmeta:OnRemoveOutfit(bSuccess, objItem)
+
+end
+
+-- overridable event for when a player updates their appearance
+function pmeta:UpdateAppearance()
 
 end
 
@@ -122,6 +140,10 @@ function outfit_base:OnDamageTaken(sBone, objDamageInfo)
 	local enumDamageType = objDamageInfo:GetDamageType()
 
 
+end
+
+function outfit_base:OnWear()
+	
 end
 
 -- returns the new players model, this should only be used for suits that override everything, returns false
