@@ -98,7 +98,10 @@ function meta:RemoveBuff(name)
 			for k,v in pairs(t) do
 				if v == name then
 					table.remove(k)
-					timer.Remove(name.." "..self:GetEntIndex())
+					if timer.Exists(name.." "..self:GetEntIndex()) then
+						timer.Adjust(name.." "..self:GetEntIndex(),0,0)
+						timer.Remove(name.." "..self:GetEntIndex())
+					end
 					net.Start("BuffStat")
 					net.WriteBool(false)
 					net.WriteString(name)
