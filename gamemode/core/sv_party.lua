@@ -57,6 +57,23 @@ function meta:JoinParty(str)
 	end
 end
 
+function meta:GetParty()
+	local cnt = 0
+	for k,v in pairs(parties) do
+		if v[2] == self then
+			return v
+			local cnt = cnt + 1
+		elseif table.HasValue(v[3],self) then
+			return v
+			local cnt = cnt + 1
+		end
+	end
+	if cnt == 0 then
+		return {}
+	end
+end
+
+
 function meta:LeaveParty()
 	for k,v in pairs(parties) do
 		local p = v[1]
