@@ -129,6 +129,25 @@ function RefreshPForMembers(pname)
 	end
 end
 
+function GetPartyMembers(pname)
+local cnt = 0
+	for k,v in pairs(parties) do
+		if v[1] == pname then
+			local t = {v[2]}
+			if v[3] && v[3] != {} then
+				for k,v in pairs(v[3]) do
+					table.insert(t,v)
+				end
+			end
+			return t
+			cnt = cnt + 1
+		end
+	end
+	if cnt == 0 then
+		return {}
+	end
+end
+
 net.Receive("PartyLeave", function(len,ply)
 ply:LeaveParty()
 end)
