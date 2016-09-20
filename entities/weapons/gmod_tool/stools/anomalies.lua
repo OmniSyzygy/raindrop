@@ -1,18 +1,18 @@
-TOOL.ClientConVar[ "type" ] = "Bead";
-TOOL.ClientConVar[ "SpawnPos" ] = "0 0 0";
+TOOL.ClientConVar[ "type" ] = "Bead"
+TOOL.ClientConVar[ "SpawnPos" ] = "0 0 0"
 
-TOOL.Category		= "Teardrop";
-TOOL.Name			= "#Anomalies";
-TOOL.Command		= nil;
-TOOL.ConfigName		= "";
+TOOL.Category		= "Teardrop"
+TOOL.Name			= "#Anomalies"
+TOOL.Command		= nil
+TOOL.ConfigName		= ""
 
 if( CLIENT ) then
 	language.Add("#Anomalies", "Anomalies")
-	language.Add( "tool.anomalies.name", "Anomaly Tool" );
-	language.Add( "tool.anomalies.desc", "Used for placing anomalies and anomaly spawn points." );
-	language.Add( "tool_anomalies_desc", "Used for placing anomalies and anomaly spawn points." );
-	language.Add( "tool.anomalies.0", "Place an anomaly." );
-	language.Add( "tool.anomalies.1", "Confirm placement and send to server, reload sends a spawn point with the default anomaly being the one you current have." );
+	language.Add( "tool.anomalies.name", "Anomaly Tool" )
+	language.Add( "tool.anomalies.desc", "Used for placing anomalies and anomaly spawn points." )
+	language.Add( "tool_anomalies_desc", "Used for placing anomalies and anomaly spawn points." )
+	language.Add( "tool.anomalies.0", "Place an anomaly." )
+	language.Add( "tool.anomalies.1", "Confirm placement and send to server, reload sends a spawn point with the default anomaly being the one you current have." )
 end
 
 local STAGE_PLACESPAWN = 0
@@ -24,7 +24,7 @@ TOOL.progresstable[STAGE_CONFIRMSPAWN] = "Send to server?"
 
 function TOOL:LeftClick( tr )
 	
-	return true;
+	return true
 
 end
 

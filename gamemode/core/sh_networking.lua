@@ -516,7 +516,7 @@ if (SV) then
 	function rain_reptable:NetUpdate(sNewKey, wNewValue, bRemoveKey)
 		net.Start("rain.reptable.update")
 		net.WriteBool(bRemoveKey or false)
-		net.WriteString(sNewKey..";"..self:GetUID())
+		net.WriteString(sNewKey..""..self:GetUID())
 		rain.net.WriteWildcard(wNewValue)
 		rain.net.broadcast(self:GetAdminOnly())
 	end
@@ -615,7 +615,7 @@ elseif (CL) then
 		local data = net.ReadString()
 		local var = rain.net.ReadWildcard()
 
-		local newdat = string.Explode(";", data)
+		local newdat = string.Explode("", data)
 
 		if newdat[1] and newdat[2] then
 			if remove then

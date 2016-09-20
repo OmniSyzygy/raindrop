@@ -5,7 +5,7 @@ AddCSLuaFile('raindrop/gamemode/core/leveling/cl/ui/fonts.lua')
 AddCSLuaFile('raindrop/gamemode/core/leveling/cl/ui/cl_hud.lua')
 AddCSLuaFile('raindrop/gamemode/core/leveling/cl/ui/cl_perksmenu.lua')
 
-// Resources
+-- Resources
 
 resource.AddFile('sound/Raindrop/levelup.wav')
 resource.AddFile('materials/Raindrop/perklocked.png')

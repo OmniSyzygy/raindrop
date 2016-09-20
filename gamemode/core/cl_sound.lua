@@ -4,18 +4,18 @@
 	Also allows for sound cues which allow mixing, crossfading, adding noise, etc.
 --]]
 
-rain.sound = {};
+rain.sound = {}
 
 function rain.sound:PlayMenuMusic()
 	if (!self.MenuMusic) then
-		self.MenuMusic = CreateSound(LocalPlayer(), "stalker/music/menu_theme.mp3");
-		self.MenuMusic:Play();
-	end;
-end;
+		self.MenuMusic = CreateSound(LocalPlayer(), "stalker/music/menu_theme.mp3")
+		self.MenuMusic:Play()
+	end
+end
 
 function rain.sound:StopMenuMusic()
 	if (self.MenuMusic) then
-		self.MenuMusic:FadeOut(1);
-		self.MenuMusic = nil;
-	end;
-end;
+		self.MenuMusic:FadeOut(1)
+		self.MenuMusic = nil
+	end
+end

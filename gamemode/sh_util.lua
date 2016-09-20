@@ -5,19 +5,37 @@ SV = SERVER
 
 rain.util = {}
 
+local tAxis = {"x", "y", "z"}
+
 function COSerp(fraction, origin, target)
-	local fraction2 = (1 - math.cos(fraction * math.pi)) / 2;
+	local fraction2 = (1 - math.cos(fraction * math.pi)) / 2
 
-	return origin * (1 - fraction2) + (target * fraction2);
-end;
+	return origin * (1 - fraction2) + (target * fraction2)
+end
 
-function COSerpVector(fraction, origin, target)
-	local x = COSerp(fraction, origin.x, target.x);
-	local y = COSerp(fraction, origin.y, target.y);
-	local z = COSerp(fraction, origin.z, target.z);
+function COSerpVector(nFraction, vOrigin, vTarget)
+	local vOut = Vector(0, 0, 0)
+	for _, sAxis in next(tAxis) do
+		vOut[sAxis] = COSerp(nFraction, vOrigin[sAxis], vTarget[sAxis])
+	end
 
-	return Vector(x, y, z);
-end;
+	return vOut
+end
+
+function SLerp(nFraction, nOrigin, nTarget)
+	local nFrac = (1 - math.sin(nFraction * math.pi)) / 2
+
+	return nOrigin * (1 - nFrac) + (nTarget * nFrac)
+end
+
+function SLerpVector(nFraction, vOrigin, vTarget)
+	local vOut = Vector(0, 0, 0)
+	for _, sAxis in next(tAxis) do
+		vOut[sAxis] = SLerp(nFraction, vOrigin[sAxis], vTarget[sAxis])
+	end
+
+	return vOut
+end
 
 function rain.util.log(sText, sTag)
 
@@ -44,26 +62,26 @@ function rain.util.rawinclude(sFilePath)
 	include(sFilePath)
 
 	if (rain.dev) then
-		rain.util.log(sFilePath, "loaded file");
-	end;
+		rain.util.log(sFilePath, "loaded file")
+	end
 end
 
 function rain.util.include(sFilePath)
 	if (!SV and string.find(sFilePath, "sv_")) then
-		return;
-	end;
+		return
+	end
 
 	if (SV and (string.find(sFilePath, "sh_") or string.find(sFilePath, "lib_") or string.find(sFilePath, "ut_"))) then
-		AddCSLuaFile(sFilePath);
-	end;
+		AddCSLuaFile(sFilePath)
+	end
 
 	if (SV and string.find(sFilePath, "cl_")) then
-		AddCSLuaFile(sFilePath);
+		AddCSLuaFile(sFilePath)
 
-		return;
-	end;
+		return
+	end
 
-	rain.util.rawinclude(sFilePath);
+	rain.util.rawinclude(sFilePath)
 end
 
 function Sound(sPathToSound)

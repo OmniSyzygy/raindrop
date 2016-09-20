@@ -27,7 +27,7 @@ function Raindrop.addXP(ply, amount, notify, carryOver)
 	
 	local TotalXP = PlayerXP + amount
 
-	if(TotalXP>=Raindrop.getMaxXP(ply)) then // Level up!
+	if(TotalXP>=Raindrop.getMaxXP(ply)) then -- Level up!
 		PlayerLevel = PlayerLevel + 1
 
 		local RemainingXP = (TotalXP-Raindrop.getMaxXP(ply))
@@ -67,7 +67,7 @@ function Raindrop.addLevels(levels)
 			return false
 	end
 	if(((GetGlobalInt(SQLStr(ply:SteamID64()).."Level", 0) or 1) +levels)>LevelSystemConfiguration.MaxLevel) then
-		// Determine how many levels we can add.
+		-- Determine how many levels we can add.
 		local LevelsCan = ((((GetGlobalInt(SQLStr(ply:SteamID64()).."Level", 0) or 1)+levels))-LevelSystemConfiguration.MaxLevel)
 		if(LevelsCan == 0) then
 			return 0

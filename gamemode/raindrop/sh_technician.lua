@@ -23,10 +23,8 @@ if (SERVER) then
 			if objItem:GetBaseItem() then
 				local bp = rain.item:New("blueprint")
 				bp:SetBaseItem(objItem:GetBaseItem())
-
-				
 			end
 		end	
 	end
-
+	
 end

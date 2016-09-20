@@ -1,53 +1,53 @@
-AddCSLuaFile();
+AddCSLuaFile()
 
-ENT.Base = "base_anim";
-ENT.Type = "anim";
+ENT.Base = "base_anim"
+ENT.Type = "anim"
 
-ENT.PrintName		= "";
-ENT.Author			= "";
-ENT.Contact			= "";
-ENT.Purpose			= "";
-ENT.Instructions	= "";
+ENT.PrintName		= ""
+ENT.Author			= ""
+ENT.Contact			= ""
+ENT.Purpose			= ""
+ENT.Instructions	= ""
 
-ENT.Spawnable			= false;
-ENT.AdminSpawnable		= false;
+ENT.Spawnable			= false
+ENT.AdminSpawnable		= false
 
 function ENT:PostEntityPaste( ply, ent, tab )
 	
-	GAMEMODE:LogSecurity( ply:SteamID(), "n/a", ply:VisibleRPName(), "Tried to duplicate " .. ent:GetClass() .. "!" );
-	ent:Remove();
+	GAMEMODE:LogSecurity( ply:SteamID(), "n/a", ply:VisibleRPName(), "Tried to duplicate " .. ent:GetClass() .. "!" )
+	ent:Remove()
 	
 end
 
 function ENT:SetupDataTables()
 	
-	self:NetworkVar( "Number", 0, "ItemID" );
+	self:NetworkVar( "Number", 0, "ItemID" )
 	
 end
 
 function ENT:Initialize()
 	
-	if( CLIENT ) then return; end
+	if( CLIENT ) then return end
 	
-	self:PhysicsInit( SOLID_VPHYSICS );
+	self:PhysicsInit( SOLID_VPHYSICS )
 	
-	local phys = self:GetPhysicsObject();
+	local phys = self:GetPhysicsObject()
 	
 	if( phys and phys:IsValid() ) then
 		
-		phys:Wake();
+		phys:Wake()
 		
 	end
 	
-	self:SetUseType( SIMPLE_USE );
+	self:SetUseType( SIMPLE_USE )
 	
-	self.KillTime = CurTime() + 21600; -- 6 hours
+	self.KillTime = CurTime() + 21600 -- 6 hours
 	
 end
 
 function ENT:OnTakeDamage( dmginfo )
 
-	self:TakePhysicsDamage( dmginfo );
+	self:TakePhysicsDamage( dmginfo )
 	
 end
 
@@ -57,19 +57,19 @@ function ENT:Use( activator, caller, usetype, val )
 
 	if( !activator:CanTakeItem( self:GetItem() ) ) then
 		
-		net.Start( "nTooHeavy" );
-		net.Send( activator );
+		net.Start( "nTooHeavy" )
+		net.Send( activator )
 		
-		return;
+		return
 		
 	end
 	
-	self:Remove();
+	self:Remove()
 	
 	if (string.len(data) > 0) then
-		activator:GiveItem( self:GetItem(), 1, pon.decode(data) );
+		activator:GiveItem( self:GetItem(), 1, pon.decode(data) )
 	else
-		activator:GiveItem( self:GetItem(), 1);
+		activator:GiveItem( self:GetItem(), 1)
 	end
 end
 
@@ -79,7 +79,7 @@ function ENT:Think()
 	
 	if( CurTime() > self.KillTime ) then
 		
-		self:Remove();
+		self:Remove()
 		
 	end
 	

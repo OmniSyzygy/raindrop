@@ -29,8 +29,8 @@ PLAYER_HOLDTYPE_TRANSLATOR["duel"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["bugbait"] = "normal"
 
 local string = string
-local stringLower = string.lower;
-local stringFind = string.find;
+local stringLower = string.lower
+local stringFind = string.find
 
 local getModelClass = rain.anim.getModelClass
 local IsValid = IsValid

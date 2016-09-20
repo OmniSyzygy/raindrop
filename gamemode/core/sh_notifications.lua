@@ -1,6 +1,7 @@
 local pmeta = FindMetaTable("Player")
-
+if (SV) then
 util.AddNetworkString("rain.notify")
+end
 
 if (CL) then
 

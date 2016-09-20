@@ -37,17 +37,17 @@ end
 		if not LevelSystemConfiguration then return end
 		if not LevelSystemConfiguration.EnableHUD then return end
 		local PlayerLevel = GetGlobalInt(SQLStr(LocalPlayer():SteamID64()).."Level", 0)
-		local PlayerXP = GetGlobalInt(SQLStr(LocalPlayer():SteamID64()).."XP", 0) // Draw the XP Bar
-		local percent = ((PlayerXP or 0) / math.pow((((10+((PlayerLevel*(PlayerLevel+1)*90))))*.261), 2.131)) // Gets the accurate level up percentage
+		local PlayerXP = GetGlobalInt(SQLStr(LocalPlayer():SteamID64()).."XP", 0) -- Draw the XP Bar
+		local percent = ((PlayerXP or 0) / math.pow((((10+((PlayerLevel*(PlayerLevel+1)*90))))*.261), 2.131)) -- Gets the accurate level up percentage
 		local drawXP = Lerp(8 * FrameTime(), OldXP, percent)
 		OldXP = drawXP
 		local percent2 = percent * 100
 		percent2 = math.Round(percent2)
-		percent2 = math.Clamp(percent2, 0, 99) // Make sure it doesn't round past 100 %
+		percent2 = math.Clamp(percent2, 0, 99) -- Make sure it doesn't round past 100 %
 		surface.SetDrawColor(0, 0, 0, 200)
-		surface.DrawRect(10, (ScrH()/2) - 400, 200, 15) // Draw the XP Bar before the texture
+		surface.DrawRect(10, (ScrH()/2) - 400, 200, 15) -- Draw the XP Bar before the texture
 		surface.SetDrawColor(LevelSystemConfiguration.LevelBarColor[1], LevelSystemConfiguration.LevelBarColor[2], LevelSystemConfiguration.LevelBarColor[3], 255)
-		surface.DrawRect(10, (ScrH()/2) - 400, 200 * drawXP, 15) // Render the texture
+		surface.DrawRect(10, (ScrH()/2) - 400, 200 * drawXP, 15) -- Render the texture
 		draw.DrawText(math.Truncate((GetGlobalInt(SQLStr(LocalPlayer():SteamID64()).."XP", 0) or 0), 0)..' / '..math.Truncate(math.pow((((10+((PlayerLevel*(PlayerLevel+1)*90))))*.261), 2.131)), "HeadBar", 110, (ScrH()/2) - 400, (LevelSystemConfiguration.XPTextColor or Color(255, 255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		
 		local rankName = ""

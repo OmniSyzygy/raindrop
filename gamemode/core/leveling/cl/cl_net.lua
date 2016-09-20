@@ -17,7 +17,7 @@ end)
 
 local pm = FindMetaTable("Player")
 
-// PERKS
+-- PERKS
 function pm:RaindropNetActivePerks()
 	net.Start( "RaindropActivePerks" )
 		net.WriteTable( Raindrop.ActivePerks )

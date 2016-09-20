@@ -70,43 +70,43 @@ hook.Add("HUDPaint", "testblur", function()
 				{x = tl.x, y = tl.y}
 			}
 
-			render.ClearStencil();
-			render.SetStencilEnable(true);
+			render.ClearStencil()
+			render.SetStencilEnable(true)
 		
 			--------------------------------------------------------
 			--- Setup the stencil & draw the circle mask onto it ---
 			--------------------------------------------------------
 		
-			render.SetStencilWriteMask(1);
-			render.SetStencilTestMask(1);
+			render.SetStencilWriteMask(1)
+			render.SetStencilTestMask(1)
 		
-			render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_NEVER);
-			render.SetStencilFailOperation(STENCILOPERATION_REPLACE);
-			render.SetStencilZFailOperation(STENCILOPERATION_KEEP);
-			render.SetStencilPassOperation(STENCILOPERATION_KEEP);
-			render.SetStencilReferenceValue(1);
+			render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_NEVER)
+			render.SetStencilFailOperation(STENCILOPERATION_REPLACE)
+			render.SetStencilZFailOperation(STENCILOPERATION_KEEP)
+			render.SetStencilPassOperation(STENCILOPERATION_KEEP)
+			render.SetStencilReferenceValue(1)
 		
-			surface.SetDrawColor(255, 255, 255);
-			draw.NoTexture();
+			surface.SetDrawColor(255, 255, 255)
+			draw.NoTexture()
 			--surface.DrawRect(0,0,200,200)
 			surface.DrawPoly(itemdata)			
 
-				render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_EQUAL);
-				render.SetStencilReferenceValue(1);
-				render.SetStencilFailOperation(STENCILOPERATION_ZERO);
-				render.SetStencilZFailOperation(STENCILOPERATION_ZERO);
-				render.SetStencilPassOperation(STENCILOPERATION_KEEP);
+				render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_EQUAL)
+				render.SetStencilReferenceValue(1)
+				render.SetStencilFailOperation(STENCILOPERATION_ZERO)
+				render.SetStencilZFailOperation(STENCILOPERATION_ZERO)
+				render.SetStencilPassOperation(STENCILOPERATION_KEEP)
 		
 
 				---- Background
-				--surface.SetDrawColor(Color(255, 0, 0, 10));
-				surface.SetDrawColor(Color(0, 0, 0, 35));
-				surface.DrawRect(0, 0, ScrW(), ScrH());
+				--surface.SetDrawColor(Color(255, 0, 0, 10))
+				surface.SetDrawColor(Color(0, 0, 0, 35))
+				surface.DrawRect(0, 0, ScrW(), ScrH())
 
 				DrawBlurRect(0,0,ScrW(), ScrH(), 2, 5)
 
-			render.SetStencilEnable(false);
-			render.ClearStencil();
+			render.SetStencilEnable(false)
+			render.ClearStencil()
 
 			local Pos = v:GetPos()
 			local Ang1 = v:GetAngles()
