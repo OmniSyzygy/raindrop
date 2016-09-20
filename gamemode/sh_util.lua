@@ -15,7 +15,8 @@ end
 
 function COSerpVector(nFraction, vOrigin, vTarget)
 	local vOut = Vector(0, 0, 0)
-	for _, sAxis in next(tAxis) do
+	
+	for _, sAxis in ipairs(tAxis) do
 		vOut[sAxis] = COSerp(nFraction, vOrigin[sAxis], vTarget[sAxis])
 	end
 
