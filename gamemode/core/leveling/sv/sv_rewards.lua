@@ -1,5 +1,5 @@
 function RaindropLoadRewards()
-	local fs, dirs = file.Find( 'Raindrop/rewards--[[', 'LUA' )
+	local fs, dirs = file.Find( 'Raindrop/rewards/*', 'LUA' )
 	
 	for i=1,#fs do
 		print( 'Raindrop/rewards/' .. fs[i] )

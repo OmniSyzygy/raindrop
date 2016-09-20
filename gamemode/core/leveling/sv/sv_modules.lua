@@ -1,5 +1,5 @@
 function RaindropLoadModules()
-	local fs, dirs = file.Find( 'Raindrop/modules--[[', 'LUA' )
+	local fs, dirs = file.Find( 'Raindrop/modules/*', 'LUA' )
 	for i=1,#dirs do
 
 		print( 'Raindrop/modules/' .. dirs[i] )
