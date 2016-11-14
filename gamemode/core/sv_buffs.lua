@@ -25,8 +25,8 @@ playerBuffs = playerBuffs or {}
 function RegisterBuff(buffName, buffUsesArgs, buffFunc)
 	if( !buffName || !buffFunc || type(buffUsesArgs) != "boolean" ) then return end
 	
-	if ( chatcommands ) then
-		for k, v in pairs( chatcommands ) do
+	if ( buffsTable ) then
+		for k, v in pairs( buffsTable ) do
 			if( buffName == k ) then
 				return
 			end
@@ -114,7 +114,7 @@ function meta:RemoveBuff(name)
 						local blyat = true
 					end
 				elseif !buffsTable[v] && blyat == true then
-					table.remove( buffsTable, k )
+					table.remove( playerBuffs, k )
 				elseif buffsTable[v] && blyat == true then
 					blyat = false
 				end
