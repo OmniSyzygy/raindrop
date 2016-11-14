@@ -8,7 +8,8 @@
 		queryObj:Execute()
 		mysql:RawQuery("CREATE TABLE IF NOT EXISTS levels(steam_id64 VARCHAR(32) NOT NULL, steam_name VARCHAR(32) NOT NULL,level int NOT NULL,xp int NOT NULL,UNIQUE(steam_id64))")
 	end
-	hook.Add("DatabaseConnected", "Raindrop:DataBaseConnected", onConnected)
+--	hook.Add("DatabaseConnected", "Raindrop:DataBaseConnected", onConnected)
+-- This throws out an error when trying to call nil method 'Unique' on line 7.
 
 	function onConnectionFailed()
 	end

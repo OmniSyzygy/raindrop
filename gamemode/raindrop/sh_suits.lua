@@ -30,7 +30,7 @@ end
 
 -- goes through the players clothing and Gets how much damage they would take
 function pmeta:GetDamageTaken(sBone, objDamageInfo)
-	for _, Outfits in pairs(self:GetOutfits())
+--	for _, Outfits in pairs(self:GetOutfits())
 end
 
 -- this is called by the inventory item when a player wants to wear an outfit
@@ -238,7 +238,7 @@ function clothing_base:SetDamageResistance(nNewDamageResistance)
 end
 
 function clothing_base:GetDamageResistance()
-	return self.DR = 0.0
+--	return self.DR = 0.0
 end
 
 function clothing_base:GetClothingHealth()

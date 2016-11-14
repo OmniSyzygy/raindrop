@@ -28,7 +28,7 @@ end
 
 function RaindropLoadPerks()
 
-	local fs, dirs = file.Find( 'perks--[[', 'LUA' )
+	local fs, dirs = file.Find( 'perks/*', 'LUA' )
 	for i=1,#fs do	
 		print( 'perks/' .. fs[i] )
 		AddCSLuaFile( 'perks/' .. fs[i] )
@@ -36,7 +36,7 @@ function RaindropLoadPerks()
 	end
 
 	for i=1, #dirs do
-		local perks = file.Find( 'perks/' .. dirs[i] .. '--[[.lua', 'LUA' )
+		local perks = file.Find( 'perks/' .. dirs[i] .. '/*.lua', 'LUA' )
 		for perkid=1,#perks do	
 			print( 'perks/' .. dirs[i] .. '/' .. perks[perkid] )
 			AddCSLuaFile( 'perks/' .. dirs[i] .. '/' .. perks[perkid] )
