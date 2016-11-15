@@ -1,7 +1,7 @@
 local pmeta = FindMetaTable("Player")
-if (SV) then
-util.AddNetworkString("rain.notify")
-end
+-- if (SV) then
+
+-- end
 
 if (CL) then
 
@@ -13,6 +13,7 @@ if (CL) then
 	end
 
 elseif (SV) then
+	util.AddNetworkString("rain.notify")
 
 	function pmeta:Notify(sNotification, nSeconds)
 		net.Start("rain.notify")
