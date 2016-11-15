@@ -249,9 +249,10 @@ if (SV) then
 	util.AddNetworkString("rain.charcreate")
 
 	net.Receive("rain.charcreate", function(len, ply)
+	if ( IsValid( ply ) ) then
 		local charData = rain.net.ReadTable()
-
 		rain.character.create(ply, charData.data, charData.appearance)
+		end
 	end)
 
 	util.AddNetworkString("rain.chardelete")
@@ -552,16 +553,16 @@ if (SV) then
 			return
 		end
 
-		local name, chardata = "error", {}
-
+		local name, chardata = "error", "{}"
+		
 		if tCharCreateData.Name then
 			name = tCharCreateData.Name
 		end
 
 		if tCharCreateData.CharData then
-			chardata = tCharCreateData.CharData
+			chardata = pon.encode(tCharCreateData.CharData)
 		end
-
+		
 		local appearance = "{}"
 		if tAppearanceData then
 			appearance = pon.encode(tAppearanceData)
@@ -571,7 +572,6 @@ if (SV) then
 		if tInventory then
 			inventory = pon.encode(tInventory)
 		end
-
 		local InsertObj = mysql:Insert("characters")
 		InsertObj:Insert("charname", name)
 		InsertObj:Insert("data_character", chardata)

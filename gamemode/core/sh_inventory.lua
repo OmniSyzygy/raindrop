@@ -680,7 +680,7 @@ end
 
 function meta:LoadItemsFromString( str )
 
-	self:SetupInventory(GAMEMODE.InventorySizeX, GAMEMODE.InventorySizeY)
+	self:SetupInventory(5, 5)
 
 	local SaveData = {}
 
