@@ -73,5 +73,6 @@ function rain.db.onconnectionsuccess()
 
 	timer.Create("rain.db.think", nCachedTime, 0, function()
 		mysql:Think()
+		rain:VolumeThink()
 	end)
 end

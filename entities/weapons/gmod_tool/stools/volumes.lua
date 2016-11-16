@@ -131,7 +131,6 @@ end
 
 if (CLIENT) then
 	function TOOL:DrawCurrentVolume()
-	print("trying to draw current volume")
 		if (self.MinPoint == nil or self.MaxPoint == nil) then
 			return
 		end
@@ -189,7 +188,6 @@ function TOOL:DrawHUD()
 				local voldata = GAMEMODE:GetVolumeType(v.Type)
 				cam.Start3D()
 					if (v.Radial) then
-					print(v.Min)
 						render.DrawWireframeSphere(v.Min, v.Max:Distance(v.Min), 9, 9, voldata.DrawColor)
 						render.DrawLine(v.Min, v.Max, voldata.DrawColor, true)
 					else

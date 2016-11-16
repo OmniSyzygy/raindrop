@@ -213,9 +213,20 @@ end
 
 --[[
 	This needs to be moved to a config file
-	rain:RegisterVolumeType(string type name, string pretty name, strength?, should it be on the serverside as well, metadata, color, fnOnEnter, fnOnExit, fnWhileInside)
+	
+	if its moved to the config file it needs to actually be set up with functions, might be better to just have these setup in the specific files they're needed.
 --]]
 
-rain:RegisterVolumeType("AmbientSound", "Ambient Sound", 1, true, {}, Color(100, 255, 100, 255))
+rain:RegisterVolumeType(
+"AmbientSound",
+ "Ambient Sound",
+ 1, 
+ true, 
+ {}, 
+ Color(100, 255, 100, 255),
+function(ent, sType, tMetadata)
+		print(ent, "has entered the", sType, "volume")
+end)
+ 
 rain:RegisterVolumeType("AreaTrigger", "Area Trigger", 1, true, {}, Color(100, 100, 255, 255))
 rain:RegisterVolumeType("S2KZone", "S2K Zone", 1, true, {}, Color(255, 100, 100, 255))
