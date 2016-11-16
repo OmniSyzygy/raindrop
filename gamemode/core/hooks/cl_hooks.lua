@@ -196,7 +196,8 @@ local inner_color = Color(0, 0, 0, 210)
 
 local tex_white = surface.GetTextureID("vgui/white")
 
-local rendering_map = false
+rendering_map = false
+prevent_map = false
 local map_rt = GetRenderTarget("RD.Minimap", RADAR_RADIUS * 2, RADAR_RADIUS * 2, true)
 local map_rt_mat = CreateMaterial("RD.MinimapMat", "UnlitGeneric", {["$basetexture"] = "RD.Minimap"})
 
@@ -349,8 +350,12 @@ local function DrawCoPHUD(localPlayer, scrW, scrH)
 			draw.SimpleText("0", "RD.HUDNormal", statusX + statusW * 0.49, statusY + statusH * 0.81, fadedYellow, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		end
 	end
-
-	DrawMinimap()
+	if !prevent_map then
+		DrawMinimap()
+	end
+	
+	
+		prevent_map = false
 end
 
 local function DrawClockworkHUD(localPlayer, scrW, scrH)
@@ -491,8 +496,12 @@ local function Draw3DHUD(localPlayer, scrW, scrH)
 
 		cam.End3D2D()
 	cam.End3D()
-
-	DrawMinimap()
+	
+	if !prevent_map then
+		DrawMinimap()
+	end
+	
+	prevent_map = false
 end
 
 local hudCheck = {

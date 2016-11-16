@@ -10,7 +10,11 @@ rain.volumes = {} -- this is where actual volume data is stored
 E_ENTERVOLUME = 0
 E_INVOLUME = 1
 E_EXITVOLUME = 2
-
+if (SV) then
+	util.AddNetworkString("nAddVolume")
+	util.AddNetworkString("nRemoveVolume")
+	util.AddNetworkString("nVolume")
+end
 rain.struct:RegisterStruct("Volume", {
 	Type = "VolumeType",
 	Min = Vector(0,0,0),
@@ -29,7 +33,7 @@ rain.struct:RegisterStruct("VolumeType", {
 		print(ent, "has exited the ", sType, "volume")
 	end,
 	WhileInside = function(ent, sType, tMetadata)
-		--print("gimme da succ")
+		print("gimme da succ")
 	end,
 	DrawColor = Color(255, 255, 255, 255) -- this is the color used to draw the lines surrounding the volume when using the toolgun.
 })
@@ -209,6 +213,7 @@ end
 
 --[[
 	This needs to be moved to a config file
+	rain:RegisterVolumeType(string type name, string pretty name, strength?, should it be on the serverside as well, metadata, color, fnOnEnter, fnOnExit, fnWhileInside)
 --]]
 
 rain:RegisterVolumeType("AmbientSound", "Ambient Sound", 1, true, {}, Color(100, 255, 100, 255))
