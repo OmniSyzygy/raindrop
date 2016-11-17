@@ -67,6 +67,17 @@ function rain.db.onconnectionsuccess()
 	queryObj:PrimaryKey("id")
 	queryObj:Execute()
 	
+	local queryObj = mysql:Create("volumes")
+	queryObj:Create("id", "INT NOT NULL AUTO_INCREMENT") -- volume id, simply the primary key
+	queryObj:Create("Min", "VARCHAR(64) NOT NULL") -- string of the item base
+	queryObj:Create("Max", "VARCHAR(64) NOT NULL") -- edited data, uses, etc goes here
+	queryObj:Create("Type", "VARCHAR(64) NOT NULL") -- volume type
+	queryObj:Create("Map", "VARCHAR(64) NOT NULL") -- map name
+	queryObj:Create("Radial", "TINYINT(1) NOT NULL") -- 0 or 1 indicating if it's radial or not
+
+	queryObj:PrimaryKey("id")
+	queryObj:Execute()
+	
 	rain.log.onconnectionsuccess()
 
 	local nCachedTime = rain.cfg.db.thinktime

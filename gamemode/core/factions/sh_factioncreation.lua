@@ -49,7 +49,7 @@ if (SV) then
 	net.Receive("rain.factioncreate", function(len, ply)
 		if ( IsValid( ply ) ) then
 			local factionData = rain.net.ReadTable()
-			rain.faction.create(ply, factionData)
+			rain:LoadVolumes()
 		end
 	end)
 
@@ -95,22 +95,7 @@ print("tFactCreateData exists.")
 		InsertObj:Insert("fact_resources", resources)
 		InsertObj:Insert("fact_inventory", inventory)
 		InsertObj:Callback(function(result, status, lastID)
-			-- pOwningClient:AddCharacter(lastID)
-
-			-- local factionTable = {}
-			-- factionTable.charname = name
-			-- factionTable.id = lastID
-			-- factionTable.data_character = chardata or {}
-			-- factionTable.data_appearance = appearance or {}
-			-- factionTable.data_adminonly = {}
-			-- factionTable.data_inventory = inventory or {}
-
-			-- pOwningClient.loaddata = pOwningClient.loaddata or {}
-			-- table.insert(pOwningClient.loaddata, factionTable)
-
-			-- net.Start("SyncMenuData")
-				-- rain.net.WriteTable(pOwningClient.loaddata)
-			-- net.Send(pOwningClient)
+			
 		end)
 		InsertObj:Execute()
 	end

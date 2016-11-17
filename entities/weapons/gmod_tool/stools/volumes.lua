@@ -66,7 +66,7 @@ function TOOL:LeftClick( trace )
 				NewVolume.Type = self:GetClientInfo("type")
 				NewVolume.Radial = self.radial
 
-				GAMEMODE:AddVolume(NewVolume)
+				GAMEMODE:AddVolume(NewVolume, true)
 			end
 			self:SetStage(STAGE_PLACEMIN)
 		end
