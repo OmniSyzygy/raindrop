@@ -107,8 +107,13 @@ end
 	--------------------------------Networking-------------------------------------------
 	-------------------------------------------------------------------------------------
 --]]
+if (SV) then
+	util.AddNetworkString("nLoadInventory")
+end
+
 
 if (CLIENT) then
+
 
 	local function nLoadInventory()
 		local inv = net.ReadString()
@@ -664,10 +669,12 @@ if (CLIENT) then
 	end
 
 	concommand.Add("cc_dev_openinventory", function()
+	LocalPlayer():LoadItemsFromString("")
 		LocalPlayer():OpenInventory()
 	end)
 
 	concommand.Add("cc_dev_stalkertest", function()
+	LocalPlayer():LoadItemsFromString("")
 		LocalPlayer():OpenStalkerInv()
 	end)
 
@@ -675,23 +682,25 @@ end
 
 --[[
 	Function: Load Items From String
-	Purpose: Loads the players item from the database
+	Purpose: Loads the players item from the database. Should be used on the server-side.
 --]]
 
 function meta:LoadItemsFromString( str )
-
-	self:SetupInventory(5, 5)
+print("loading items from string maybe")
+	meta:SetupInventory(5, 5)
 
 	local SaveData = {}
-
+if str ~= nil then
 	if string.len(str) > 0 then
 		SaveData = pon.decode(str)
-		self.Inventory = SaveData
 	end
-
-	net.Start("nLoadInventory")
+end
+self.Inventory = SaveData
+	if SERVER then
+		net.Start("nLoadInventory")
 		net.WriteString(pon.encode(self.Inventory))
-	net.Send(self)
+		net.Send(self)
+	end
 end
 
 --[[

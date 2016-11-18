@@ -10,7 +10,12 @@ rain.volumes = {} -- this is where actual volume data is stored
 E_ENTERVOLUME = 0
 E_INVOLUME = 1
 E_EXITVOLUME = 2
-
+if (SV) then
+	util.AddNetworkString("nAddVolume")
+	util.AddNetworkString("nRemoveVolume")
+	util.AddNetworkString("nVolume")
+	util.AddNetworkString("nSendVolumes")
+end
 rain.struct:RegisterStruct("Volume", {
 	Type = "VolumeType",
 	Min = Vector(0,0,0),
@@ -29,7 +34,7 @@ rain.struct:RegisterStruct("VolumeType", {
 		print(ent, "has exited the ", sType, "volume")
 	end,
 	WhileInside = function(ent, sType, tMetadata)
-		--print("gimme da succ")
+		print("gimme da succ")
 	end,
 	DrawColor = Color(255, 255, 255, 255) -- this is the color used to draw the lines surrounding the volume when using the toolgun.
 })
@@ -133,25 +138,44 @@ function rain:GetVolumeType(sName)
 end
 
 --[[
+	Function: SendVolumes
+	Purpose: Gets the volume table from the server and sends it to the player.
+--]]
+
+function rain:SendVolumes(pClient)
+	if (SERVER) then
+		
+			net.Start("nSendVolumes")
+			net.WriteTable(rain.volumes)
+			net.Send(pClient)
+		
+	end
+end
+
+--[[
 	Function: AddVolume
 	Purpose: When called it adds a volume to the registry, this function gets replicated from server to client but not the other way around.
 --]]
 
-function rain:AddVolume(tVolume, index)
+function rain:AddVolume(tVolume, new, index)
 	local NewVolume = rain.struct:GetStruct("Volume")
-	NewVolume.Min = tVolume.Min or NewVolume.Min
-	NewVolume.Max = tVolume.Max or NewVolume.Max
+	NewVolume.Min = Vector(tVolume.Min) or NewVolume.Min
+	NewVolume.Max = Vector(tVolume.Max) or NewVolume.Max
 	NewVolume.Type = tVolume.Type or NewVolume.Type
-	NewVolume.Radial = tVolume.Radial or NewVolume.Radial
+	NewVolume.Radial = tobool(tVolume.Radial) or tobool(NewVolume.Radial)
 
 	local newindex = index or #self.volumes+1
 	self.volumes[newindex] = NewVolume
 
 	if (SERVER) then
-		net.Start("nAddVolume")
-		net.WriteInt(newindex, 11) -- since I assume there will be a lot of volumes created I'm using a fairly larger int, this allows for up to 1,024 volumes which is more than enough
-		net.WriteTable(NewVolume)
-		net.Broadcast()
+		if new then
+			rain:SaveVolume(NewVolume)
+		end
+			net.Start("nAddVolume")
+			net.WriteInt(newindex, 11) -- since I assume there will be a lot of volumes created I'm using a fairly larger int, this allows for up to 1,024 volumes which is more than enough
+			net.WriteTable(NewVolume)
+			net.Broadcast()
+		
 	end
 end
 
@@ -163,9 +187,11 @@ end
 function rain:RemoveVolume(vPos)
 	for k, v in pairs(self.volumes) do
 		if ((v.Min:Distance(vPos) < 256) or (v.Max:Distance(vPos) < 256)) then
+		
 			self.volumes[k] = nil
 
 			if (SERVER) then
+				rain:DeleteVolume(v.Min, v.Max, game.GetMap())
 				net.Start("nRemoveVolume")
 				net.WriteVector(vPos)
 				net.Broadcast()
@@ -176,11 +202,17 @@ function rain:RemoveVolume(vPos)
 end
 
 if (CLIENT) then
+	local function nSendVolumes(len)
+		local NewVolumes = net.ReadTable()
+		rain.volumes = NewVolumes
+	end
+	net.Receive("nSendVolumes", nSendVolumes)
+
 	local function nAddVolume(len)
 		local Index = net.ReadInt(11)
 		local NewVolume = net.ReadTable()
 
-		GAMEMODE:AddVolume(NewVolume, Index)
+		GAMEMODE:AddVolume(NewVolume, false, Index)
 	end
 	net.Receive("nAddVolume", nAddVolume)
 
@@ -209,8 +241,20 @@ end
 
 --[[
 	This needs to be moved to a config file
+	
+	if its moved to the config file it needs to actually be set up with functions, might be better to just have these setup in the specific files they're needed.
 --]]
 
-rain:RegisterVolumeType("AmbientSound", "Ambient Sound", 1, true, {}, Color(100, 255, 100, 255))
+rain:RegisterVolumeType(
+"AmbientSound",
+ "Ambient Sound",
+ 1, 
+ true, 
+ {}, 
+ Color(100, 255, 100, 255),
+function(ent, sType, tMetadata)
+		print(ent, "has entered the", sType, "volume")
+end)
+ 
 rain:RegisterVolumeType("AreaTrigger", "Area Trigger", 1, true, {}, Color(100, 100, 255, 255))
 rain:RegisterVolumeType("S2KZone", "S2K Zone", 1, true, {}, Color(255, 100, 100, 255))

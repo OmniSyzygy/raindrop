@@ -21,8 +21,8 @@ end
 
 function ENT:SetupDataTables()
 	
-	self:NetworkVar( "Number", 0, "ItemID" )
-	
+	self:NetworkVar( "Int", 0, "ItemID" )
+	self:NetworkVar( "String", 0, "Data" )
 end
 
 function ENT:Initialize()
@@ -53,9 +53,9 @@ end
 
 function ENT:Use( activator, caller, usetype, val )
 	
-	local data = self:GetData()
+	print(self:GetData())
 
-	if( !activator:CanTakeItem( self:GetItem() ) ) then
+	if( !activator:CanTakeItem( self:GetItemID() ) ) then
 		
 		net.Start( "nTooHeavy" )
 		net.Send( activator )
@@ -66,8 +66,8 @@ function ENT:Use( activator, caller, usetype, val )
 	
 	self:Remove()
 	
-	if (string.len(data) > 0) then
-		activator:GiveItem( self:GetItem(), 1, pon.decode(data) )
+	if (string.len(self:GetData()) > 0) then
+		activator:GiveItem( self:GetItemID(), 1, pon.decode(self:GetData()) )
 	else
 		activator:GiveItem( self:GetItem(), 1)
 	end

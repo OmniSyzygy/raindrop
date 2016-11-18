@@ -56,13 +56,17 @@ function TOOL:LeftClick( trace )
 			end
 		elseif (self:GetStage() == STAGE_SENDTOSERVER) then
 			if (SERVER) then
-				local NewVolume = GAMEMODE:GetStruct("Volume")
+			
+							print("hello volume")
+			
+				local NewVolume = GAMEMODE.struct:GetStruct("VolumeType")
+
 				NewVolume.Min = Vector(self:GetClientInfo("min"))
 				NewVolume.Max = Vector(self:GetClientInfo("max"))
 				NewVolume.Type = self:GetClientInfo("type")
 				NewVolume.Radial = self.radial
 
-				GAMEMODE:AddVolume(NewVolume)
+				GAMEMODE:AddVolume(NewVolume, true)
 			end
 			self:SetStage(STAGE_PLACEMIN)
 		end
@@ -141,7 +145,7 @@ if (CLIENT) then
 		end
 
 		render.DrawLine(self.MinPoint, self.MaxPoint, voldata.DrawColor, true)
-
+		prevent_map = true
 		cam.End3D()
 
 		local min = self.MinPoint:ToScreen()
@@ -192,6 +196,7 @@ function TOOL:DrawHUD()
 	
 					local min = v.Min:ToScreen()
 					local max = v.Max:ToScreen()
+					prevent_map = true
 				cam.End3D()
 
 				if (self:GetStage() == STAGE_PLACEMIN) then

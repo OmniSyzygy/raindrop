@@ -25,6 +25,8 @@ function rain.db.onconnectionsuccess()
 	queryObj:Create("data_appearance", "MEDIUMTEXT NOT NULL")
 	queryObj:Create("data_adminonly", "MEDIUMTEXT NOT NULL")
 	queryObj:Create("data_inventory", "MEDIUMTEXT NOT NULL")
+	queryObj:Create("data_factions", "MEDIUMTEXT NOT NULL")
+	
 	queryObj:PrimaryKey("id")
 	queryObj:Execute()
 
@@ -45,6 +47,34 @@ function rain.db.onconnectionsuccess()
 	queryObj:Create("meta", "VARCHAR(64) NOT NULL") -- edited data, uses, etc goes here
 	queryObj:Create("inworld", "TINYINT(1) NOT NULL") -- 0 or 1 indicating wether it should be in the world or not
 	queryObj:Create("worlddata", "VARCHAR(256) NOT NULL") -- data such as the pos, angs, and any additional info needed to spawn the item
+	
+	queryObj:PrimaryKey("id")
+	queryObj:Execute()
+	
+	local queryObj = mysql:Create("factions")
+	--important keeping track stuff
+	queryObj:Create("id", "INT NOT NULL AUTO_INCREMENT") -- faction id
+	queryObj:Create("fact_steamid", "VARCHAR(2048) NOT NULL") -- creator of the faction, has full power over faction
+	--rank stuff
+	queryObj:Create("fact_name", "VARCHAR(64) NOT NULL") -- list of ranks w/ the string name of them
+	queryObj:Create("fact_ranknames", "VARCHAR(2048) NOT NULL") -- list of ranks w/ the string name of them
+	queryObj:Create("fact_uniforms", "VARCHAR(2048) NOT NULL") -- list of model uniforms tied to ranks (this would most likely swap body groups in cyberpunk/faction
+	--faction meta stuff
+	queryObj:Create("fact_desc", "VARCHAR(2048) NOT NULL") -- description of the faction, public on the faction list
+	queryObj:Create("fact_resources", "VARCHAR(64) NOT NULL") -- contains the factions resources
+	queryObj:Create("fact_inventory", "VARCHAR(256) NOT NULL") -- data such as the pos, angs, and any additional info needed to spawn the item
+	--actually setting primarykey and executing
+	queryObj:PrimaryKey("id")
+	queryObj:Execute()
+	
+	local queryObj = mysql:Create("volumes")
+	queryObj:Create("id", "INT NOT NULL AUTO_INCREMENT") -- volume id, simply the primary key
+	queryObj:Create("Min", "VARCHAR(64) NOT NULL") -- string of the item base
+	queryObj:Create("Max", "VARCHAR(64) NOT NULL") -- edited data, uses, etc goes here
+	queryObj:Create("Type", "VARCHAR(64) NOT NULL") -- volume type
+	queryObj:Create("Map", "VARCHAR(64) NOT NULL") -- map name
+	queryObj:Create("Radial", "TINYINT(1) NOT NULL") -- 0 or 1 indicating if it's radial or not
+
 	queryObj:PrimaryKey("id")
 	queryObj:Execute()
 	
@@ -54,5 +84,6 @@ function rain.db.onconnectionsuccess()
 
 	timer.Create("rain.db.think", nCachedTime, 0, function()
 		mysql:Think()
+		rain:VolumeThink()
 	end)
 end
