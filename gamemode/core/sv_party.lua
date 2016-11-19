@@ -66,6 +66,7 @@ function meta:GetParty()
 		elseif table.HasValue(v[3],self) then
 			return v
 			local cnt = cnt + 1
+			
 		end
 	end
 	if cnt == 0 then
@@ -208,7 +209,7 @@ else
 	--v:ChatPrint(ply:Nick().." may be exploiting or something has gone horribly wrong with party system.")
 	raindrop.log.add(ply,"misc","exploit","Possible attempt to exploit party via net.send spoof request accept")
 end
-end
+end)
 
 net.Receive("PartyKick", function(len,ply)
 	local cnt = 0

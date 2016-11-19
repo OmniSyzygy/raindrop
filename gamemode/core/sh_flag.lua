@@ -92,14 +92,14 @@ end
 function charmeta:RemoveFlags(sFlagsToRemove)
 	local flags = string.Explode("", sFlagsToRemove)
 	local currentflags = self:GetAdminOnlyData("flags", "")
-
+print("testing flag removal")
 	for _, flag in pairs(flags) do
 		if string.len(currentflags) > 0 then
-			currentflags = string.Replace(self.flags, flag, "")
+			newflags = string.Replace(currentflags, sFlagsToRemove, "")
 		end
 	end
 
-	self:SetAdminOnlyData("flags", currentflags)
+	self:SetAdminOnlyData("flags", newflags)
 end
 
 if rain.dev then

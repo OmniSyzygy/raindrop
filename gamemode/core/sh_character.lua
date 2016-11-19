@@ -9,6 +9,7 @@ DATA_APPEARANCE = 1
 DATA_INVENTORY = 2
 DATA_ADMINONLY = 3
 DATA_NAME = 4
+DATA_FACTIONS = 5
 
 rain.character = {}
 
@@ -148,6 +149,8 @@ if (SV) then
 			SaveObj:Update("data_adminonly", sNewData or pon.encode(self.data_adminonly))
 		elseif enumDataType == DATA_NAME then
 			SaveObj:Update("charname", sNewData or self:GetName())
+		elseif enumDataType == DATA_FACTIONS then
+			SaveObj:Update("data_factions", sNewData or pon.encode(self.data_factions))
 		end
 
 		SaveObj:Execute()
@@ -275,6 +278,7 @@ function character_meta:SetupDefaultDataFields()
 	self.data_inventory = {}
 	self.data_adminonly = {}
 	self.data_character = {}
+	self.data_factions = {}
 end
 
 function character_meta:SetNameAndID(sName, nID)
@@ -387,6 +391,27 @@ function character_meta:SetInventoryData(wArg1, wArg2)
 end
 
 --[[
+	Name: Set Factions
+	Category: Character
+	Desc: If the number of arguments > 1 it will set the admin only data using the first argument as a key, second as the new data. 
+		  A single argument means that it set the new admin only data to be equal to that data. The new data will be type checked to a table.
+--]]
+
+function character_meta:SetFactions(wArg1, wArg2)
+	if rain.util.countargs(wArg1, wArg2) > 1 then
+		self.data_adminonly[wArg1] = wArg2
+		if (SV) then
+			self:SyncDataByKey(DATA_FACTIONS, wArg1, wArg2)
+		end
+	else
+		self.data_adminonly = wArg1
+		if (SV) then
+			self:SyncData(DATA_FACTIONS, wArg1)
+		end
+	end
+end
+
+--[[
 	Name: Get Appearance Data
 	Category: Character
 	Desc: Gets the appearance data by a key, if no key is supplied the entire table is returned
@@ -437,6 +462,22 @@ function character_meta:GetAdminOnlyData(sKey, wDefault)
 		end
 	else
 		return self.data_adminonly
+	end
+end
+
+--[[
+Name: Get Factions
+--]]
+
+function character_meta:GetFactions(sKey, wDefault)
+	if (sKey) then
+		if self.data_factions[sKey] then
+			return self.data_factions[sKey]
+		else
+			return wDefault
+		end
+	else
+		return self.data_factions
 	end
 end
 
@@ -577,6 +618,7 @@ if (SV) then
 		InsertObj:Insert("data_character", chardata)
 		InsertObj:Insert("data_appearance", appearance)
 		InsertObj:Insert("data_adminonly", "{}")
+		InsertObj:Insert("data_factions", "{}")
 		InsertObj:Insert("data_inventory", inventory)
 		InsertObj:Callback(function(result, status, lastID)
 			pOwningClient:AddCharacter(lastID)
