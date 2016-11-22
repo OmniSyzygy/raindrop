@@ -37,6 +37,5 @@ rain.util.loadraindrop()
 function rain:Initialize()
 	if SV then
 		rain.util.initraindrop()
-		rain:LoadVolumes()
 	end
 end

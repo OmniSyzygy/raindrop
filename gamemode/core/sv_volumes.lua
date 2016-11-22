@@ -32,7 +32,7 @@ function rain:LoadVolumes()
 	LoadObj:Callback(function(tResult, uStatus, uLastID)
 			for _, volumes in pairs(tResult) do
 				rain:AddVolume(volumes, false)
-				PrintTable(volumes)
+			--	PrintTable(volumes)
 			end
 		end)
 	LoadObj:Execute()

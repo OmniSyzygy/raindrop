@@ -14,7 +14,7 @@ ENT.AdminSpawnable		= false
 
 function ENT:PostEntityPaste( ply, ent, tab )
 	
-	GAMEMODE:LogSecurity( ply:SteamID(), "n/a", ply:VisibleRPName(), "Tried to duplicate " .. ent:GetClass() .. "!" )
+	GAMEMODE:LogSecurity( ply:SteamID(), "n/a", ply:GetRPName(), "Tried to duplicate " .. ent:GetClass() .. "!" )
 	ent:Remove()
 	
 end

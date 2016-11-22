@@ -2,10 +2,12 @@
 	Filename: sh_item.lua
 --]]
 
-rain.item = {}
-rain.itembuffer = {} -- this is where all base items are stored
-rain.itemindex = {} -- this is where all current and unique items are stored
+rain.item = rain.item or {}
+rain.itembuffer = rain.itembuffer or {} -- this is where all base items are stored
+rain.itemindex = rain.itemindex or {} -- this is where all current and unique items are stored
 rain.itemsavequeue = {} -- this is the item save queue
+
+itemdirectory = "raindrop/gamemode/raindrop/items"
 
 local item_meta = {}
 
@@ -36,12 +38,42 @@ function item_meta:Save()
 	table.insert(rain.itemsavequeue, self:GetID())
 end
 
-function item_meta:Sync(tVarArgs)
+local pm = FindMetaTable("Player")
+function pm:Sync(tVarArgs)
 	if (CL) then -- this function called clientside syncs the item info on the client itself
-
+		net.Start("nRequestItemBuffer")
+		net.SendToServer()
 	else
 
 	end
+end
+
+if (SV) then
+util.AddNetworkString("nReceiveItemBuffer")
+	util.AddNetworkString("nRequestItemBuffer")
+		util.AddNetworkString("nReceiveItemIndex")
+		
+		function rain:SendItemBuffer(pClient)
+			net.Start("nReceiveItemBuffer")
+			net.Send(pClient)
+
+			net.Start("nReceiveItemIndex")
+			net.WriteTable( rain.itemindex )
+			net.Send(pClient)
+		end
+
+else
+	net.Receive("nReceiveItemBuffer", function(len, ply)
+	--rain.itembuffer = net.ReadTable()
+	rain.item.loadbaseitems()
+		PrintTable(rain.itembuffer)
+	end)
+	net.Receive("nReceiveItemIndex", function(len, ply)
+	rain.itemindex = net.ReadTable()
+		for k, v in pairs(rain.itemindex) do
+			
+		end
+	end)
 end
 
 function item_meta:SyncMetaData(tVarArgs)
@@ -141,11 +173,31 @@ function item_meta:GetDescription()
 end
 
 function item_meta:SetName(sNewName)
-	self.itemname = sNewName
+	self.Name = sNewName
 end
 
 function item_meta:GetName()
-	return self.itemname or "Item name not loaded."
+	return self.Name or "Item name not loaded."
+end
+
+function item_meta:GetItemSize()
+return self.SizeX, self.SizeY
+end
+
+function item_meta:GetSizeX()
+	return self.SizeX or 1
+end
+
+function item_meta:GetSizeY()
+	return self.SizeY or 1
+end
+
+function item_meta:GetIconX()
+	return self.IconX or 1
+end
+
+function item_meta:GetIconY()
+	return self.IconX or 1
 end
 
 function item_meta:OverrideImpactSounds(bOverride, tOverrideSounds)
@@ -186,6 +238,8 @@ end
 
 function item_meta:New(sUniqueID, tMetaData)
 
+
+--tMetaData
 end
 
 function item_meta:DestroyItem()
@@ -205,6 +259,33 @@ end
 item_meta.__index = item_meta
 local RAIN_ITEMMETA = item_meta
 
+function rain.item.new(base, id, data)
+	if (rain.itemindex[id] and rain.itemindex[id].base == base) then
+		return rain.itemindex[id]
+	end
+
+	local stockItem = rain.itembuffer[base]
+
+	if (stockItem) then
+		local item = setmetatable({}, {__index = stockItem})
+		item.id = id
+		item.data = data or {}
+		item.base = base
+
+		rain.itemindex[id] = item
+	if (SV) then
+		local InsertObj = mysql:Insert("items")
+		InsertObj:Insert("base", base)
+		InsertObj:Insert("meta", pon.encode(item.data))
+		InsertObj:Insert("ownerhistory", "{}")
+		InsertObj:Insert("inworld", 0)
+		InsertObj:Insert("worlddata", "{}")
+		InsertObj:Execute()
+	end
+		return item
+	end
+end
+
 function rain.item.getmeta()
 	return RAIN_ITEMMETA
 end
@@ -214,12 +295,35 @@ function rain.item.destroyitembyid(nItemID)
 	-- do mysql removal here
 end
 
-function rain.item.loaddefaultitems()
+function rain.item.loadbaseitems()
+local items = file.Find(itemdirectory.."/base/*.lua", "LUA")
 
+	for k, v in ipairs(items) do
+	print(itemdirectory.."/base/"..v)
+		rain.util.include(itemdirectory.."/base/"..v)
+	end
+	
+	
 end
 
 function rain.item.loaditems()
-	-- load items from mysql then insert them into the index, the item bases must be loaded first.
+	-- load from items mysql then insert them into the index, the item bases must be loaded first.
+	if (SV) then
+	local LoadObj = mysql:Select("items")
+	LoadObj:Callback(function(tResult, uStatus, uLastID)
+			for _, item in pairs(tResult) do
+				rain.item.new(item.base, item.id, item.meta)
+			end
+		end)
+	LoadObj:Execute()
+	end
+	
+	if (CL) then
+	for k, v in SortedPairs(item.index) do
+		print(v)
+		print(k)
+	end
+	end
 end
 
 function rain.item.get(nItemID)
@@ -230,6 +334,34 @@ function rain.item.saveitems()
 	for _, ItemID in pairs(rain.itemsavequeue) do
 		rain.item.get(ItemID):Save()
 	end
+end
+--credit to nutscript for the registering system
+function rain.item.register(ITEM)
+	local meta = RAIN_ITEMMETA
+			setmetatable(ITEM, RAIN_ITEMMETA)
+			ITEM.Name = ITEM.Name or "No Name Specified"
+			ITEM.Description = ITEM.Description or "noDesc"
+			ITEM.base = ITEM.base or "NoUniqueID"
+			ITEM.IconMat = ITEM.IconMat or "materials/icon16/cancel.png"
+			ITEM.hooks = ITEM.hooks or {}
+			ITEM.postHooks = ITEM.postHooks or {}
+			ITEM.functions = ITEM.functions or {}
+			
+
+			local oldBase = ITEM.base
+
+			if (ITEM.base) then
+				
+			end
+
+			ITEM.SizeX = ITEM.SizeX or 2
+			ITEM.SizeY = ITEM.SizeY or 2
+			ITEM.IconX = ITEM.IconX or 2
+			ITEM.IconY = ITEM.IconY or 2
+			ITEM.category = ITEM.category or "misc"
+-- can make bases by replacing this V table with a new one
+			(isBaseItem and rain.itembuffer or rain.itembuffer)[ITEM.base] = ITEM
+print(ITEM.Name.." item base loaded.")
 end
 
 if (SV) then
@@ -242,13 +374,6 @@ if (SV) then
 	end
 end
 
--- constructs and returns a new item object
-
-function rain.item:New(sItemBase)
-	local itemObj = {}
-	return itemObj
-end
-
 local rainchar = rain.character.getmeta()
 
 function rainchar:DropItem(objItem)
@@ -256,9 +381,5 @@ function rainchar:DropItem(objItem)
 end
 
 function rainchar:AddItem(objItem)
-
-end
-
-function rainchar:CreateAndAddItem(objItem)
 
 end

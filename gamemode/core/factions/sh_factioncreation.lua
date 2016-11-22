@@ -7,7 +7,7 @@ if (CL) then
 	creationData.RankNames = {"Owner", "Lieutenant", "Peasant"}
 	creationData.Desc = {"A faction about worshipping me, Soren."}
 	creationData.Uniforms = {"models/cakez/rxstalker/stalker_dolg/stalker_dolg1a.mdl", "models/gman_high.mdl", "models/Humans/Group02/male_03.mdl"}
-
+print(creationData.Uniforms[1])
 			net.Start("rain.factioncreate")
 				rain.net.WriteTable(creationData)
 			net.SendToServer()
@@ -19,37 +19,44 @@ if (CL) then
 	end) 
 
 	concommand.Add("dev_testfactionjoin",function()
-		net.Start("rain.testfactionjoin")
-		net.SendToServer()
+		--rain.itemindex[1] = nil
+		--rain.item.new("food", 1, nil)
+
+		for k, v in pairs(rain.itemindex) do
+			local base = rain.itemindex[k].base
+			rain.itemindex[k] = setmetatable({}, {__index = rain.itembuffer[base]})
+		end
+		PrintTable(rain.itemindex)
+				print(rain.itemindex[1].SizeX)
+		print("this should have a metatable now")
 	end) 
 	
 		concommand.Add("dev_createitem",function()
+		rain.item.new("food", 1)
+		LocalPlayer():GiveItem(1, 1, nil)
 		net.Start("rain.createitem")
 		net.SendToServer()
+		PrintTable( LocalPlayer().character.data_inventory)
 	end) 
+	
+	function cNewFaction(factionData)
+		net.Start( "rain.factioncreate" )
+		net.WriteTable( factionData )
+		net.SendToServer()
+	end
 	
 end
 
 if (SV) then
-
-
-	local charmeta = rain.character.getmeta()
-	
-		util.AddNetworkString("rain.createitem")
+		
+	util.AddNetworkString("rain.createitem")
 	net.Receive("rain.createitem", function(len, ply)
 		if ( IsValid( ply ) ) then
-				local item = ents.Create("rd_item")
-
-				item:SetModel("models/props_borealis/bluebarrel001.mdl")
-				item:SetPos(ply:GetEyeTrace().HitPos)
-				item:SetAngles(Angle( 0, 0, 0 ))
-				item:SetItemID(0)
-				item:SetData("{}")
-				item:Spawn()
-
+			--	rain.item.new("food", 1)
+				ply:GiveItem(1, 1, nil)
 		end
 	end)
-	
+		
 	util.AddNetworkString("rain.testfactiondelete")
 	net.Receive("rain.testfactiondelete", function(len, ply)
 		if ( IsValid( ply ) ) then
@@ -68,7 +75,7 @@ if (SV) then
 	net.Receive("rain.factioncreate", function(len, ply)
 		if ( IsValid( ply ) ) then
 			local factionData = rain.net.ReadTable()
-			rain:LoadVolumes()
+			rain.faction.create(ply, factionData)
 		end
 	end)
 
@@ -79,10 +86,9 @@ if (SV) then
 		end
 print("tFactCreateData exists.")
 		local name, factionData = "error", "{}"
-		--thinking this should just be converted to a string? but this is a really quick fix atm.
-		local name = "{}"
+
 		if tFactCreateData.Name then
-			name = pon.encode(tFactCreateData.Name)
+			name = tFactCreateData.Name
 		end
 
 		local ranknames = "{}"
@@ -95,9 +101,9 @@ print("tFactCreateData exists.")
 			uniforms = pon.encode(tFactCreateData.Uniforms)
 		end
 		
-		local desc = "{}"
+		local desc = "No Desc Recorded"
 		if tFactCreateData.Desc then
-			desc = pon.encode(tFactCreateData.Desc)
+			desc = tFactCreateData.Desc
 		end
 		
 		local resources = "{}"

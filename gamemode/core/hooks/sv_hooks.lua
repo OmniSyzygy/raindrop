@@ -1,6 +1,7 @@
 function rain:PlayerInitialSpawn(pClient)
 	rain.pdata.clientinitialspawn(pClient)
 	rain:SendVolumes(pClient)
+	rain:SendItemBuffer(pClient)
 end
 
 function rain:PlayerSpawn(pClient)

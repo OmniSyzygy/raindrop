@@ -72,7 +72,7 @@ end
 --]]
 
 local function GetItemSize(ItemID)
-	local ItemTable = GAMEMODE:GetItemByID(ItemID)
+	local ItemTable = rain:GetItemByID(ItemID)
 
 	return ItemTable.SizeX, ItemTable.SizeY
 end
@@ -89,7 +89,7 @@ local function BuildTraceTable(Inventory)
 	for x = 1, width do 
 		for y = 1, height do 
 			if (Inventory[x][y].ID) then
-				local ItemTable = GAMEMODE:GetItemByID(Inventory[x][y].ID)
+				local ItemTable = GetItemByID(Inventory[x][y].ID)
 				for i = x, (x + (ItemTable.SizeX - 1)) do
 					for i2 = y, (y + (ItemTable.SizeY - 1)) do
 						TraceTable[i][i2] = "OCCUPIED"
@@ -108,18 +108,12 @@ end
 	-------------------------------------------------------------------------------------
 --]]
 if (SV) then
-	util.AddNetworkString("nLoadInventory")
+	util.AddNetworkString("nGiveItem")
+	util.AddNetworkString("nMoveItemFromTo")
 end
 
 
 if (CLIENT) then
-
-
-	local function nLoadInventory()
-		local inv = net.ReadString()
-		LocalPlayer().Inventory = pon.decode(inv)
-	end
-	net.Receive("nLoadInventory", nLoadInventory)
 
 	local function nGiveItem()
 		local ItemID = net.ReadString()
@@ -437,13 +431,13 @@ if (CLIENT) then
 	--]]
 
 	function DrawToolTip(pIconPanel)
-		if (!CurrentTooltip) then
-			SetupToolTip(pIconPanel)
-		elseif (!CurrentTooltip:IsValid()) then
-			SetupToolTip(pIconPanel)
-		else
-			UpdateToolTip(pIconPanel)
-		end
+	--	if (!CurrentTooltip) then
+	--		SetupToolTip(pIconPanel)
+	--	elseif (!CurrentTooltip:IsValid()) then
+	--		SetupToolTip(pIconPanel)
+	--	else
+	--		UpdateToolTip(pIconPanel)
+	--	end
 	end
 
 	--[[
@@ -473,6 +467,7 @@ if (CLIENT) then
 	--]]
 
 	function CreateInventoryUI(Inventory, Owner, GridSize)
+	PrintTable(Inventory)
 		local width, height = GetInventorySize(Inventory)
 		local GridSize = GridSize or 50
 
@@ -536,7 +531,7 @@ if (CLIENT) then
 							end
 						elseif (item.Owner == LocalPlayer()) then -- the item being dragged is within the players inventory and the inventory is the players inventory
 							if (LocalPlayer():ItemCanFit(x, y, item.ItemID)) then
-								local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+								local ItemTable = GetItemByID(item.ItemID)
 		
 								for i = x,  (x + (ItemTable.SizeX - 1)) do
 									for i2 = y, (y + (ItemTable.SizeY - 1)) do
@@ -555,7 +550,7 @@ if (CLIENT) then
 					if (Owner and Owner:GetClass() == "cc_container") then -- this branch of code is used when manipulating items within a container
 						if (item.Owner:GetClass() == "cc_container") then -- transfering within a container
 							if (LocalPlayer():ItemCanFitContainer(x, y, item.ItemID, Owner)) then
-								local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+								local ItemTable = GetItemByID(item.ItemID)
 	
 								for i = x,  (x + (ItemTable.SizeX - 1)) do
 									for i2 = y, (y + (ItemTable.SizeY - 1)) do
@@ -570,7 +565,7 @@ if (CLIENT) then
 							end
 						elseif (item.Owner == LocalPlayer()) then -- transfering from player inventory to the container inventory
 							if (LocalPlayer():CanTransferItem(x, y, item.ItemID, Owner)) then
-								local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+								local ItemTable = GetItemByID(item.ItemID)
 	
 								for i = x,  (x + (ItemTable.SizeX - 1)) do
 									for i2 = y, (y + (ItemTable.SizeY - 1)) do
@@ -592,9 +587,10 @@ if (CLIENT) then
 
 		for x = 1, width do 
 			for y = 1, height do 
-				if (Inventory[x][y].ID) then
-					local ItemTable = GAMEMODE:GetItemByID(Inventory[x][y].ID)
-					local InvObject = vgui.Create("CCStalkerIcon", InventoryPanel)
+				if (rain.itemindex[Inventory[x][y].ID] ~= nil) then
+				if true then
+					local ItemTable = rain.itemindex[Inventory[x][y].ID]
+					local InvObject = vgui.Create("RD_StalkerIcon", InventoryPanel)
 					InvObject:SetCoords(ItemTable.IconX,ItemTable.IconX + ItemTable.SizeX, ItemTable.IconY,ItemTable.IconY + ItemTable.SizeY)
 					InvObject:SetSize(ItemTable.SizeX * GridSize, ItemTable.SizeY * GridSize)
 					InvObject:SetPos((x - 1) * GridSize, (y - 1) * GridSize)
@@ -616,6 +612,7 @@ if (CLIENT) then
 							LocalPlayer():DropItem(x, y)
 							LocalPlayer():RefreshInventoryPanel()
 						end
+					end
 					end
 				end
 			end
@@ -640,7 +637,7 @@ if (CLIENT) then
 
 	function meta:OpenInventory()
 		self.InventoryFrame = vgui.Create("DFrame")
-		self.InventoryFrame.ItemPanel = CreateInventoryUI(LocalPlayer().Inventory, LocalPlayer())
+		self.InventoryFrame.ItemPanel = CreateInventoryUI(LocalPlayer().character.data_inventory, LocalPlayer())
 		self.InventoryFrame.ItemPanel:SetParent(self.InventoryFrame)
 		local SizeX, SizeY = self.InventoryFrame.ItemPanel:GetSize()
 		self.InventoryFrame:SetSize(SizeX, SizeY + 24)
@@ -651,9 +648,13 @@ if (CLIENT) then
 	end
 
 	function meta:RefreshInventoryPanel()
-		self.StalkerFrame:Refresh()
+		if self.StalkerFrame ~= nil then
+			self.StalkerFrame:Refresh()
+		elseif self.InventoryFrame ~= nil then
+			self.InventoryFrame:Refresh() -- currently the base inventory frame doesn't support refreshing. needs to support refreshing for going public.
+		end
 	end
-
+	
 	function meta:RefreshContainerPanel(Container)
 		if (self.ContainerFrame and IsValid(self.ContainerFrame)) then
 			self.ContainerFrame.ItemPanel:Remove()
@@ -664,17 +665,21 @@ if (CLIENT) then
 	end
 
 	function meta:OpenStalkerInv()
-		self.StalkerFrame = vgui.Create("CCStalkerFrame")
+		self.StalkerFrame = vgui.Create("RD_StalkerFrame")
 		self.StalkerFrame:SetPlayer(true)
 	end
 
 	concommand.Add("cc_dev_openinventory", function()
-	LocalPlayer():LoadItemsFromString("")
 		LocalPlayer():OpenInventory()
+	--	LocalPlayer():GiveItem(1, 1, nil)
+PrintTable(LocalPlayer().character.data_inventory)	
+if SERVER then
+print("im server")
+end
 	end)
 
 	concommand.Add("cc_dev_stalkertest", function()
-	LocalPlayer():LoadItemsFromString("")
+	PrintTable(rain.itemindex)
 		LocalPlayer():OpenStalkerInv()
 	end)
 
@@ -687,7 +692,7 @@ end
 
 function meta:LoadItemsFromString( str )
 print("loading items from string maybe")
-	meta:SetupInventory(5, 5)
+	meta:SetupInventory(5, 8)
 
 	local SaveData = {}
 if str ~= nil then
@@ -695,10 +700,10 @@ if str ~= nil then
 		SaveData = pon.decode(str)
 	end
 end
-self.Inventory = SaveData
+self.character.data_inventory = SaveData
 	if SERVER then
 		net.Start("nLoadInventory")
-		net.WriteString(pon.encode(self.Inventory))
+		net.WriteString(pon.encode(self.character.data_inventory))
 		net.Send(self)
 	end
 end
@@ -713,7 +718,7 @@ end
 --]]
 
 function meta:SetQuickSlot(nSlot, sItemID, bReceived)
-	self.Inventory.QuickUse[nSlot] = sItemID
+	self.character.data_inventory.QuickUse[nSlot] = sItemID
 	net.Start("nSetQuickSlot")
 	net.WriteInt(nSlot, 3)
 	net.WriteString(sItemID)
@@ -726,7 +731,7 @@ end
 --]]
 
 function meta:ResetQuickSlot(nSlot, bReceived)
-	self.Inventory.QuickUse[nSlot] = {}
+	self.character.data_inventory.QuickUse[nSlot] = {}
 
 	net.Start("nResetQuickSlot")
 	net.WriteInt(nSlot, 3)
@@ -739,12 +744,12 @@ end
 --]]
 
 function meta:GetQuickSlot(nSlot, bReceived)
-	if (!self.Inventory) then
+	if (!self.character.data_inventory) then
 		return false
 	end
 
-	if (type(self.Inventory.QuickUse[nSlot]) == "string") then
-		return self.Inventory.QuickUse[nSlot]
+	if (type(self.character.data_inventory.QuickUse[nSlot]) == "string") then
+		return self.character.data_inventory.QuickUse[nSlot]
 	else
 		return false
 	end
@@ -760,7 +765,7 @@ function meta:SetArtifactSlot(nSlot, sItemID, bReceived)
 
 	if (ItemTable) then
 		if (ItemTable.IsArtifact) then
-			self.Inventory.Artifacts[nSlot] = sItemID
+			self.character.data_inventory.Artifacts[nSlot] = sItemID
 
 			net.Start("nSetArtifactSlot")
 			net.WriteInt(nSlot, 4)
@@ -776,7 +781,7 @@ end
 --]]
 
 function meta:ResetArtifactSlot(nSlot, bReceived)
-	self.Inventory.Artifacts[nSlot] = {}
+	self.character.data_inventory.Artifacts[nSlot] = {}
 
 	net.Start("nResetArtifactSlot")
 	net.WriteInt(nSlot, 4)
@@ -789,12 +794,12 @@ end
 --]]
 
 function meta:GetArtifactSlot(nSlot)
-	if (!self.Inventory) then
+	if (!self.character.data_inventory) then
 		return false
 	end
 
-	if (type(self.Inventory.Artifacts[nSlot]) == "string") then
-		return self.Inventory.Artifacts[nSlot]
+	if (type(self.character.data_inventory.Artifacts[nSlot]) == "string") then
+		return self.character.data_inventory.Artifacts[nSlot]
 	else
 		return false
 	end
@@ -806,7 +811,7 @@ end
 --]]
 
 function meta:SetGearSlot(nSlot, sItemID, bReceived)
-	self.Inventory.Gear[nSlot] = sItemID
+	self.character.data_inventory.Gear[nSlot] = sItemID
 
 	net.Start("nSetGearSlot")
 	net.WriteInt(nSlot, 3)
@@ -820,7 +825,7 @@ end
 --]]
 
 function meta:ResetGearSlot(nSlot, bReceived)
-	self.Inventory.Gear[nSlot] = {}
+	self.character.data_inventory.Gear[nSlot] = {}
 
 	net.Start("nResetGearSlot")
 	net.WriteInt(nSlot, 3)
@@ -833,12 +838,12 @@ end
 --]]
 
 function meta:GetGearSlot(nSlot)
-	if (!self.Inventory) then
+	if (!self.character.data_inventory) then
 		return false
 	end
 
-	if (type(self.Inventory.Gear[nSlot]) == "string") then
-		return self.Inventory.Gear[nSlot]
+	if (type(self.character.data_inventory.Gear[nSlot]) == "string") then
+		return self.character.data_inventory.Gear[nSlot]
 	else
 		return false
 	end
@@ -850,7 +855,7 @@ end
 --]]
 
 function meta:SetArtifactDetector(sItemID, bReceived)
-	self.Inventory.ArtifactDetector = sItemID
+	self.character.data_inventory.ArtifactDetector = sItemID
 
 	net.Start("nSetArtifactDetector")
 	net.WriteString(sItemID)
@@ -863,7 +868,7 @@ end
 --]]
 
 function meta:ResetArtifactDetector(bReceived)
-	self.Inventory.ArtifactDetector = {}
+	self.character.data_inventory.ArtifactDetector = {}
 
 	net.Start("nResetArtifactDetector")
 	net.Replicate(self, bReceived)
@@ -875,12 +880,12 @@ end
 --]]
 
 function meta:GetArtifactDetector()
-	if (!self.Inventory) then
+	if (!self.character.data_inventory) then
 		return false
 	end
 
-	if (type(self.Inventory.Detector) == "string") then
-		return self.Inventory.Detector
+	if (type(self.character.data_inventory.Detector) == "string") then
+		return self.character.data_inventory.Detector
 	else
 		return false
 	end
@@ -896,12 +901,12 @@ end
 --]]
 
 function meta:EquipArtifactFrom(nPosX, nPosY, nSlot, bReceived)
-	if (self.Inventory[nPosX][nPosY].ID) then
-		local ItemTable = GAMEMODE:GetItemByID(self.Inventory[nPosX][nPosY].ID)
+	if (self.character.data_inventory[nPosX][nPosY].ID) then
+		local ItemTable = GetItemByID(self.character.data_inventory[nPosX][nPosY].ID)
 		if (ItemTable.IsArtifact) then
 			if (!self:GetArtifactSlot(nSlot)) then
-				self:SetArtifactSlot(nSlot, self.Inventory[nPosX][nPosY].ID, true)
-				self.Inventory[nPosX][nPosY] = {}
+				self:SetArtifactSlot(nSlot, self.character.data_inventory[nPosX][nPosY].ID, true)
+				self.character.data_inventory[nPosX][nPosY] = {}
 			end
 		end
 	end
@@ -942,12 +947,12 @@ end
 
 function meta:EquipWeaponFrom(nPosX, nPosY, nSlot, bReceived)
 	if (nSlot == 1 or nSlot == 2) then
-		if (self.Inventory[nPosX][nPosY].ID) then
-			local ItemTable = GAMEMODE:GetItemByID(self.Inventory[nPosX][nPosY].ID)
+		if (self.character.data_inventory[nPosX][nPosY].ID) then
+			local ItemTable = GetItemByID(self.character.data_inventory[nPosX][nPosY].ID)
 			if (ItemTable.IsWeapon) then
 				if (!self:GetGearSlot(nSlot)) then
-					self:SetGearSlot(nSlot, self.Inventory[nPosX][nPosY].ID, true)
-					self.Inventory[nPosX][nPosY] = {}
+					self:SetGearSlot(nSlot, self.character.data_inventory[nPosX][nPosY].ID, true)
+					self.character.data_inventory[nPosX][nPosY] = {}
 				end
 			end
 		end
@@ -989,8 +994,9 @@ end
 --]]
 
 function meta:SaveInventory()
-	local str = pon.encode( self.Inventory )
-	self:UpdateCharacterField( "Inventory", str )
+	local str = pon.encode( self.character.data_inventory )
+	print("i should be saving the inventory now")
+	self.character:SaveByKey(DATA_INVENTORY, str)
 end
 
 --[[
@@ -1012,7 +1018,7 @@ function meta:HasItem(ItemID)
 
 	for i = 1, width do
 		for i2 = 1, height do
-			if (self.Inventory[i][i2].ID and self.Inventory[i][i2].ID == ItemID) then
+			if (self.character.data_inventory[i][i2].ID and self.character.data_inventory[i][i2].ID == ItemID) then
 				return true
 			end
 		end
@@ -1031,7 +1037,7 @@ function meta:GetInventoryItem(ItemID)
 
 	for i = 1, width do
 		for i2 = 1, height do
-			if (self.Inventory[i][i2].ID and self.Inventory[i][i2].ID == ItemID) then
+			if (self.character.data_inventory[i][i2].ID and self.character.data_inventory[i][i2].ID == ItemID) then
 				return i, i2
 			end
 		end
@@ -1044,7 +1050,7 @@ end
 --]]
 
 function meta:InventoryWeight()
-	if (!self.Inventory) then
+	if (!self.character.data_inventory) then
 		return 0
 	end
 
@@ -1053,8 +1059,9 @@ function meta:InventoryWeight()
 
 	for i = 1, SizeX do
 		for i2 = 1, SizeY do
-			if (self.Inventory[i][i2] and self.Inventory[i][i2].ID) then
-				local ItemTable = GAMEMODE:GetItemByID(self.Inventory[i][i2].ID)
+			if (self.character.data_inventory[i][i2] and self.character.data_inventory[i][i2].ID) and rain.itemindex[self.character.data_inventory[i][i2].ID] then
+				
+				local ItemTable = rain.itemindex[self.character.data_inventory[i][i2].ID]
 				if (ItemTable.Weight) then
 					weight = weight + ItemTable.Weight
 				end
@@ -1081,7 +1088,7 @@ end
 
 function meta:GiveItem(ItemID, n, data)
 	local data = data or {}
-	local ItemTable = GAMEMODE:GetItemByID(ItemID)
+	local ItemTable = rain.itemindex[ItemID]
 	local n = n or 1
 
 	for i = 1, n do
@@ -1105,7 +1112,7 @@ end
 --]]
 
 function meta:RemoveItem(PosX, PosY)
-	self.Inventory[PosX][PosY] = {}
+	self.character.data_inventory[PosX][PosY] = {}
 
 	if (SERVER) then
 		self:SaveInventory()
@@ -1131,7 +1138,7 @@ function meta:UseItem(PosX, PosY)
 	end
 
 	if (SERVER) then
-		GAMEMODE:LogItems( "[R] " .. self:VisibleRPName() .. "'s item " .. self.Inventory[PosX][PosY].ID .. " was removed.", self )
+		GAMEMODE:LogItems( "[R] " .. self:GetRPName() .. "'s item " .. self.character.data_inventory[PosX][PosY].ID .. " was removed.", self )
 		self:SaveInventory()
 	else
 		net.Start("nUseItem")
@@ -1139,9 +1146,9 @@ function meta:UseItem(PosX, PosY)
 		net.SendToServer()
 	end
 
-	local ret = GAMEMODE:GetItemByID(self.Inventory[PosX][PosY].ID).OnPlayerUse(self.Inventory[PosX][PosY].ID, self)
+	local ret = GetItemByID(self.character.data_inventory[PosX][PosY].ID).OnPlayerUse(self.character.data_inventory[PosX][PosY].ID, self)
 
-	if( GAMEMODE:GetItemByID(self.Inventory[PosX][PosY].ID).DeleteOnUse and !ret ) then
+	if( GetItemByID(self.character.data_inventory[PosX][PosY].ID).DeleteOnUse and !ret ) then
 		self:RemoveItem(PosX, PosY)
 	end
 end
@@ -1161,10 +1168,10 @@ function meta:DropItem(PosX, PosY)
 	end
 
 	if (SERVER) then
-		GAMEMODE:LogItems( "[R] " .. self:VisibleRPName() .. "'s drop item " .. self.Inventory[PosX][PosY].ID .. ".", self )
-		if (self.Inventory[PosX][PosY].ID) then
-			local ItemID = self.Inventory[PosX][PosY].ID
-			local data = self.Inventory[PosX][PosY].data
+		GAMEMODE:LogItems( "[R] " .. self:GetRPName() .. "'s drop item " .. self.character.data_inventory[PosX][PosY].ID .. ".", self )
+		if (self.character.data_inventory[PosX][PosY].ID) then
+			local ItemID = self.character.data_inventory[PosX][PosY].ID
+			local data = self.character.data_inventory[PosX][PosY].data
 			GAMEMODE:CreateItem(self, ItemID, data)
 		end
 	else
@@ -1182,27 +1189,27 @@ end
 --]]
 
 function meta:SetupInventory(width, height)
-	self.Inventory = CreateInventory(width, height)
-	self.Inventory.QuickUse = {}
-	self.Inventory.QuickUse[1] = GAMEMODE.DefaultQuickUseOne or {} -- allows a config variable to be set so you can toss in default quick use slots, etc
-	self.Inventory.QuickUse[2] = GAMEMODE.DefaultQuickUseTwo or {}
-	self.Inventory.QuickUse[3] = GAMEMODE.DefaultQuickUseThree or {}
-	self.Inventory.QuickUse[4] = GAMEMODE.DefaultQuickUseFour or {}
+	self.character.data_inventory = CreateInventory(width, height)
+	self.character.data_inventory.QuickUse = {}
+	self.character.data_inventory.QuickUse[1] = GAMEMODE.DefaultQuickUseOne or {} -- allows a config variable to be set so you can toss in default quick use slots, etc
+	self.character.data_inventory.QuickUse[2] = GAMEMODE.DefaultQuickUseTwo or {}
+	self.character.data_inventory.QuickUse[3] = GAMEMODE.DefaultQuickUseThree or {}
+	self.character.data_inventory.QuickUse[4] = GAMEMODE.DefaultQuickUseFour or {}
 
-	self.Inventory.Artifacts = {}
-	self.Inventory.Artifacts[1] = GAMEMODE.DefaultArtifactOne or {}
-	self.Inventory.Artifacts[2] = GAMEMODE.DefaultArtifactTwo or {}
-	self.Inventory.Artifacts[3] = GAMEMODE.DefaultArtifactThree or {}
-	self.Inventory.Artifacts[4] = GAMEMODE.DefaultArtifactFour or {}
-	self.Inventory.Artifacts[5] = GAMEMODE.DefaultArtifactFive or {}
+	self.character.data_inventory.Artifacts = {}
+	self.character.data_inventory.Artifacts[1] = GAMEMODE.DefaultArtifactOne or {}
+	self.character.data_inventory.Artifacts[2] = GAMEMODE.DefaultArtifactTwo or {}
+	self.character.data_inventory.Artifacts[3] = GAMEMODE.DefaultArtifactThree or {}
+	self.character.data_inventory.Artifacts[4] = GAMEMODE.DefaultArtifactFour or {}
+	self.character.data_inventory.Artifacts[5] = GAMEMODE.DefaultArtifactFive or {}
 
-	self.Inventory.Gear = {}
-	self.Inventory.Gear[1] = GAMEMODE.DefaultGearOne or {} -- first two are weapon slots, last two are clothing
-	self.Inventory.Gear[2] = GAMEMODE.DefaultGearTwo or {}
-	self.Inventory.Gear[3] = GAMEMODE.DefaultGearThree or {}
-	self.Inventory.Gear[4] = GAMEMODE.DefaultGearFour or {}
+	self.character.data_inventory.Gear = {}
+	self.character.data_inventory.Gear[1] = GAMEMODE.DefaultGearOne or {} -- first two are weapon slots, last two are clothing
+	self.character.data_inventory.Gear[2] = GAMEMODE.DefaultGearTwo or {}
+	self.character.data_inventory.Gear[3] = GAMEMODE.DefaultGearThree or {}
+	self.character.data_inventory.Gear[4] = GAMEMODE.DefaultGearFour or {}
 
-	self.Inventory.ArtifactDetector = {}
+	self.character.data_inventory.ArtifactDetector = {}
 end
 
 --[[
@@ -1212,7 +1219,7 @@ end
 
 function meta:InsertItemAt(x, y, ItemID, d)
 	local d = d or {}
-	self.Inventory[x][y] = {ID = ItemID, data = d}
+	self.character.data_inventory[x][y] = {ID = ItemID, data = d}
 end
 
 --[[
@@ -1221,19 +1228,28 @@ end
 --]]
 
 function meta:InsertItemEasy(ItemID, data)
-	local ItemTable = GAMEMODE:GetItemByID(ItemID)
+
+	local ItemTable = rain.itemindex[ItemID]
+		if ItemTable ~= nil then
 	local SizeX, SizeY = ItemTable.SizeX, ItemTable.SizeY
 
-	if (self:FindSlot(ItemID)) then
-		local PosX, PosY = self:FindSlot(ItemID)
-		self:InsertItemAt(PosX, PosY, ItemID, data)
+		if (self:FindSlot(ItemID)) then
+			local PosX, PosY = self:FindSlot(ItemID)
+			self:InsertItemAt(PosX, PosY, ItemID, data)
 
-		if (SERVER) then
-			GAMEMODE:LogItems( "[G] " .. self:VisibleRPName() .. " obtained item " .. ItemID .. ".", self )
-			GAMEMODE:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
+			if (SERVER) then
+			--	GAMEMODE:LogItems( "[G] " .. self:GetRPName() .. " obtained item " .. ItemID .. ".", self )
+			--	GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
+			end
 		end
 	end
 end
+
+function GetItemByID(ID)
+
+	return rain.itemindex[ID]
+end
+
 
 --[[
 	Function: Get Inventory Size
@@ -1241,7 +1257,7 @@ end
 --]]
 
 function meta:GetInventorySize()
-	local inventory = self.Inventory
+	local inventory = self.character.data_inventory
 	local width, height = #inventory, #inventory[1]
 
 	return width, height
@@ -1272,9 +1288,9 @@ end
 
 function meta:ItemCanFit(PosX, PosY, ItemID)
 	local width, height = self:GetInventorySize()
-	local SizeX, SizeY = GetItemSize(ItemID)
+	local SizeX, SizeY = rain.itemindex[ItemID].SizeX, rain.itemindex[ItemID].SizeY
 
-	local TraceTable = BuildTraceTable(self.Inventory)
+	local TraceTable = BuildTraceTable(self.character.data_inventory)
 
 	local available = false
 
@@ -1301,7 +1317,7 @@ end
 
 function meta:ItemCanFitContainer(PosX, PosY, ItemID, Container)
 	local width, height = GetInventorySize(Container.Inventory)
-	local SizeX, SizeY = GetItemSize(ItemID)
+	local SizeX, SizeY = GetItemByID(ItemID):GetItemSize()
 
 	local TraceTable = BuildTraceTable(Container.Inventory)
 
@@ -1342,11 +1358,11 @@ function meta:TransferItem(StartX, StartY, EndX, EndY, Container, From)
 		local Item = Container.Inventory[StartX][StartY]
 	
 		Container.Inventory[StartX][StartY] = {}
-		self.Inventory[EndX][EndY] = Item
+		self.character.data_inventory[EndX][EndY] = Item
 	else
-		local Item = self.Inventory[StartX][StartY]
+		local Item = self.character.data_inventory[StartX][StartY]
 	
-		self.Inventory[StartX][StartY] = {}
+		self.character.data_inventory[StartX][StartY] = {}
 		Container.Inventory[EndX][EndY] = Item
 	end
 
@@ -1371,7 +1387,7 @@ end
 function meta:CanTransferItem(PosX, PosY, ItemID, Container, From)
 	local width, height
 	if (From) then
-		width, height = GetInventorySize(self.Inventory)
+		width, height = GetInventorySize(self.character.data_inventory)
 	else
 		width, height = GetInventorySize(Container.Inventory)
 	end
@@ -1383,7 +1399,7 @@ function meta:CanTransferItem(PosX, PosY, ItemID, Container, From)
 		TraceTable = BuildTraceTable(Container.Inventory)
 	end
 
-	local SizeX, SizeY = GetItemSize(ItemID)
+	local SizeX, SizeY = GetItemByID(ItemID):GetItemSize()
 	local available = false
 
 	if (TraceTable[PosX][PosY] != "OCCUPIED") then
@@ -1410,8 +1426,8 @@ end
 function meta:MoveItemFromToContainer(StartX, StartY, EndX, EndY, Container)
 	local Item = Container.Inventory[StartX][StartY]
 
-	self.Inventory[StartX][StartY] = {}
-	self.Inventory[EndX][EndY] = Item
+	self.character.data_inventory[StartX][StartY] = {}
+	self.character.data_inventory[EndX][EndY] = Item
 
 	if (CLIENT) then
 		net.Start("nMoveItemFromToContainer")
@@ -1428,18 +1444,18 @@ end
 --]]
 
 function meta:MoveItemFromTo(StartX, StartY, EndX, EndY)
-	local Item = self.Inventory[StartX][StartY]
+	local Item = self.character.data_inventory[StartX][StartY]
 
 	if (SERVER) then
 		if (self:ItemCanFit(EndX, EndY, Item.ID)) then
-			self.Inventory[StartX][StartY] = {}
-			self.Inventory[EndX][EndY] = Item
+			self.character.data_inventory[StartX][StartY] = {}
+			self.character.data_inventory[EndX][EndY] = Item
 
 			self:SaveInventory()
 		end
 	else
-		self.Inventory[StartX][StartY] = {}
-		self.Inventory[EndX][EndY] = Item
+		self.character.data_inventory[StartX][StartY] = {}
+		self.character.data_inventory[EndX][EndY] = Item
 
 		net.Start("nMoveItemFromTo")
 			net.WriteVector(Vector(StartX, StartY, EndX))
@@ -1455,9 +1471,9 @@ end
 
 function meta:FindSlot(ItemID)
 	local width, height = self:GetInventorySize()
-	local SizeX, SizeY = GetItemSize(ItemID)
+	local SizeX, SizeY = 1, 1
 
-	local TraceTable = BuildTraceTable(self.Inventory)
+	local TraceTable = BuildTraceTable(self.character.data_inventory)
 
 	for x = 1, width do
 		for y = 1, height do

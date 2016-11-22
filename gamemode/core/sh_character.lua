@@ -184,9 +184,9 @@ if (SV) then
 				data.appearance = self:GetAppearanceData()
 
 				if (v == self:GetOwningClient()) or v:IsAdmin() then
-					data.inventory = self:GetInventory()
+					data.Inventory = self:GetInventory()
 				else
-					data.inventory = {}
+					data.Inventory = {}
 				end
 
 				data.name = self:GetName()
@@ -513,7 +513,7 @@ if (CL) then
 		local adminonly = charsyncdata.adminonly
 		local character = charsyncdata.character
 		local appearance = charsyncdata.appearance
-		local inventory = charsyncdata.inventory
+		local inventory = charsyncdata.Inventory
 		local name = charsyncdata.name
 		local id = charsyncdata.id
 
@@ -564,12 +564,17 @@ if (CL) then
 		elseif datatype == DATA_APPEARANCE then
 			target:SetAppearanceData(data.newdata)
 		end
+		rain.item.loaditems()
+		PrintTable(rain.itemindex)
+		PrintTable(rain.itembuffer)
 	end)
 
 	function rain.character.loadcharacter(charid)
 		net.Start("rain.loadcharacter")
 			rain.net.WriteLongInt(charid)
 		net.SendToServer()
+		
+		
 	end
 end
 
@@ -681,6 +686,7 @@ if (SV) then
 
 			pClient:SetModel(appearTable.model)
 			pClient:SetSkin(appearTable.skin)
+		--	pClient:LoadItemsFromString(pon.encode(tCharacter.data_inventory))
 		end
 	end
 
@@ -747,7 +753,9 @@ if (SV) then
 							self.character.data_appearance = pon.decode(tResult.data_appearance)
 							self.character.data_adminonly = pon.decode(tResult.data_adminonly)
 							self.character.data_inventory = pon.decode(tResult.data_inventory)
-
+							
+							PrintTable(self.character.data_inventory)
+							
 							rain.characterindex[nCharID] = self.character
 
 							setmetatable(self.character, character_meta)

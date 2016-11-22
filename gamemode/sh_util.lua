@@ -139,6 +139,14 @@ end
 if SV then
 	function rain.util.initraindrop()
 		rain.db.connect(rain.cfg.db.address, rain.cfg.db.username, rain.cfg.db.password, rain.cfg.db.database, rain.cfg.db.port)
+		rain:LoadVolumes()
+		
+		rain.item.loadbaseitems()
+		
+		rain.item.loaditems()
+		
+		PrintTable(rain.itemindex)
+		
 	end
 end	
 
