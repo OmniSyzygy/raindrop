@@ -142,10 +142,9 @@ if SV then
 		rain:LoadVolumes()
 		
 		rain.item.loadbaseitems()
-		
+		print("this loads a single item to the server; this will be interated through a character's inventory so it adds all of the items it needs. can be called on the client once he recieves his item, reducing backend pressure.")
+		--rain.item.loaditem(1)
 		rain.item.loaditems()
-		
-		PrintTable(rain.itemindex)
 		
 	end
 end	

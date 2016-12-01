@@ -60,7 +60,7 @@ end
 	Purpose: Returns the size of the inventory table handed to the function.
 --]]
 
-local function GetInventorySize(Inventory)
+function GetInventorySize(Inventory)
 	local width, height = #Inventory, #Inventory[1]
 
 	return width, height
@@ -110,6 +110,7 @@ end
 if (SV) then
 	util.AddNetworkString("nGiveItem")
 	util.AddNetworkString("nMoveItemFromTo")
+	util.AddNetworkString("nDropItem")
 end
 
 
@@ -119,8 +120,8 @@ if (CLIENT) then
 		local ItemID = net.ReadString()
 		local n = net.ReadFloat()
 		local d = net.ReadTable()
-
-		LocalPlayer():GiveItem(ItemID, n, d)
+		print("server tried to give me an item")
+		LocalPlayer():GiveItem(tonumber(ItemID), 1, d)
 	end
 	net.Receive("nGiveItem", nGiveItem)
 
@@ -679,7 +680,8 @@ end
 	end)
 
 	concommand.Add("cc_dev_stalkertest", function()
-	PrintTable(rain.itemindex)
+	print("hello")
+	--PrintTable(rain.itemindex[2])
 		LocalPlayer():OpenStalkerInv()
 	end)
 
@@ -702,9 +704,9 @@ if str ~= nil then
 end
 self.character.data_inventory = SaveData
 	if SERVER then
-		net.Start("nLoadInventory")
-		net.WriteString(pon.encode(self.character.data_inventory))
-		net.Send(self)
+	--	net.Start("nLoadInventory")
+	--	net.WriteString(pon.encode(self.character.data_inventory))
+	--	net.Send(self)
 	end
 end
 
@@ -1090,12 +1092,13 @@ function meta:GiveItem(ItemID, n, data)
 	local data = data or {}
 	local ItemTable = rain.itemindex[ItemID]
 	local n = n or 1
-
+print("im on giveitem!")
 	for i = 1, n do
 		self:InsertItemEasy(ItemID, data)
 	end
 
 	if (SERVER) then
+		ItemTable:SetInWorld(0)
 		self:SaveInventory()
 
 		net.Start("nGiveItem")
@@ -1103,6 +1106,7 @@ function meta:GiveItem(ItemID, n, data)
 			net.WriteFloat(n)
 			net.WriteTable(data)
 		net.Send(self)
+		PrintTable(self.character.data_inventory)
 	end
 end
 
@@ -1117,9 +1121,9 @@ function meta:RemoveItem(PosX, PosY)
 	if (SERVER) then
 		self:SaveInventory()
 
-		net.Start("nRemoveItem")
-			net.WriteVector(Vector(PosX, PosY, 0))
-		net.Send(self)
+	--	net.Start("nRemoveItem")
+	--		net.WriteVector(Vector(PosX, PosY, 0))
+	--	net.Send(self)
 	end
 end
 
@@ -1159,20 +1163,25 @@ end
 --]]
 
 function meta:DropItem(PosX, PosY)
-	if (self:PassedOut()) then 
-		return
-	end
+--s	if (self:PassedOut()) then 
+--		return
+--	end
 
-	if (self:TiedUp()) then 
-		return
-	end
+--	if (self:TiedUp()) then 
+--		return
+--	end
 
 	if (SERVER) then
-		GAMEMODE:LogItems( "[R] " .. self:GetRPName() .. "'s drop item " .. self.character.data_inventory[PosX][PosY].ID .. ".", self )
+		--GAMEMODE:LogItems( "[R] " .. self:GetRPName() .. "'s drop item " .. self.character.data_inventory[PosX][PosY].ID .. ".", self )
 		if (self.character.data_inventory[PosX][PosY].ID) then
 			local ItemID = self.character.data_inventory[PosX][PosY].ID
 			local data = self.character.data_inventory[PosX][PosY].data
-			GAMEMODE:CreateItem(self, ItemID, data)
+			local droppos = self:GetEyeTrace().HitPos
+			print("hello trying to spawn entity")
+			
+			rain.itemindex[ItemID]:SpawnEntity(droppos, Angle(0, 0, 0))
+			rain.itemindex[ItemID]:SetInWorld(1)
+			rain.itemindex[ItemID]:AddToSaveQueue()
 		end
 	else
 		net.Start("nDropItem")
@@ -1212,6 +1221,32 @@ function meta:SetupInventory(width, height)
 	self.character.data_inventory.ArtifactDetector = {}
 end
 
+
+function BuildEmptyInventory(width, height)
+	local inventory = CreateInventory(width, height)
+	inventory.QuickUse = {}
+	inventory.QuickUse[1] = GAMEMODE.DefaultQuickUseOne or {} -- allows a config variable to be set so you can toss in default quick use slots, etc
+	inventory.QuickUse[2] = GAMEMODE.DefaultQuickUseTwo or {}
+	inventory.QuickUse[3] = GAMEMODE.DefaultQuickUseThree or {}
+	inventory.QuickUse[4] = GAMEMODE.DefaultQuickUseFour or {}
+
+	inventory.Artifacts = {}
+	inventory.Artifacts[1] = GAMEMODE.DefaultArtifactOne or {}
+	inventory.Artifacts[2] = GAMEMODE.DefaultArtifactTwo or {}
+	inventory.Artifacts[3] = GAMEMODE.DefaultArtifactThree or {}
+	inventory.Artifacts[4] = GAMEMODE.DefaultArtifactFour or {}
+	inventory.Artifacts[5] = GAMEMODE.DefaultArtifactFive or {}
+
+	inventory.Gear = {}
+	inventory.Gear[1] = GAMEMODE.DefaultGearOne or {} -- first two are weapon slots, last two are clothing
+	inventory.Gear[2] = GAMEMODE.DefaultGearTwo or {}
+	inventory.Gear[3] = GAMEMODE.DefaultGearThree or {}
+	inventory.Gear[4] = GAMEMODE.DefaultGearFour or {}
+
+	inventory.ArtifactDetector = {}
+	return inventory
+end
+
 --[[
 	Function: Insert Item At
 	Purpose: Inserts an item into a clients inventory at a given position
@@ -1228,15 +1263,16 @@ end
 --]]
 
 function meta:InsertItemEasy(ItemID, data)
-
+-- owner history should only be synced when it's requested by a client that's an admin to avoid a huge fucking list of bullshit that people will only care about 1% of the time
+		print(ItemID)
+		print("im on insert item easy")
 	local ItemTable = rain.itemindex[ItemID]
 		if ItemTable ~= nil then
 	local SizeX, SizeY = ItemTable.SizeX, ItemTable.SizeY
-
 		if (self:FindSlot(ItemID)) then
 			local PosX, PosY = self:FindSlot(ItemID)
 			self:InsertItemAt(PosX, PosY, ItemID, data)
-
+			print(ItemID)
 			if (SERVER) then
 			--	GAMEMODE:LogItems( "[G] " .. self:GetRPName() .. " obtained item " .. ItemID .. ".", self )
 			--	GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
@@ -1474,7 +1510,7 @@ function meta:FindSlot(ItemID)
 	local SizeX, SizeY = 1, 1
 
 	local TraceTable = BuildTraceTable(self.character.data_inventory)
-
+print("hello im in findslot")
 	for x = 1, width do
 		for y = 1, height do
 			if (TraceTable[x][y] != "OCCUPIED") then
@@ -1489,7 +1525,10 @@ function meta:FindSlot(ItemID)
 					end
 				end
 				if (available) then
+					print("is available")
 					return x, y
+					else
+					print("is not available")
 				end
 			end
 		end

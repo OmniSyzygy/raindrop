@@ -14,29 +14,27 @@ print(creationData.Uniforms[1])
 	end) 
 
 	concommand.Add("dev_testfactiondelete",function()
-		net.Start("rain.testfactiondelete")
-		net.SendToServer()
+	print("trying to get name")
+		print(LocalPlayer():GetEyeTrace().Entity:GetRPName())
 	end) 
 
 	concommand.Add("dev_testfactionjoin",function()
-		--rain.itemindex[1] = nil
-		--rain.item.new("food", 1, nil)
-
-		for k, v in pairs(rain.itemindex) do
-			local base = rain.itemindex[k].base
-			rain.itemindex[k] = setmetatable({}, {__index = rain.itembuffer[base]})
-		end
 		PrintTable(rain.itemindex)
-				print(rain.itemindex[1].SizeX)
+	--	for k, v in pairs(rain.itemindex) do
+	--		local base = rain.itemindex[k].base
+	--		 setmetatable(rain.itemindex[k], {__index = rain.itembuffer[base]})
+	--	end
+	--			PrintTable(rain.itemindex)
+	--			print(rain.itemindex[1].SizeX)
+	--			print(rain.itemindex[1]:GetSizeX())
 		print("this should have a metatable now")
 	end) 
 	
 		concommand.Add("dev_createitem",function()
-		rain.item.new("food", 1)
-		LocalPlayer():GiveItem(1, 1, nil)
+		--rain.item.create("food", 1)
+	--	LocalPlayer():GiveItem(2, 1, nil)
 		net.Start("rain.createitem")
 		net.SendToServer()
-		PrintTable( LocalPlayer().character.data_inventory)
 	end) 
 	
 	function cNewFaction(factionData)
@@ -53,7 +51,9 @@ if (SV) then
 	net.Receive("rain.createitem", function(len, ply)
 		if ( IsValid( ply ) ) then
 			--	rain.item.new("food", 1)
-				ply:GiveItem(1, 1, nil)
+			local droppos = ply:GetEyeTrace().HitPos
+			print("hello trying to spawn entity")
+			rain.itemindex[4]:SpawnEntity(droppos, Angle(0, 0, 0))
 		end
 	end)
 		

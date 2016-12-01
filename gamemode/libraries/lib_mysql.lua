@@ -441,6 +441,8 @@ function mysql:RawQuery(query, callback, flags, ...)
 
 					if (!bStatus) then
 						ErrorNoHalt(string.format("[mysql] MySQL Callback Error!\n%s\n", value))
+						
+						debug.getinfo(callback) 
 					end
 				end
 			else

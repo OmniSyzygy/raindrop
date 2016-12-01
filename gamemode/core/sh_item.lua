@@ -2,9 +2,9 @@
 	Filename: sh_item.lua
 --]]
 
-rain.item = rain.item or {}
-rain.itembuffer = rain.itembuffer or {} -- this is where all base items are stored
-rain.itemindex = rain.itemindex or {} -- this is where all current and unique items are stored
+rain.item = {}
+rain.itembuffer = {} -- this is where all base items are stored
+rain.itemindex = {} -- this is where all current and unique items are stored
 rain.itemsavequeue = {} -- this is the item save queue
 
 itemdirectory = "raindrop/gamemode/raindrop/items"
@@ -28,31 +28,86 @@ TIER_BLUE = 3
 TIER_PURPLE = 4
 TIER_GOLD = 5
 TIER_SET = 6
+if (CL) then
+	net.Receive("rain.itemsync", function()
+		local itemsync = net.ReadTable()
+		rain.item.create(itemsync.base, itemsync.id, itemsync.data)
+		print("syncing an item")
+	end)
+end
+if (SV) then
+ util.AddNetworkString("ItemSyncRequest")
+	net.Receive("ItemSyncRequest", function(len,ply) 
+	local id = net.ReadEntity()
+		rain:SyncItem(id:GetItemID(), ply)
+	end)
+end
 
+function rain:SyncItem(id, pReceiver)
+	local TargetPlayers = player.GetAll()
+	PrintTable(rain.itemindex)
+	if (pReceiver) then
+		TargetPlayers = {pReceiver}
+	end
+	net.Start("rain.itemsync")
+	net.WriteTable(rain.itemindex[id])
+	net.Send(pReceiver)
+end
+
+function rain:SyncInventoryItems(tInventory, pClient)
+	local width, height = GetInventorySize(tInventory)
+		for x = 1, width do 
+			for y = 1, height do
+				if (tInventory[x][y].ID) then
+					rain:SyncItem(tInventory[x][y].ID, pClient)
+				end
+			end			
+		end
+end
 
 function item_meta:GetID()
 	return self.id or 0
 end
 
-function item_meta:Save()
+function item_meta:AddToSaveQueue()
 	table.insert(rain.itemsavequeue, self:GetID())
 end
 
-local pm = FindMetaTable("Player")
-function pm:Sync(tVarArgs)
-	if (CL) then -- this function called clientside syncs the item info on the client itself
-		net.Start("nRequestItemBuffer")
-		net.SendToServer()
-	else
+function item_meta:Save()
 
-	end
+		local SaveObj = mysql:Update("items")
+		SaveObj:Where("id", self:GetID())
+
+		local SortData = {}
+		local a, b, c, d = self:GetItemData()
+
+		SortData["base"] = a
+		SortData["meta"] = b
+		SortData["ownerhistory"] = c
+		SortData["inworld"] = d
+		SortData["worlddata"] = e
+		
+		for k, v in pairs(SortData) do
+			if type(v) == "table" then
+				SaveObj:Update(k, pon.encode(v))
+			elseif type(v) == "string" then
+				SaveObj:Update(k, v)
+			end
+		end
+					
+		SaveObj:Update("charname", self:GetName())
+		SaveObj:Execute()
+end
+
+function item_meta:GetItemData()
+	return self.base, self.meta, self.ownerhistory, self.inworld, self.worlddata
 end
 
 if (SV) then
-util.AddNetworkString("nReceiveItemBuffer")
+	util.AddNetworkString("nReceiveItemBuffer")
 	util.AddNetworkString("nRequestItemBuffer")
-		util.AddNetworkString("nReceiveItemIndex")
-		
+	util.AddNetworkString("nReceiveItemIndex")
+	util.AddNetworkString("rain.itemsync")
 		function rain:SendItemBuffer(pClient)
 			net.Start("nReceiveItemBuffer")
 			net.Send(pClient)
@@ -66,22 +121,13 @@ else
 	net.Receive("nReceiveItemBuffer", function(len, ply)
 	--rain.itembuffer = net.ReadTable()
 	rain.item.loadbaseitems()
-		PrintTable(rain.itembuffer)
 	end)
 	net.Receive("nReceiveItemIndex", function(len, ply)
-	rain.itemindex = net.ReadTable()
+	--rain.itemindex = net.ReadTable()
 		for k, v in pairs(rain.itemindex) do
-			
+			print(v)
 		end
 	end)
-end
-
-function item_meta:SyncMetaData(tVarArgs)
-	if (CL) then
-
-	else
-
-	end
 end
 
 function item_meta:GetSeed()
@@ -109,6 +155,12 @@ function item_meta:GetOwningEntity()
 end
 
 function item_meta:GetInWorld()
+	if self.inworld == 0 then
+		return false
+	end
+	if self.inworld == 1 then
+		return true
+	end
 	return self.inworld
 end
 
@@ -220,26 +272,23 @@ end
 
 if (SV) then
 	function item_meta:SpawnEntity(vPos, aAngs)
+	print(self:GetInWorld())
 		if self:GetInWorld() then
 			return
 		end
+print(self:GetModel().." my model")
 
-		self:SetInWorld(true)
+		self:SetInWorld(1)
+		print(self:GetInWorld())
 		local item = ents.Create("rd_item")
-
+		
 		item:SetModel(self:GetModel())
 		item:SetPos(vPos)
-		item:SetAngs(aAngs)
-		item:SetItemID(self:GetItemID())
+		item:SetAngles(aAngs)
+		item:SetItemID(self:GetID())
 		item:Spawn()
 		self:SetOwningEntity(item)
 	end
-end
-
-function item_meta:New(sUniqueID, tMetaData)
-
-
---tMetaData
 end
 
 function item_meta:DestroyItem()
@@ -249,17 +298,17 @@ function item_meta:DestroyItem()
 end
 
 function item_meta:SetBaseItem(sNewBase)
-	self.ItemBase = sNewBase or false
+	self.base = sNewBase or false
 end
 
 function item_meta:GetBaseItem()
-	return self.ItemBase
+	return self.base
 end
 
 item_meta.__index = item_meta
 local RAIN_ITEMMETA = item_meta
 
-function rain.item.new(base, id, data)
+function rain.item.create(base, id, meta, new)
 	if (rain.itemindex[id] and rain.itemindex[id].base == base) then
 		return rain.itemindex[id]
 	end
@@ -269,20 +318,25 @@ function rain.item.new(base, id, data)
 	if (stockItem) then
 		local item = setmetatable({}, {__index = stockItem})
 		item.id = id
-		item.data = data or {}
 		item.base = base
+		item.ownerhistory = {}
+		item.inworld = 0
+		item.worlddata = {}
 
-		rain.itemindex[id] = item
-	if (SV) then
+		table.insert(  rain.itemindex, item.id, item )
+	if (SV && new) then
 		local InsertObj = mysql:Insert("items")
 		InsertObj:Insert("base", base)
-		InsertObj:Insert("meta", pon.encode(item.data))
+		InsertObj:Insert("meta", pon.encode(item.meta))
 		InsertObj:Insert("ownerhistory", "{}")
 		InsertObj:Insert("inworld", 0)
 		InsertObj:Insert("worlddata", "{}")
 		InsertObj:Execute()
 	end
+	PrintTable(rain.itemindex)
 		return item
+		else
+		print("stock item not found")
 	end
 end
 
@@ -298,7 +352,7 @@ end
 function rain.item.loadbaseitems()
 local items = file.Find(itemdirectory.."/base/*.lua", "LUA")
 
-	for k, v in ipairs(items) do
+	for k, v in pairs(items) do
 	print(itemdirectory.."/base/"..v)
 		rain.util.include(itemdirectory.."/base/"..v)
 	end
@@ -306,28 +360,51 @@ local items = file.Find(itemdirectory.."/base/*.lua", "LUA")
 	
 end
 
-function rain.item.loaditems()
+function rain.item.loaditem(id)
 	-- load from items mysql then insert them into the index, the item bases must be loaded first.
 	if (SV) then
 	local LoadObj = mysql:Select("items")
+	LoadObj:Where("id", id)
 	LoadObj:Callback(function(tResult, uStatus, uLastID)
-			for _, item in pairs(tResult) do
-				rain.item.new(item.base, item.id, item.meta)
+			for _, loaditem in pairs(tResult) do
+		rain.item.create(loaditem.base, loaditem.id, nil)
+			
 			end
 		end)
 	LoadObj:Execute()
 	end
-	
-	if (CL) then
-	for k, v in SortedPairs(item.index) do
-		print(v)
-		print(k)
+end
+
+function rain.item.loadmapitems()
+	if (SV) then
+		local LoadObj = mysql:Select("items")
+		LoadObj:Where("inworld", 1)
+		LoadObj:Callback(function(tResult, uStatus, uLastID)
+				for _, loaditem in pairs(tResult) do
+			rain.item.create(loaditem.base, loaditem.id, nil)
+				
+				end
+			end)
+		LoadObj:Execute()
 	end
+end
+
+function rain.item.loaditems()
+	if (SV) then
+		local LoadObj = mysql:Select("items")
+		LoadObj:Where("inworld", 0)
+		LoadObj:Callback(function(tResult, uStatus, uLastID)
+				for _, loaditem in pairs(tResult) do
+				rain.item.create(loaditem.base, loaditem.id, nil)
+				
+				end
+			end)
+		LoadObj:Execute()
 	end
 end
 
 function rain.item.get(nItemID)
-	return rain.item.itemin[nItemID]
+	return rain.itemindex[nItemID]
 end
 
 function rain.item.saveitems()
@@ -337,8 +414,8 @@ function rain.item.saveitems()
 end
 --credit to nutscript for the registering system
 function rain.item.register(ITEM)
-	local meta = RAIN_ITEMMETA
-			setmetatable(ITEM, RAIN_ITEMMETA)
+
+			setmetatable(ITEM, item_meta)
 			ITEM.Name = ITEM.Name or "No Name Specified"
 			ITEM.Description = ITEM.Description or "noDesc"
 			ITEM.base = ITEM.base or "NoUniqueID"
@@ -376,9 +453,6 @@ end
 
 local rainchar = rain.character.getmeta()
 
-function rainchar:DropItem(objItem)
-
-end
 
 function rainchar:AddItem(objItem)
 

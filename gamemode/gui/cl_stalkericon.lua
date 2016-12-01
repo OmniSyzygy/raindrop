@@ -1,8 +1,24 @@
 PANEL = {}
 
-AccessorFunc(PANEL, "m_Rotated", "Rotated",  FORCE_BOOL) -- wether or not there is a ccstalkerprogress bar reference to this file that this file should be setting progress on
+AccessorFunc(PANEL, "m_Rotated", "Rotated",  FORCE_BOOL) -- wether or not there is a ccstalkerprogress bar reference to this file that this file should be setting progress on <<<< what the fuck?
 AccessorFunc(PANEL, "m_cctooltiptitle", "TooltipTitle")
 AccessorFunc(PANEL, "m_cctooltipdesc", "TooltipDesc")
+
+renderdIcons = renderdIcons or {}
+
+function renderNewIcon(panel, itemTable)
+	if ((itemTable.iconCam and !renderdIcons[string.lower(itemTable.model)]) or itemTable.forceRender) then
+		local iconCam = itemTable.iconCam
+		iconCam = {
+			cam_pos = iconCam.pos,
+			cam_fov = iconCam.fov,
+			cam_ang = iconCam.ang,
+		}
+		renderdIcons[string.lower(itemTable.model)] = true
+		
+		panel.Icon:RebuildSpawnIconEx(iconCam)
+	end
+end
 
 function PANEL:Init()
 	self:SetTooltipTitle("")
@@ -12,7 +28,14 @@ function PANEL:Init()
 	self.StartU, self.StartV, self.EndU, self.EndV = 0, 0, 0, 0
 end
 
-function PANEL:SetCoords(StartX, EndX, StartY, EndY)
+function PANEL:SetCoords(StartX, EndX, StartY, EndY, model)
+	model = "models/props_junk/watermelon01.mdl"
+	
+	if model then
+		self:SetSize(StartX * 50, StartY * 50)
+		self:SetModel(model)
+		
+	end
 
 	local ImageSize = {w = 2048, h = 4096}
 	local IconSize = 50 -- this should awlays be 50
@@ -22,8 +45,8 @@ function PANEL:SetCoords(StartX, EndX, StartY, EndY)
 	end
 
 	if (self:GetRotated()) then
-		--StartX = (ImageSize.w/IconSize - StartX)
-		--EndX = (ImageSize.w/IconSize - EndX)
+		StartX = (ImageSize.w/IconSize - StartX)
+		EndX = (ImageSize.w/IconSize - EndX)
 		StartY = (ImageSize.h/IconSize - StartY)
 		EndY = (ImageSize.h/IconSize - EndY)
 	end
@@ -41,7 +64,6 @@ local iconmat_rot = Material("stalker/ui_icon_equipment_rotated.png", "noclamp m
 
 function PANEL:Paint( w, h )
 
-	--surface.DrawTexturedRectUV( number x, number y, number width, number height, number startU, number startV, number endU, number endV )
 	surface.SetMaterial(iconmat)
 	surface.SetDrawColor(Color(255,255,255,255))
 	if (self:GetRotated()) then
@@ -52,6 +74,14 @@ function PANEL:Paint( w, h )
 		surface.DrawTexturedRectUV(0, 0, w, h, self.StartU, self.StartV, self.EndU, self.EndV) 
 	end
 	return true
+end
+
+function PANEL:PaintOver( w, h )
+		if ( 0 > 1 ) then
+		
+		end
+
+	self:DrawSelections()
 end
 
 function PANEL:Think()
@@ -70,4 +100,4 @@ function PANEL:PostThink()
 	end
 end
 
-derma.DefineControl( "RD_StalkerIcon", "", PANEL, "DButton" )
+derma.DefineControl( "RD_StalkerIcon", "", PANEL, "SpawnIcon" )

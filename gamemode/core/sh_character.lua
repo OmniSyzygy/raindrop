@@ -166,14 +166,14 @@ if (SV) then
 	function character_meta:Sync(pReceiver)
 		local TargetPlayers = player.GetAll()
 
-		if (pReceiver) then
-			TargetPlayers = {pReceiver}
-		else
+			if (pReceiver) then
+				TargetPlayers = {pReceiver}
+			end
 			for k, v in pairs(TargetPlayers) do
 				local data = {}
 
 				data.target = self:GetOwningClient()
-
+				print(self:GetOwningClient())
 				if v:IsAdmin() then
 					data.adminonly = self:GetAdminOnlyData()
 				else
@@ -195,8 +195,9 @@ if (SV) then
 				net.Start("rain.charsync")
 					rain.net.WriteTable(data)
 				net.Send(v)
+				
 			end
-		end
+
 	end
 
 	--[[
@@ -254,7 +255,7 @@ if (SV) then
 	net.Receive("rain.charcreate", function(len, ply)
 	if ( IsValid( ply ) ) then
 		local charData = rain.net.ReadTable()
-		rain.character.create(ply, charData.data, charData.appearance)
+		rain.character.create(ply, charData.data, charData.appearance, BuildEmptyInventory(5, 8))
 		end
 	end)
 
@@ -564,7 +565,8 @@ if (CL) then
 		elseif datatype == DATA_APPEARANCE then
 			target:SetAppearanceData(data.newdata)
 		end
-		rain.item.loaditems()
+		
+		rain.items.loadinventoryitems()
 		PrintTable(rain.itemindex)
 		PrintTable(rain.itembuffer)
 	end)
@@ -585,6 +587,7 @@ if (SV) then
 		local charid = rain.net.ReadLongInt()
 		if charid then
 			pClient:LoadCharacter(charid)
+			--rain:SyncInventoryItems(rain.characterindex[charid].data_inventory, pClient)
 		end 
 	end)
 
@@ -666,7 +669,7 @@ if (SV) then
 		Desc: Syncs a single character
 	--]]
 
-	function rain.character.sync()
+	function rain.character.sync(pClient)
 		-- this will be written once I figure out some networking backend stuff
 	end
 
@@ -676,17 +679,26 @@ if (SV) then
 		Desc: Syncs the character index to all clients in the server
 	--]]
 
-	function rain.character.syncindex()
+	function rain.character.syncindex(pClient)
 		-- this will be written once I figure out some networking backend stuff
+		local tPlayers = player.GetAll()
+		if tPlayers then
+			for k, v in pairs(tPlayers) do
+		--	print("syncing the index ~~~~~~~~~~ or something")
+				if v:GetState() == STATE_ALIVE then
+					v:GetCharacter():Sync(pClient) 
+				end
+			end
+		end
 	end
 
 	function rain.character.playerspawn(pClient, tCharacter)
 		if (istable(tCharacter)) then
 			local appearTable = tCharacter.data_appearance
-
+			rain.character.syncindex(pClient)
 			pClient:SetModel(appearTable.model)
 			pClient:SetSkin(appearTable.skin)
-		--	pClient:LoadItemsFromString(pon.encode(tCharacter.data_inventory))
+			--pClient:LoadItemsFromString(pon.encode(tCharacter.data_inventory))
 		end
 	end
 
@@ -754,8 +766,6 @@ if (SV) then
 							self.character.data_adminonly = pon.decode(tResult.data_adminonly)
 							self.character.data_inventory = pon.decode(tResult.data_inventory)
 							
-							PrintTable(self.character.data_inventory)
-							
 							rain.characterindex[nCharID] = self.character
 
 							setmetatable(self.character, character_meta)
@@ -763,7 +773,9 @@ if (SV) then
 							self.character:SetNameAndID(tResult.charname, nCharID)
 							self.character:SetOwningClient(self)
 							self.character:Sync()
-
+							
+							rain:SyncInventoryItems(self.character.data_inventory, self)
+							--rain:SyncItem(2, self)
 							self:Spawn()
 						end
 					end)
