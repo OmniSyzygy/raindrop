@@ -1,4 +1,4 @@
-if SERVER then
+if (SV) then
 	AddCSLuaFile()
 	return
 end

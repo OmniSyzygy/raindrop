@@ -117,10 +117,10 @@ end
 
 
 local function BeadInit(ent)
-	if (CLIENT) then
+	if (CL) then
 		ent.Timer = 0
 		ent.Emitter = ParticleEmitter( ent.Entity:GetPos() )
-	elseif (SERVER) then
+	elseif (SV) then
 		ent.Pain = { Sound( "ambient/atmosphere/thunder1.wav" ), 
 		Sound( "ambient/atmosphere/thunder2.wav" ), 
 		Sound( "ambient/atmosphere/thunder3.wav" ), 
@@ -180,7 +180,7 @@ local function BeadInit(ent)
 end
 
 local function BeadThink(ent)
-	if (CLIENT) then
+	if (CL) then
 		if ent.Timer < CurTime() then
 		
 			ent.Timer = CurTime() + math.Rand( 0.1, 2.5 )
@@ -209,7 +209,7 @@ local function BeadThink(ent)
  		particle:SetEndSize( 0 ) 
  		particle:SetColor( 255, 255, 255 )
 		particle:SetAirResistance( 10 )
-	elseif (SERVER) then
+	elseif (SV) then
 		if (ent.ExplodeTime and ent.ExplodeTime < CurTime()) then
 				for k,v in pairs( player.GetAll() ) do
 					if IsValid( v ) and v:Alive() and ent.Entity:GetPos():Distance( v:GetPos() ) < ent.Distance then
@@ -241,7 +241,7 @@ local function BeadThink(ent)
 end
 
 local function BeadDraw(ent)
-	if (CLIENT) then
+	if (CL) then
 		ent.Entity:DrawModel()
 	end
 end
@@ -261,7 +261,7 @@ local function BigVortexInit(self)
 
 	self.NPCs = { "npc_zombie_fast", "npc_zombie_poison", "npc_zombie_normal", "npc_rogue" }
 
-	if (CLIENT) then
+	if (CL) then
 		self.Emitter = ParticleEmitter( self.Entity:GetPos() )
 		self.VortexPos = self.Entity:GetPos() + Vector( 0, 0, 2000 )
 		self.Alpha = 0
@@ -304,7 +304,7 @@ local function BigVortexInit(self)
 end
 
 local function BigVortexThink(self)
-	if (CLIENT) then
+	if (CL) then
 			if self.DustTimer < CurTime() then
 	
 			self.DustTimer = CurTime() + 0.1
@@ -360,7 +360,7 @@ local function BigVortexThink(self)
 		end
 	end
 
-	if (SERVER) then
+	if (SV) then
 		if self.SetOff and self.SetOff < CurTime() and not self.VortexTime then
 			self.VortexTime = CurTime() + self.SuckTime
 			self.Entity:SetNWBool( "Suck", false )
@@ -496,7 +496,7 @@ local function BubbleInit(self)
 	self.Blast = Sound( "physics/nearmiss/whoosh_huge2.wav" )
 	self.Blast2 = Sound( "ambient/levels/citadel/portal_beam_shoot5.wav" )
 
-	if (CLIENT) then
+	if (CL) then
 		self.Emitter = ParticleEmitter( self.Entity:GetPos() )
 		self.Fraction = 0
 		self.Size = 80
@@ -531,7 +531,7 @@ local function BubbleInit(self)
 end
 
 local function BubbleThink(self)
-	if (SERVER) then
+	if (SV) then
 		if self.BounceTime and self.BounceTime < CurTime() then
 		
 			self.BounceTime = nil
@@ -608,7 +608,7 @@ local function BurnerInit(self)
 	self.Death = Sound( "ambient/fire/mtov_flame2.wav" )
 	self.Burn = Sound( "Fire.Plasma" )
 
-	if (SERVER) then
+	if (SV) then
 		self.Entity:SetMoveType( MOVETYPE_NONE )
 		self.Entity:SetSolid( SOLID_NONE )
 		
@@ -658,7 +658,7 @@ local function BurnerInit(self)
 end
 
 local function BurnerThink(self)
-	if (SERVER) then
+	if (SV) then
 		if self.BurnTime and self.BurnTime >= CurTime() then
 			local tbl = player.GetAll()
 			tbl = table.Add( tbl, ents.FindByClass( "npc*" ) )
@@ -812,7 +812,7 @@ local function DamageInit(self)
 	self.Warning.TickDelay = 0.1
 	self.Warning.Radius = self.BaseScale*3
 
-	if (SERVER) then
+	if (SV) then
 		self.model = "models/Gibs/HGIBS_spine.mdl"
 		self.Entity:SetModel( self.model ) 
  		
@@ -871,7 +871,7 @@ local function DamageInit(self)
 end 
 
 local function DamageThink(self)
-	if (SERVER) then
+	if (SV) then
 		local all = player.GetAll()
 		local ePos = self.Entity:GetPos()
 		for k,user in pairs(all) do
@@ -937,7 +937,7 @@ local function DeathFogInit(self)
 	self.KillRadius = 2000
 	self.Damage = 2
 
-	if (CLIENT) then
+	if (CL) then
 		self.Emitter = ParticleEmitter( self.Entity:GetPos() )
 		self.Timer = CurTime() + 3
 		self.DustTimer = 0
@@ -1009,7 +1009,7 @@ local function DeathFogInit(self)
 end
 
 local function DeathFogThink(self)
-	if (CLIENT) then
+	if (CL) then
 		if self.Timer > CurTime() then 
 			return 
 		end
@@ -1116,7 +1116,7 @@ rain:RegisterAnomaly("DeathFog", {"EDeathFog"})
 rain:RegisterElement("EDeathFog", DeathFogInit, DeathFogThink)
 
 local function EvadeInit(self)
-	if (SERVER) then
+	if (SV) then
 		self.Entity:SetModel( "models/props_junk/watermelon01.mdl" ) --Set its model.
 		self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, rainod is a physics
 		self.Entity:SetSolid( SOLID_NONE ) 	-- Toolbox
@@ -1135,7 +1135,7 @@ local function EvadeInit(self)
 end
 
 local function EvadeThink(self)
-	if (SERVER) then
+	if (SV) then
 	    for k, v in pairs( ents.FindInSphere( self.Entity:GetPos(), 400 )  ) do	
 				--If it is a valid entity and nearby		
 			if v:GetClass() != "anom_physicspush" then -- if the entity isnt a anom_physicspush
@@ -1204,7 +1204,7 @@ rain:RegisterAnomaly("Evade", {"EEvade"})
 rain:RegisterElement("EEvade", EvadeInit, EvadeThink)
 
 local function HeatInit(self)
-	if (SERVER) then
+	if (SV) then
 		self.Entity:SetModel( "models/props_junk/watermelon01.mdl" ) --Set its model.
 		self.Entity:SetMoveType( MOVETYPE_NONE )   -- after all, rainod is a physics
 		self.Entity:SetSolid( SOLID_NONE ) 	-- Toolbox
@@ -1223,7 +1223,7 @@ local function HeatInit(self)
 end
 
 local function HeatThink(self)
-	if (CLIENT) then
+	if (CL) then
 		local mypos = self:GetPos()
 		local dist = LocalPlayer():GetPos():Distance(mypos)
 		
@@ -1286,7 +1286,7 @@ local function HoverstoneInit(self)
 	Sound( "ambient/levels/canals/critter5.wav" ),
 	Sound( "ambient/machines/station_train_squeel.wav" ) }
 
-	if (CLIENT) then
+	if (CL) then
 		self.Emitter = ParticleEmitter( self.Entity:GetPos() )
 		self.Dist = self.Entity:OBBCenter():Distance( self.Entity:OBBMaxs() )
 	else
@@ -1365,7 +1365,7 @@ local function HoverstoneInit(self)
 end
 
 local function HoverstoneThink(self)
-	if (CLIENT) then
+	if (CL) then
 		local mypos = self:GetPos()
 		local dist = LocalPlayer():GetPos():Distance(mypos)
 		
@@ -1417,7 +1417,7 @@ rain:RegisterAnomaly("Hoverstone", {"EHoverstone"})
 rain:RegisterElement("EHoverstone", HoverstoneInit, HoverstoneThink, HoverstoneDraw)
 
 local function HydroInit(self)
-	if (CLIENT) then
+	if (CL) then
 		self.Color = Color(255, 255, 255, 0)
 	else
 		self.Entity:SetModel( "models/props_borealis/bluebarrel001.mdl" )
@@ -1440,7 +1440,7 @@ local function HydroInit(self)
 end
 
 local function HydroThink(self)
-	if (SERVER) then
+	if (SV) then
 		local harange = math.random( 32, 128 )
 		local b = ents.Create( "point_hurt" )
 		b:SetKeyValue("targetname", "fier" ) 
@@ -1493,7 +1493,7 @@ local function MysticInit(self)
 	
 	self.Distance = 600
 
-	if (CLIENT) then
+	if (CL) then
 		self.Timer = 0
 	else
 		self.Entity:SetModel( "models/XQM/Rails/gumball_1.mdl" )
@@ -1515,7 +1515,7 @@ local function MysticInit(self)
 end
 
 local function MysticThink(self)
-	if (CLIENT) then
+	if (CL) then
 		local mypos = self:GetPos()
 		local dist = LocalPlayer():GetPos():Distance(mypos)
 		
@@ -1610,7 +1610,7 @@ local function distort(ent, pos)
 end
 
 local function PunchInit(self)
-	if (CLIENT) then
+	if (CL) then
 		return 
 	end
 	
@@ -1633,7 +1633,7 @@ local function PunchInit(self)
 end
 
 local function PunchThink(self)
-	if (CLIENT) then
+	if (CL) then
 		return 
 	end
 
@@ -1672,7 +1672,7 @@ local function StaticInit(self)
 	
 	self.ZapRadius = 300
 
-	if (SERVER) then
+	if (SV) then
 		self.Entity:SetMoveType( MOVETYPE_NONE )
 		self.Entity:SetSolid( SOLID_NONE )
 	
@@ -1809,7 +1809,7 @@ local function StaticInit(self)
 				self.SetOff = CurTime() + 3
 			end
 		end 	
-	elseif (CLIENT) then
+	elseif (CL) then
 		self.Size = 15
 		self.Emitter = ParticleEmitter( self.Entity:GetPos() )
 		self.Timer = 0
@@ -1818,7 +1818,7 @@ local function StaticInit(self)
 end
 
 local function StaticThink(self)
-	if (CLIENT) then
+	if (CL) then
 		if self.Timer < CurTime() then
 		
 			self.Timer = CurTime() + 0.75
@@ -1848,7 +1848,7 @@ local function StaticThink(self)
 			end
 		
 		end
-	elseif (SERVER) then
+	elseif (SV) then
 		if self.SetOff and self.SetOff > CurTime() then
 			if self.SoundTime < CurTime() then
 				self.SoundTime = CurTime() + 0.3
@@ -1897,7 +1897,7 @@ local function VortexInit(self)
 	self.SuckRadius = 700
 	self.KillRadius = 300
 
-	if (SERVER) then
+	if (SV) then
 		self.Entity:SetMoveType( MOVETYPE_NONE )
 		self.Entity:SetSolid( SOLID_NONE )
 		
@@ -1924,7 +1924,7 @@ local function VortexInit(self)
 		end 
 	end
 
-	if (CLIENT) then
+	if (CL) then
 		self.Emitter = ParticleEmitter( self.Entity:GetPos() )
 		self.VortexPos = self.Entity:GetPos() + Vector( 0, 0, 250 )
 		self.Alpha = 0
@@ -1936,7 +1936,7 @@ local function VortexInit(self)
 end
 
 local function VortexThink(self)
-	if (CLIENT) then
+	if (CL) then
 		if self.DustTimer < CurTime() then
 		
 			self.DustTimer = CurTime() + 0.5
@@ -2068,7 +2068,7 @@ rain:RegisterAnomaly("Vortex", {"EVortex"})
 rain:RegisterElement("EVortex", VortexInit, VortexThink, VortexDraw)
 
 local function WhirlgigInit(self)
-	if (CLIENT) then
+	if (CL) then
 		return
 	end
 
@@ -2090,7 +2090,7 @@ local function WhirlgigInit(self)
 end
 
 local function WhirlgigThink(self)
-	if (CLIENT) then
+	if (CL) then
 		return
 	end
 
@@ -2222,7 +2222,7 @@ local function ElectroThink(self)
 			if (dist > self.Radius) then continue end -- skip players outside of the radius
 			if (self.DoTime < CurTime()) then
 				
-				if (SERVER) then
+				if (SV) then
 					local shock = DamageInfo()
 					shock:SetDamage(10)
 					shock:SetDamageType(DMG_SHOCK)

@@ -1,4 +1,4 @@
-if SERVER then
+if (SV) then
 	hook.Add("PlayerLevelUp", "ZSLeveling:PlayerLevelUp", function(ply)
 		for k,v in pairs(player.GetAll()) do
 			if (v == ply) then

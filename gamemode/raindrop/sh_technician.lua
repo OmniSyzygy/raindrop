@@ -10,7 +10,7 @@ function pmeta:IsTechnician()
 	return false
 end
 
-if (SERVER) then
+if (SV) then
 	-- creates a blueprint from an item object
 	
 	function pmeta:CreateBlueprint(objItem)

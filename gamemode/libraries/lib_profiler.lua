@@ -14,7 +14,7 @@ local math = math
 local SysTime = SysTime
 local AddCSLuaFile = AddCSLuaFile
 
-if (SERVER) then
+if (SV) then
 	AddCSLuaFile()
 end
 

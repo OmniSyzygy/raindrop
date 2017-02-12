@@ -22,6 +22,23 @@ function rain.log.error(sText)
 	end
 end
 
+
+--[[
+	Name: getplayerinfo
+	Category: Log
+	Desc: Get the player name, or return a string stating the player is invalid.
+--]]
+
+function rain.log.getplayerinfo(aPlayer)
+	if (IsValid(aPlayer) and aPlayer) then
+		if (aPlayer:GetState() != E_LOADING) then
+			return aPlayer:GetVisibleRPName()
+		end
+	else
+		return "invalid client"
+	end
+end
+
 --[[
 	Name: Dev
 	Category: Log
@@ -133,7 +150,7 @@ Raindrop Logs
 Made by LivKX
 For: Deadi
 
-]]
+--]]
 
 util.AddNetworkString("LogsRequest")
 util.AddNetworkString("SendLogs")

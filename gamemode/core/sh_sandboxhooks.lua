@@ -48,7 +48,7 @@
 
 -- the really nice thing about loading a set of 'core' files then a psuedo schema is the fact that we can re-enable these hooks later on
 
-if CL then
+if (CL) then
 	function rain:HUDAmmoPickedUp(sItemName, nAmount)
 		return false
 	end

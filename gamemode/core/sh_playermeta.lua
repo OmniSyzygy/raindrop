@@ -17,9 +17,13 @@ end
 	Desc: Returns the players RP name by grabbing their character name, this can be modified for stuff like disguises later on.
 --]]
 
-function rainclient:GetVisibleRPName()
+function rainclient:GetVisibleRPName(bForceRet)
 	if self.character then
 		return self.character:GetName()
+	elseif (!bForceRet) then
+		return "Unknwon"
+	elseif (bForceRet) then
+		return self:Nick()
 	end
 end
 

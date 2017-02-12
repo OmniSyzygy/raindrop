@@ -41,7 +41,7 @@ function netstream.Hook(name, Callback)
 	netstream.stored[name] = Callback
 end
 
-if (SERVER) then
+if (SV) then
 	util.AddNetworkString("NetStreamDS")
 
 	-- A function to start a net stream.

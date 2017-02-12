@@ -26,7 +26,7 @@
 
 function net.Replicate(Authority, Received)
 	if (!Received) then
-		if (CLIENT) then
+		if (CL) then
 			net.SendToServer()
 		else
 			net.Send(Authority)
@@ -108,7 +108,7 @@ end
 	-------------------------------------------------------------------------------------
 --]]
 
-if (CLIENT) then
+if (CL) then
 
 	local function nLoadInventory()
 		local inv = net.ReadString()
@@ -222,7 +222,7 @@ if (CLIENT) then
 	end
 	net.Receive("nRemoveWeaponFrom", nRemoveWeaponFrom)
 
-elseif (SERVER) then
+elseif (SV) then
 
 	local function nEquipWeaponFrom(len, ply)
 		local PosX = net.ReadInt(5)
@@ -358,7 +358,7 @@ end
 	-------------------------------------------------------------------------------------
 --]]
 
-if (CLIENT) then
+if (CL) then
 
 	local CurrentTooltip = CurrentTooltip or nil
 	local ToolTipTimer = CurTime()
@@ -897,7 +897,7 @@ function meta:EquipArtifactFrom(nPosX, nPosY, nSlot, bReceived)
 		end
 	end
 
-	if (SERVER) then
+	if (SV) then
 		self:SaveInventory()
 	end
 
@@ -943,7 +943,7 @@ function meta:EquipWeaponFrom(nPosX, nPosY, nSlot, bReceived)
 			end
 		end
 	
-		if (SERVER) then
+		if (SV) then
 			self:SaveInventory()
 		end
 	
@@ -1079,7 +1079,7 @@ function meta:GiveItem(ItemID, n, data)
 		self:InsertItemEasy(ItemID, data)
 	end
 
-	if (SERVER) then
+	if (SV) then
 		self:SaveInventory()
 
 		net.Start("nGiveItem")
@@ -1098,7 +1098,7 @@ end
 function meta:RemoveItem(PosX, PosY)
 	self.Inventory[PosX][PosY] = {}
 
-	if (SERVER) then
+	if (SV) then
 		self:SaveInventory()
 
 		net.Start("nRemoveItem")
@@ -1121,7 +1121,7 @@ function meta:UseItem(PosX, PosY)
 		return
 	end
 
-	if (SERVER) then
+	if (SV) then
 		GAMEMODE:LogItems( "[R] " .. self:VisibleRPName() .. "'s item " .. self.Inventory[PosX][PosY].ID .. " was removed.", self )
 		self:SaveInventory()
 	else
@@ -1151,7 +1151,7 @@ function meta:DropItem(PosX, PosY)
 		return
 	end
 
-	if (SERVER) then
+	if (SV) then
 		GAMEMODE:LogItems( "[R] " .. self:VisibleRPName() .. "'s drop item " .. self.Inventory[PosX][PosY].ID .. ".", self )
 		if (self.Inventory[PosX][PosY].ID) then
 			local ItemID = self.Inventory[PosX][PosY].ID
@@ -1219,7 +1219,7 @@ function meta:InsertItemEasy(ItemID, data)
 		local PosX, PosY = self:FindSlot(ItemID)
 		self:InsertItemAt(PosX, PosY, ItemID, data)
 
-		if (SERVER) then
+		if (SV) then
 			GAMEMODE:LogItems( "[G] " .. self:VisibleRPName() .. " obtained item " .. ItemID .. ".", self )
 			GAMEMODE:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
 		end
@@ -1341,7 +1341,7 @@ function meta:TransferItem(StartX, StartY, EndX, EndY, Container, From)
 		Container.Inventory[EndX][EndY] = Item
 	end
 
-	if (SERVER) then
+	if (SV) then
 		self:SaveInventory()
 		GAMEMODE:SaveContainer(Container)
 	else
@@ -1404,7 +1404,7 @@ function meta:MoveItemFromToContainer(StartX, StartY, EndX, EndY, Container)
 	self.Inventory[StartX][StartY] = {}
 	self.Inventory[EndX][EndY] = Item
 
-	if (CLIENT) then
+	if (CL) then
 		net.Start("nMoveItemFromToContainer")
 			net.WriteVector(Vector(StartX, StartY, EndX))
 			net.WriteFloat(EndY)
@@ -1421,7 +1421,7 @@ end
 function meta:MoveItemFromTo(StartX, StartY, EndX, EndY)
 	local Item = self.Inventory[StartX][StartY]
 
-	if (SERVER) then
+	if (SV) then
 		if (self:ItemCanFit(EndX, EndY, Item.ID)) then
 			self.Inventory[StartX][StartY] = {}
 			self.Inventory[EndX][EndY] = Item

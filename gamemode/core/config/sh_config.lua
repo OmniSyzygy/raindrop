@@ -10,8 +10,7 @@ rain.cfg.tech = {}
 rain.cfg.tech.maxgeneration 		= 5
 rain.cfg.tech.durabilitylossscale 	= 0.2
 
-rain.cfg.dammul = {} -- this needs to be moved to the raindrop cfg
-
+rain.cfg.dammul = {}
 rain.cfg.dammul["ValveBiped.Bip01_Pelvis"] 		= 1.0
 rain.cfg.dammul["ValveBiped.Bip01_L_Thigh"] 	= 0.9
 rain.cfg.dammul["ValveBiped.Bip01_L_Calf"] 		= 0.4

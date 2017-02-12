@@ -383,7 +383,7 @@ do
 		end
 	end
 
-	if (CLIENT) then
+	if (CL) then
 		netstream.Hook("seqSet", function(entity, sequence)
 			if (IsValid(entity)) then
 				if (!sequence) then

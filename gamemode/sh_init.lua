@@ -23,7 +23,7 @@ rain.Email = "jooni@thereeplex.com"
 rain.dev = true
 
 -- include raindrop utilities to make loading the rest of the gamemode easier
-if (SERVER) then
+if (SV) then
 	AddCSLuaFile("sh_util.lua")
 	include("sh_util.lua")
 else
@@ -35,7 +35,7 @@ rain.util.loadlibraries()
 rain.util.loadraindrop()
 
 function rain:Initialize()
-	if SV then
+	if (SV) then
 		rain.util.initraindrop()
 		rain:LoadVolumes()
 	end

@@ -46,12 +46,12 @@ function rain.util.log(sText, sTag)
 		sTag = string.upper(sTag)
 	end
 
-	if SV then
+	if (SV) then
 		MsgC(Color(45,137,239),"[RAIN]")
 		MsgC(Color(110,110,255,255)," [SV]")
 		MsgC(Color(255,0,0,255)," ["..sTag.."] ")
 		MsgC(Color(110,110,255,255), sText.."\n")
-	elseif CL then
+	elseif (CL) then
 		MsgC(Color(45,137,239),"[RAIN]")
 		MsgC(Color(255,196,13)," [CL]")
 		MsgC(Color(255,0,0,255)," ["..sTag.."] ")
@@ -136,7 +136,7 @@ function rain.util.loadraindrop()
 	end
 end
 
-if SV then
+if (SV) then
 	function rain.util.initraindrop()
 		rain.db.connect(rain.cfg.db.address, rain.cfg.db.username, rain.cfg.db.password, rain.cfg.db.database, rain.cfg.db.port)
 	end

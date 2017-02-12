@@ -13,7 +13,7 @@ DATA_FACTIONS = 5
 
 rain.character = {}
 
-if (SERVER) then
+if (SV) then
 	rain.characterindex = rain.characterindex or {}
 end
 

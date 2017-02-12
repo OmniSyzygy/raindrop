@@ -10,6 +10,8 @@ function onPlayerDeath(victim, inflictor, attacker)
 end
 hook.Add("PlayerDeath", "Raindrop:PlayerDeath", onPlayerDeath)
 
+-- the fuck is this
+
 function checkHeadshot(pl, hitGroup)
 	pl.lastHitGroup = hitGroup
 end

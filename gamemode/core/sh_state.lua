@@ -7,14 +7,14 @@ rain.state = {}
 
 -- enums for state
 
-STATE_LOADING = 0 --  this is before the player has any data loaded
-STATE_MENU = 1 -- main menu state
-STATE_ALIVE = 2 -- when the player is alive and in the world
-STATE_ALIVE_OOC = 3 -- when the player is alive but OOC IE in observer
-STATE_OBSERVER = 4 -- when a player is in observer
-STATE_DEAD = 5 -- when a player is data
-STATE_KO = 6 -- when a player is knocked out
-STATE_AFK = 7 -- when a player is AFK
+E_LOADING 		= 0 --  this is before the player has any data loaded
+E_MENU 			= 1 -- main menu state
+E_ALIVE 		= 2 -- when the player is alive and in the world
+E_ALIVE_OOC 	= 3 -- when the player is alive but OOC IE in observer
+E_OBSERVER 		= 4 -- when a player is in observer
+E_DEAD 			= 5 -- when a player is data
+E_KO 			= 6 -- when a player is knocked out
+E_AFK 			= 7 -- when a player is AFK
 
 if (SV) then
 	--[[
@@ -27,11 +27,11 @@ if (SV) then
 		if !pClient.character then
 			pClient:KillSilent()
 			pClient:SetNoDraw(true)
-			pClient:SetState(STATE_MENU)
+			pClient:SetState(E_MENU)
 		else
 			pClient:SetNoDraw(false)
 			rain:PlayerLoadout(pClient)
-			pClient:SetState(STATE_ALIVE)
+			pClient:SetState(E_ALIVE)
 		end
 	end
 
@@ -46,7 +46,7 @@ local rainclient = FindMetaTable("Player")
 --]]
 
 function rainclient:GetState()
-	return self.r_state or STATE_LOADING
+	return self.r_state or E_LOADING
 end
 
 --[[

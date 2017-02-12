@@ -299,7 +299,7 @@ local function DrawCoPHUD(localPlayer, scrW, scrH)
 	local pos = localPlayer:GetPos()
 
 	for k, v in pairs(player.GetAll()) do
-		if (v == localPlayer or v:GetState() != STATE_ALIVE or !v:Alive()) then continue end
+		if (v == localPlayer or v:GetState() != E_ALIVE or !v:Alive()) then continue end
 
 		if (v:GetPos():Distance(pos) <= 256) then
 			nPlayers = nPlayers + 1
@@ -518,7 +518,7 @@ local hudCheck = {
 function rain:HUDPaint()
 	local localPlayer = LocalPlayer()
 
-	if localPlayer:GetState() == STATE_ALIVE and localPlayer:Alive() then
+	if localPlayer:GetState() == E_ALIVE and localPlayer:Alive() then
 		local scrW, scrH = ScrW(), ScrH()
 		local chosenHUD = hudCheck[GetConVar("RD_HUD_TYPE"):GetInt() or HUD_STALKER_COP]
 

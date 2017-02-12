@@ -1,0 +1,343 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/C/Users/Nik-Work/Documents/artstuff.txt",
+			"settings":
+			{
+				"buffer_size": 1501,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "Subject of Art"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 304,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/Users/Nik-Home/Documents/contract.txt",
+			"settings":
+			{
+				"buffer_size": 869,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop"
+	],
+	"file_history":
+	[
+		"/C/dm/dm114/Config/DefaultGame.ini",
+		"/C/dm/dm114/Config/DefaultEditor.ini",
+		"/C/steamworks/sdk/tools/ContentBuilder/scripts/depot_build_575441.vdf",
+		"/C/dm/dm114/Config/DefaultEngine.ini",
+		"/C/steamworks/sdk/tools/ContentBuilder/scripts/app_build_575440.vdf",
+		"/C/dm/dm114/Config/DefaultInput.ini",
+		"/C/Users/Nik-Work/Documents/Unreal Projects/MultiplayerFirstPersonSho/MultiplayerFirstPersonSho.uproject",
+		"/C/dm/dm114/dm114.uproject",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop/sh_technician.lua",
+		"/C/dm/dm114/Plugins/AdvancedSessions/AdvancedSessions.uplugin",
+		"/C/dm/dm114/Plugins/ProceduralMeshComponent/ProceduralMeshComponent.uplugin",
+		"/C/dm/dm114/Intermediate/Build/Win64/dm114/Development/dm114/dm114.generated.cpp.obj.response",
+		"/C/dm/dm114/Plugins/AdvancedSessions/README.md",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/DeviceProfiles.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/Compat.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/Scalability.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/Input.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/Lightmass.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/Hardware.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/GameUserSettings.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/GameplayTags.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/Game.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/Engine.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/EditorPerProjectUserSettings.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Config/DefaultEditor.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Config/DefaultInput.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Config/DefaultGame.ini",
+		"/H/dmbuild/WindowsNoEditor/dm114/Config/DefaultEngine.ini",
+		"/C/dm/DeadMatter/DeadMatter/Config/ConsoleVariables.ini",
+		"/C/dm/DeadMatter/DeadMatter/Config/DefaultEditor.ini",
+		"/C/dm/DeadMatter/DeadMatter/Config/DefaultEditorPerProjectUserSettings.ini",
+		"/C/dm/DeadMatter/DeadMatter/Config/DefaultInput.ini",
+		"/C/dm/DeadMatter/DeadMatter/Config/DefaultGame.ini",
+		"/C/Program Files (x86)/Epic Games/4.14/Engine/Config/BaseEngine.ini",
+		"/C/dm/DeadMatter/DeadMatter/Config/DefaultEngine.ini",
+		"/C/dm/DeadMatter_UE114/DeadMatter/Config/DefaultEditorPerProjectUserSettings.ini",
+		"/C/Program Files (x86)/Epic Games/4.14/Engine/Config/ConsoleVariables.ini",
+		"/C/dm/DeadMatter_UE114/DeadMatter/Config/DefaultEditor.ini",
+		"/C/dm/DeadMatter_UE114/DeadMatter/Config/ConsoleVariables.ini",
+		"/C/dm/DeadMatter/DeadMatter/deadmatter.uproject",
+		"/C/Users/Nik-Work/Documents/Unreal Projects/KiteDemo/KiteDemo.uproject",
+		"/C/root/dev/ue4/DM-UnrealEngine/.gitignore",
+		"/C/dm/DeadMatter_UE4_14/DeadMatter/deadmatter.uproject",
+		"/G/DM-UnrealEngine/UE4Games.uprojectdirs",
+		"/C/root/dev/ue4/DM-UnrealEngine/README.md",
+		"/C/zm/readme.textile",
+		"/C/dm/readme.textile",
+		"/G/schumuddel/schu.txt",
+		"/C/Users/Nik-Work/Documents/MusicBot/config/options.ini",
+		"/H/jerkoff2/MultiplayerFirstPersonSho/MultiplayerFirstPersonSho.sln",
+		"/H/jerkoff2/MultiplayerFirstPersonSho/MultiplayerFirstPersonSho.uproject",
+		"/C/root/dev/workspace/DeadMatter/DeadMatter/Saved/SaveGames/UserSettings.sav",
+		"/C/root/dev/workspace/DeadMatter/DeadMatter/Saved/SaveGames/DM_UserSettings.sav",
+		"/C/root/dev/ue4/UnrealEngine/README.md"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			"G:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop\\gamemode",
+			"C:\\Users\\Nik-Work\\Documents\\MusicBot\\config"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"SERVER",
+			"r.a",
+			"AOSpecular",
+			"AO",
+			"SMAA"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/Nik-Work/Documents/artstuff.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1501,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								708,
+								708
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Subject of Art",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 118.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 304,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								77,
+								77
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/D/Users/Nik-Home/Documents/contract.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 869,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								869,
+								869
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 45.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "raindrop.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 255.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -17,7 +17,7 @@ function PANEL:Init()
 	mid:SetSize(ScrW(), ScrH()*0.7)
 	mid.Paint = function()
 		local w, h = mid:GetSize()
-		rain.skin.paintpanel(w, h, mid, Color(0, 0, 0, 220))
+		rain.skin.paintpanel(w, h, mid, Color(0, 0, 0, 220)) 
 	end
 	bottom:Dock(TOP)
 	bottom:SetSize(ScrW(), ScrH()*0.1)

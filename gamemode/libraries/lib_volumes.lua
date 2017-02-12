@@ -10,12 +10,14 @@ rain.volumes = {} -- this is where actual volume data is stored
 E_ENTERVOLUME = 0
 E_INVOLUME = 1
 E_EXITVOLUME = 2
+
 if (SV) then
 	util.AddNetworkString("nAddVolume")
 	util.AddNetworkString("nRemoveVolume")
 	util.AddNetworkString("nVolume")
 	util.AddNetworkString("nSendVolumes")
 end
+
 rain.struct:RegisterStruct("Volume", {
 	Type = "VolumeType",
 	Min = Vector(0,0,0),
@@ -60,7 +62,7 @@ function rain:VolumeThink()
 			end
 	
 			for k2, v2 in pairs(tocheck) do
-				if (SERVER) then
+				if (SV) then
 					if (v2:IsPlayer()) then
 						if (!v2.Volumes) then
 							v2.Volumes = {}
@@ -143,7 +145,7 @@ end
 --]]
 
 function rain:SendVolumes(pClient)
-	if (SERVER) then
+	if (SV) then
 		
 			net.Start("nSendVolumes")
 			net.WriteTable(rain.volumes)
@@ -167,7 +169,7 @@ function rain:AddVolume(tVolume, new, index)
 	local newindex = index or #self.volumes+1
 	self.volumes[newindex] = NewVolume
 
-	if (SERVER) then
+	if (SV) then
 		if new then
 			rain:SaveVolume(NewVolume)
 		end
@@ -190,7 +192,7 @@ function rain:RemoveVolume(vPos)
 		
 			self.volumes[k] = nil
 
-			if (SERVER) then
+			if (SV) then
 				rain:DeleteVolume(v.Min, v.Max, game.GetMap())
 				net.Start("nRemoveVolume")
 				net.WriteVector(vPos)
@@ -201,7 +203,7 @@ function rain:RemoveVolume(vPos)
 	end
 end
 
-if (CLIENT) then
+if (CL) then
 	local function nSendVolumes(len)
 		local NewVolumes = net.ReadTable()
 		rain.volumes = NewVolumes
@@ -246,15 +248,15 @@ end
 --]]
 
 rain:RegisterVolumeType(
-"AmbientSound",
- "Ambient Sound",
- 1, 
- true, 
- {}, 
- Color(100, 255, 100, 255),
-function(ent, sType, tMetadata)
-		print(ent, "has entered the", sType, "volume")
-end)
+	"AmbientSound",
+	"Ambient Sound",
+	1, 
+	true, 
+	{}, 
+	Color(100, 255, 100, 255),
+	function(ent, sType, tMetadata)
+			print(ent, "has entered the", sType, "volume")
+	end)
  
 rain:RegisterVolumeType("AreaTrigger", "Area Trigger", 1, true, {}, Color(100, 100, 255, 255))
 rain:RegisterVolumeType("S2KZone", "S2K Zone", 1, true, {}, Color(255, 100, 100, 255))

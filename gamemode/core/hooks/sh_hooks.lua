@@ -186,7 +186,7 @@ function rain:CalcMainActivity(client, velocity)
 
 	client.SetPoseParameter(client, "move_yaw", normalized)
 
-	if (CLIENT) then
+	if (CL) then
 		client.SetIK(client, false)
 	end
 

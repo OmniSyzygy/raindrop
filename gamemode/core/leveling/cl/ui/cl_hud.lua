@@ -1,4 +1,4 @@
-if CLIENT then
+if (CL) then
 	local function DrawDisplay()
 	if not(LevelSystemConfiguration.ShowPlayerLevel) then return end
 	local shootPos = LocalPlayer():GetShootPos()
