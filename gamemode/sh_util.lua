@@ -1,5 +1,7 @@
 -- this is a utility library, it is assumed that base functions are kept within this file. More info later.
 
+AddCSLuaFile()
+
 CL = CLIENT
 SV = SERVER
 

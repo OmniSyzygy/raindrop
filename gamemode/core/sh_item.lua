@@ -11,21 +11,21 @@ local item_meta = {}
 
 -- tier enums
 
-TIER_WORN = 1 -- (White)
-TIER_STANDARD = 2 -- (Green)
-TIER_SPECIALIZED = 3 -- (Blue)
-TIER_SUPERIOR = 4 -- (Purple)
-TIER_HIGHEND = 5 -- (Gold)
-TIER_GEARSET = 6 -- (Turqoise)
+E_WORN = 1 -- (White)
+E_STANDARD = 2 -- (Green)
+E_SPECIALIZED = 3 -- (Blue)
+E_SUPERIOR = 4 -- (Purple)
+E_HIGHEND = 5 -- (Gold)
+E_GEARSET = 6 -- (Turqoise)
 
 -- WoW style tier enums that go off of color (I do prefer using these)
 
-TIER_WHITE = 1
-TIER_GREEN = 2
-TIER_BLUE = 3
-TIER_PURPLE = 4
-TIER_GOLD = 5
-TIER_SET = 6
+E_WHITE = 1
+E_GREEN = 2
+E_BLUE = 3
+E_PURPLE = 4
+E_GOLD = 5
+E_SET = 6
 
 
 function item_meta:GetID()

@@ -43,8 +43,8 @@ function PANEL:Init()
 end
 
 -- passes a reference to the panel that allows us to do something with condition when we change it
-function PANEL:SetConditionPanel(vguiCCStalkerProgressBar)
-	self.ConditionPanel = vguiCCStalkerProgressBar
+function PANEL:SetConditionPanel(vguiRD_StalkerProgressBar)
+	self.ConditionPanel = vguiRD_StalkerProgressBar
 end
 
 -- accessor func
@@ -67,7 +67,7 @@ function PANEL:UpdateSlot()
 	if (self:GetSlotType() == SLOT_QUICKUSE) then
 		if (LocalPlayer():GetQuickSlot(self:GetSlot())) then
 			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetQuickSlot(self:GetSlot()))
-			self.ItemPanel = vgui.Create("CCStalkerIcon", self)
+			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			local w, h = self:GetSize()
 			w = w * 0.8
 			self.ItemPanel:SetSize(w, w)
@@ -86,7 +86,7 @@ function PANEL:UpdateSlot()
 	elseif (self:GetSlotType() == SLOT_ARTIFACT) then
 		if (LocalPlayer():GetArtifactSlot(self:GetSlot())) then
 			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetArtifactSlot(self:GetSlot()))
-			self.ItemPanel = vgui.Create("CCStalkerIcon", self)
+			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			local w, h = self:GetSize()
 			w = w * 0.8
 			self.ItemPanel:SetSize(w, w)
@@ -108,7 +108,7 @@ function PANEL:UpdateSlot()
 	elseif (self:GetSlotType() == SLOT_GUN) then
 		if (LocalPlayer():GetGearSlot(self:GetSlot())) then
 			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetGearSlot(self:GetSlot()))
-			self.ItemPanel = vgui.Create("CCStalkerIcon", self)
+			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			self.ItemPanel:SetRotated(true)
 			local w, h = self:GetSize()
 			w = w * 0.95

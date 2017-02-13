@@ -26,7 +26,6 @@ rain.dev = true
 -- include raindrop utilities to make loading the rest of the gamemode easier
 if (SV) then
 
-	AddCSLuaFile("sh_util.lua")
 	include("sh_util.lua")
 
 else
