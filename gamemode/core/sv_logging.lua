@@ -240,7 +240,7 @@ end)
 
 -- (!)ADD MYSQL QUERY UNDERNEATH THE TABLE.INSERT
 -- (!)Yes, we are inserting a table into a table!
-
+--[[
 function rain.log.add(ply,tag,action,value,value2,ply2) -- set up function
 	local TimeStamp = os.time() -- get time
 	local TimeString = os.date( "%d/%m/%Y" , TimeStamp ) -- format time and date for logging
@@ -338,3 +338,4 @@ function dmglogs(plytk,dmginfo) -- Automatic Damage Logs!
 	end
 end
 hook.Add(EntityTakeDamage,"DamageLogging",dmglogs)
+--]]
