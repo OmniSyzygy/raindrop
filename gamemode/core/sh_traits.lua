@@ -58,6 +58,10 @@ function charmeta:HasTrait(sTraitID)
 	return false
 end
 
+function charmeta:TraitSpawn(sTraitID, bSkipCallback)
+
+end
+
 function charmeta:GiveTrait(sTraitID, bSkipCallback)
 	local traits = self:GetAdminOnlyData("traits", {})
 
