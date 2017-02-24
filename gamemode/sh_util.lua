@@ -175,3 +175,48 @@ rain.meta = {}
 function rain.util.findmetatable(sKey)
 	return rain.meta[sKey]
 end
+
+--[[
+	Name: Print Formatted
+	Desc: Shitty util function meant to very quickly print out data while devmode is enabled
+--]]
+
+function printF(wArgs)
+	if rain.dev then
+		if type(wArgs) == "Table" then
+			PrintTable(wArgs)
+		else
+			print(wArgs)
+		end
+	end
+end
+
+rain.util.TypeBuffer = {}
+rain.util.TypeBuffer[TYPE_ANGLE] 	= "Angle"
+rain.util.TypeBuffer[TYPE_BOOL] 	= "Bool"
+rain.util.TypeBuffer[TYPE_COLOR]	= "Color"
+rain.util.TypeBuffer[TYPE_NUMBER] 	= "Number"
+rain.util.TypeBuffer[TYPE_STRING] 	= "String"
+rain.util.TypeBuffer[TYPE_VECTOR] 	= "Vector"
+rain.util.TypeBuffer[TYPE_TABLE] 	= "Table"
+
+function rain.util.typeEnumToString(enumType)
+	return string.lower(rain.util.TypeBuffer(enumType))
+end
+
+function rain.util.isType(wToTest, wType)
+
+	local sTypeID = ""
+
+	if type(wType) == "String" then
+		sTypeID = wType
+	elseif type(wType) == "Number" then
+		sTypeID = rain.util.typeEnumToString(wType)
+	end
+
+	if type(wToTest) == sTypeID then
+		return true
+	end
+
+	return false
+end
