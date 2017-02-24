@@ -9,11 +9,11 @@
 	So far though, the result is clean networking that is very well predicted. So that's good.
 --]]
 
-	SLOT_QUICKUSE = 0
-	SLOT_GEAR = 1
-	SLOT_ARTIFACT = 2
-	SLOT_GUN = 3
-	SLOT_DETECTOR = 4
+	E_QUICKUSE 	= 0
+	E_GEAR 		= 1
+	E_ARTIFACT 	= 2
+	E_GUN 		= 3
+	E_DETECTOR 	= 4
 
 --[[
 	Don't mind me, just set up some enums for use later, mostly util functions below.
