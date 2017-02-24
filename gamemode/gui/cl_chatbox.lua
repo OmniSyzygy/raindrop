@@ -2,37 +2,19 @@ PANEL = {}
 function PANEL:Init()
 	self.tabs = {"ALL", "IC", "OOC", "PM", "HELP", "ADMIN", "DEV"}
 
-	self.Organizer = vgui.Create("DPropertySheet", self)
-	self.Organizer:Dock(FILL)
-	self.chattabs = {}
-	for i, sheet in pairs(self.tabs) do
-		self.chattabs[i] = vgui.Create("RD_HTMLPanel", self.Organizer)
-		self.chattabs[i]:LoadHTMLComponent("chatbox")
-		self.chattabs[i]:SetSize(650, 250)
-	
-		self.Organizer:AddSheet(self.tabs[i], self.chattabs[i], "icon16/tick.png")
-	end
-end
+	self:SetPos(rain.dpi(30, 750))
+	self:SetSize(rain.dpi(700, 300))
 
-function PANEL:GetAllTabs()
-	local ret = {}
-	for k, v in pairs(self.tabs) do
-		table.insert(ret, k)
+	self.chatPanel = vgui.Create("DPropertySheet", self)
+	self.chatPanel:Dock(FILL)
+
+	for _, tab in pairs(rain.chat.tabs) do
+		print(tab.sChatPrintID)
 	end
 
-	return ret
+	self.chatTextEntry = vgui.Create("DTextEntry", self)
+	self.chatTextEntry:Dock(BOTTOM)
 end
 
-function PANEL:AddChat(sSender, sNewChat, tTabs)
-	local tTabs = tTabs or self:GetAllTabs()
 
-	for k, v in pairs(tTabs) do
-		self.chattabs[v]:RunJavascript("chatbox.AddMessage('"..sSender.."', '"..sNewChat.."')")
-	end	
-end
-
-function PANEL:Paint()
-
-end
-
-derma.DefineControl("RD_Chatbox", "", PANEL, "DPanel")
+derma.DefineControl("RD_Chatbox", "", PANEL, "DFrame")

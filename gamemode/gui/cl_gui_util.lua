@@ -1,5 +1,13 @@
 local blur = Material("pp/blurscreen")
 
+function rain.dpi(nUnscaledX, nUnscaledY)
+	return (nUnscaledX / 1920) * ScrW(), (nUnscaledY / 1080) * ScrH()
+end
+
+function rain.addFont()
+
+end
+
 function DrawBlurRect(x, y, w, h, amount, heavyness)
 	local X, Y = 0,0
 	local scrW, scrH = ScrW(), ScrH()
@@ -54,7 +62,7 @@ hook.Add("HUDPaint", "testblur", function()
 
 	local sizemul = 0.05
 
-	for k, v in pairs(ents.FindByClass("cc_item")) do
+	for k, v in pairs(ents.FindByClass("rd_item")) do
 		local scrdata = (v:GetPos() + v:GetAngles():Up() * 10):ToScreen()
 		if (scrdata.visible) then
 			local tl = (v:GetPos() + (v:GetAngles():Up()) + (v:GetAngles():Up() * (9)) + (v:GetAngles():Forward()) * (-144 * sizemul)):ToScreen()
@@ -170,6 +178,8 @@ hook.Add("HUDPaint", "testblur", function()
 	end
 end)
 
+
+-- remove garrys mod default sandbox hints
 timer.Remove("HintSystem_OpeningMenu")
 timer.Remove("HintSystem_Annoy1")
 timer.Remove("HintSystem_Annoy2")

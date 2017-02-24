@@ -78,6 +78,11 @@ end
 function rain.struct:GetStruct(sUniqueIdentifier)
 	local ret = {}
 	ret = table.Copy(rain.structs[sUniqueIdentifier])
-	setmetatable(ret, rain_structmeta)
-	return ret
+	
+	if ret then
+		setmetatable(ret, rain_structmeta)
+		return ret
+	else
+		return {}
+	end
 end

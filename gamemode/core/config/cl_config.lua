@@ -107,3 +107,5 @@ local availableModels = {
 for k, v in pairs(availableModels) do
 	table.insert( rain.cfg.PlayerModels, "models/cakez/rxstalker/stalker_neutral/"..v..".mdl" )
 end
+
+rain.chat.addTab(sChatID, sChatPrintID, tAcceptedEnums)

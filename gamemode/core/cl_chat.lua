@@ -5,18 +5,24 @@
 
 rain.chat = {}
 rain.chat.tabs = {}
-rain.chat.ui = vgui.Create("RD_Chatbox")
+rain.chat.ui = nil
+
+rain.chat.currentTab = 1
 
 E_NOMESSAGE 	= 0
-E_ALL			= 1
+E_SERVER		= 1
 E_WHISPERING	= 2
 E_TALKING		= 3
 E_YELLING		= 4
 E_OOC			= 5
-E_PM			= 6
-E_HELP			= 7
-E_ADMIN			= 8
-E_DEV			= 9
+E_LOOC			= 6
+E_PM			= 7
+E_HELP			= 8
+E_ADMIN			= 9
+E_DEV			= 10
+E_NOTIFICATION	= 11
+E_PM			= 12
+
 
 
 --[[
@@ -25,7 +31,11 @@ E_DEV			= 9
 --]]
 
 function rain.chat.init()
+	if rain.chat.ui then
+		rain.chat.ui:Remove()
+	end
 
+	rain.chat.ui = vgui.Create("RD_Chatbox")
 end
 
 --[[
@@ -33,13 +43,20 @@ end
 	Desc: Called to add tabs
 --]]
 
-function rain.chat.addTab()
+function rain.chat.addTab(sChatID, sChatPrintID, tAcceptedEnums)
+	tNewTab = rain.struct:GetStruct("S_ChatTab")
 
+	tNewTab.sChatID = sChatID
+	tNewTab.sChatPrintID = sChatPrintID
+	tNewTab.tAcceptedEnums = tAcceptedEnums
+
+	table.insert(rain.chat.tabs, tNewTab)
 end
 
 rain.struct:RegisterStruct("S_ChatTab", {
 	sChatID = "", 		-- the id of the chat tab
 	sChatPrintID = "", 	-- fancy ID for the chat
+	tAcceptedEnums = {},
 	tMessages = {}
 })
 
@@ -50,15 +67,64 @@ rain.struct:RegisterStruct("S_Message", {
 	enumMessageType = E_NOMESSAGE
 })
 
---[[
-	Name: RemoveTab
-	Desc: Called when a tab is forcibly removed
---]]
 
-function rain.chat.removeTab()
+rain.chat.addTab(
+	"all", 
+	"All",
+	{
+		E_SERVER, 
+		E_WHISPERING, 
+		E_TALKING, 
+		E_YELLING, 
+		E_OOC, 
+		E_LOOC,
+		E_HELP, 
+		E_ADMIN, 
+		E_DEV, 
+		E_NOTIFICATION
+	}
+)
 
-end
+rain.chat.addTab(
+	"ic", 
+	"IC",
+	{
+		E_WHISPERING, 
+		E_TALKING, 
+		E_YELLING
+	}
+)
 
+rain.chat.addTab(
+	"ooc", 
+	"OOC",
+	{
+		E_SERVER, 
+		E_OOC, 
+		E_LOOC,
+		E_HELP, 
+		E_ADMIN, 
+		E_NOTIFICATION
+	}
+)
+
+rain.chat.addTab(
+	"admin", 
+	"Admin",
+	{
+		E_ADMIN, 
+		E_DEV, 
+		E_NOTIFICATION
+	}
+)
+
+rain.chat.addTab(
+	"pm", 
+	"PMs",
+	{
+		E_PM
+	}
+)
 
 --[[
 	Name: AddMessage
@@ -147,11 +213,7 @@ end
 	Desc: Overwrite gmod base function that adds text to the chatbox
 --]]
 
-local chatAddText = chatAddText or nil
-
-if !chatAddText then
-	chatAddText = chat.AddText()
-end
+--local chatAddText = chatAddText or chat.AddText()
 
 function chat.AddText( ... )
 
@@ -167,7 +229,7 @@ function chat.AddText( ... )
 		end
 	end
 
-	chatAddText(...)
+	--chatAddText(...)
 end
 
 
