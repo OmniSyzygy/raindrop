@@ -5,9 +5,10 @@
 
 rain.chat = {}
 rain.chat.tabs = {}
-rain.chat.ui = nil
+rain.chat.ui = rain.chat.ui or nil
 
-rain.chat.currentTab = 1
+rain.chat.currentTab 	= 1
+rain.chat.pmTab			= 5
 
 E_NOMESSAGE 	= 0
 E_SERVER		= 1
@@ -56,6 +57,7 @@ end
 rain.struct:RegisterStruct("S_ChatTab", {
 	sChatID = "", 		-- the id of the chat tab
 	sChatPrintID = "", 	-- fancy ID for the chat
+	sIcon = "icon16/tick.png",
 	tAcceptedEnums = {},
 	tMessages = {}
 })
@@ -147,32 +149,38 @@ end
 
 
 --[[
+	Name: OpenChatbox
+	Desc: Called when the chatbox is opened, this is only used to setup input on the chatbox
+--]]
+
+function rain.chat.openChatbox(nCurrentTab)
+	if (rain.chat.ui) then
+		rain.chat.ui:OpenChatbox()
+		rain.chat.ui:SetCurrentTab(nCurrentTab or rain.chat.currentTab)
+		rain.chat.ui:SetMouseInputEnabled(true)
+		rain.chat.ui:SetKeyboardInputEnabled(true)
+		gui.EnableScreenClicker(true)
+	end
+end
+
+
+--[[
 	Name: OnOpenWorldChat 
 	Desc: Called when global/world chat is opened
 --]]
 
 function rain.chat.onOpenWorldChat()
-
+	rain.chat.openChatbox(rain.chat.currentTab)
 end
 
 
 --[[
 	Name: OnOpenTeamChat
-	Desc: Called when team chat is opened
+	Desc: Called when team chat is opened, basically it sets the chatbox to use the PM tabs
 --]]
 
 function rain.chat.onOpenTeamChat()
-
-end
-
-
---[[
-	Name: OpenChatbox
-	Desc: Called when the chatbox is opened, this is only used to setup input on the chatbox
---]]
-
-function rain.chat.openChatbox()
-
+	rain.chat.openChatbox(rain.chat.pmTab)
 end
 
 
@@ -181,10 +189,13 @@ end
 	Desc: Called to release all input from the chatbox
 --]]
 
-function rain.chat.closeChatbox(objChatPanel)
-	objChatPanel:SetMouseInputEnabled(false)
-	objChatPanel:SetKeyboardInputEnabled(false)
-	gui.EnableScreenClicker(false)
+function rain.chat.closeChatbox()
+	if (rain.chat.ui) then
+		rain.chat.ui:SetMouseInputEnabled(false)
+		rain.chat.ui:SetKeyboardInputEnabled(false)
+		rain.chat.ui:CloseChatbox(false)
+		gui.EnableScreenClicker(false)
+	end
 end
 
 
