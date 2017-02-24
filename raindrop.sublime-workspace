@@ -3,34 +3,339 @@
 	{
 		"selected_items":
 		[
+			[
+				"Inven",
+				"inventory"
+			],
+			[
+				"mys",
+				"mysqloo"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "/C/Users/Nik-Work/Documents/artstuff.txt",
+			"file": "gamemode/libraries/lib_mysql.lua",
 			"settings":
 			{
-				"buffer_size": 1501,
+				"buffer_size": 14895,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/core/sv_logging.lua",
+			"settings":
+			{
+				"buffer_size": 2960,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/core/sh_item.lua",
+			"settings":
+			{
+				"buffer_size": 4906,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/core/sh_sandboxhooks.lua",
+			"settings":
+			{
+				"buffer_size": 528,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/raindrop/items/base/sh_blueprint.lua",
+			"settings":
+			{
+				"buffer_size": 285,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/gui/cl_stalkerframe.lua",
+			"settings":
+			{
+				"buffer_size": 6897,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/gui/cl_stalkeritemholder.lua",
+			"settings":
+			{
+				"buffer_size": 5152,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/dm/Source/Engine415/UnrealEngine-release/Engine/Config/BaseGame.ini",
+			"settings":
+			{
+				"buffer_size": 3040,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/dm/dm114/Source/dm114Server.Target.cs",
+			"settings":
+			{
+				"buffer_size": 615,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/dm/dm114/dm114_proceduralmesh.uproject",
+			"settings":
+			{
+				"buffer_size": 2273,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/dm/dm114/Source/dm114Editor.Target.cs",
+			"settings":
+			{
+				"buffer_size": 589,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/dm/dm114/Config/DefaultGame.ini",
+			"settings":
+			{
+				"buffer_size": 24629,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/dm/dm114/Config/DefaultInput.ini",
+			"settings":
+			{
+				"buffer_size": 5264,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/dm/dm114/Config/DefaultEditor.ini",
+			"settings":
+			{
+				"buffer_size": 172412,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/dm/dm114/Config/DefaultEngine.ini",
+			"settings":
+			{
+				"buffer_size": 3616,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "[URL]\n[/Script/HardwareTargeting.HardwareTargetingSettings]\nTargetedHardwareClass=Desktop\nAppliedTargetedHardwareClass=Desktop\nDefaultGraphicsPerformance=Maximum\nAppliedDefaultGraphicsPerformance=Maximum\n\n[/Script/Engine.NetworkSettings]\np.EnableMultiplayerWorldOriginRebasing=True\n\n[/Script/EngineSettings.GameMapsSettings]\nEditorStartupMap=/Game/DM_Master/Levels/Playground/MovementPlayground/MovementPlayground.MovementPlayground\nLocalMapOptions=\nTransitionMap=None\nbUseSplitscreen=True\nTwoPlayerSplitscreenLayout=Horizontal\nThreePlayerSplitscreenLayout=FavorTop\nbOffsetPlayerGamepadIds=True\nGameInstanceClass=/Script/Engine.GameInstance\nGameDefaultMap=/Game/DM_Master/Levels/Playground/EnvironmentPlayground/EnvironmentShowcase.EnvironmentShowcase\nServerDefaultMap=/Game/DM_Master/Levels/Playground/EnvironmentPlayground/EnvironmentShowcase.EnvironmentShowcase\nGlobalDefaultGameMode=/Game/ThirdPersonBP/Blueprints/ThirdPersonGameMode.ThirdPersonGameMode_C\nGlobalDefaultServerGameMode=None\n\n[/Script/Engine.RendererSettings]\nr.DiscardUnusedQuality=True\nr.MinScreenRadiusForLights=0.060000\nr.MinScreenRadiusForDepthPrepass=0.060000\nr.MinScreenRadiusForCSMDepth=0.020000\nr.DBuffer=True\nr.GenerateMeshDistanceFields=True\nr.GenerateLandscapeGIData=True\nr.CustomDepth=3\nr.GBufferFormat=1\nr.MorphTarget.Mode=True\nr.SupportStationarySkylight=True\nr.SupportLowQualityLightmaps=True\nr.SupportPointLightWholeSceneShadows=True\nr.AllowStaticLighting=False\nr.DefaultFeature.AntiAliasing=2\nr.DefaultFeature.LensFlare=True\nr.ReflectionCaptureResolution=256\n\n[/Script/SubstanceCore.SubstanceSettings]\nMemoryBudgetMb=2048\nCPUCores=12\nDefaultGenerationMode=SGM_Baked\nSubstanceEngine=SET_GPU\n\n[/Script/Engine.NavigationSystem]\nbAllowClientSideNavigation=True\nDataGatheringMode=Instant\nbGenerateNavigationOnlyAroundNavigationInvokers=True\n\n[/Script/Engine.RecastNavMesh]\nbFixedTilePoolSize=False\n\n[/Script/Engine.Engine]\nbSmoothFrameRate=False\n\n[/Script/Engine.EndUserSettings]\nbSendAnonymousUsageDataToEpic=False\n\n[/Script/AIModule.AISystem]\nbAllowControllersAsEQSQuerier=True\nbEnableBTAITasks=False\n\n[OnlineSubsystem]\nDefaultPlatformService=Steam\nbHasVoiceEnabled=true \n\n[OnlineSubsystemSteam]\nbEnabled=false\nSteamDevAppId=575440\nGameServerQueryPort=27015\nbRelaunchInSteam=false\nGameVersion=1.0.0.0\nbVACEnabled=1\nbAllowP2PPacketRelay=true\nP2PConnectionTimeout=90\n\n[/Script/OnlineSubsystemSteam.SteamNetDriver]\nNetConnectionClassName=\"OnlineSubsystemSteam.SteamNetConnection\"\n\n[Voice]\nbEnabled=true\n\n[/Script/Engine.StreamingSettings]\ns.EventDrivenLoaderEnabled=False\n\n[/Script/Engine.PhysicsSettings]\nDefaultGravityZ=-980.000000\nDefaultTerminalVelocity=4000.000000\nDefaultFluidFriction=0.300000\nSimulateScratchMemorySize=262144\nRagdollAggregateThreshold=4\nTriangleMeshTriangleMinAreaThreshold=5.000000\nbEnableAsyncScene=False\nbEnableShapeSharing=False\nbEnablePCM=False\nbWarnMissingLocks=True\nbEnable2DPhysics=False\nLockedAxis=Invalid\nDefaultDegreesOfFreedom=Full3D\nBounceThresholdVelocity=200.000000\nFrictionCombineMode=Average\nRestitutionCombineMode=Average\nMaxAngularVelocity=3600.000000\nMaxDepenetrationVelocity=0.000000\nContactOffsetMultiplier=0.010000\nMinContactOffset=0.000100\nMaxContactOffset=1.000000\nbSimulateSkeletalMeshOnDedicatedServer=True\nDefaultShapeComplexity=CTF_UseSimpleAndComplex\nbDefaultHasComplexCollision=True\nbSuppressFaceRemapTable=False\nbSupportUVFromHitResults=False\nbDisableActiveActors=False\nbDisableCCD=False\nMaxPhysicsDeltaTime=0.033333\nbSubstepping=False\nbSubsteppingAsync=False\nMaxSubstepDeltaTime=0.016667\nMaxSubsteps=6\nSyncSceneSmoothingFactor=0.000000\nAsyncSceneSmoothingFactor=0.990000\nInitialAverageFrameRate=0.016667\n\n\n",
+			"file": "/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Config/DefaultEngine.ini",
+			"file_size": 3772,
+			"file_write_time": 131322047469140618,
+			"settings":
+			{
+				"buffer_size": 3643,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/steamworks/sdk/tools/ContentBuilder/content/windows_content/dm114_proceduralmesh/Config/DefaultEngine.ini",
+			"settings":
+			{
+				"buffer_size": 3616,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/steamworks/sdk/tools/ContentBuilder/content/windows_content/dm114_proceduralmesh/Config/DefaultGame.ini",
+			"settings":
+			{
+				"buffer_size": 24629,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/G/SteamLibrary/steamapps/common/Dead Matter/dm114_proceduralmesh/Config/DefaultEngine.ini",
+			"settings":
+			{
+				"buffer_size": 3616,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/G/SteamLibrary/steamapps/common/Dead Matter/dm114_proceduralmesh/Config/DefaultGame.ini",
+			"settings":
+			{
+				"buffer_size": 24629,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/core/config/sh_config.lua",
+			"settings":
+			{
+				"buffer_size": 1288,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/G/SteamLibrary/steamapps/common/Dead Matter/Engine/Config/BaseEngine.ini",
+			"settings":
+			{
+				"buffer_size": 212313,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/G/SteamLibrary/steamapps/common/Dead Matter/Engine/Config/ConsoleVariables.ini",
+			"settings":
+			{
+				"buffer_size": 2654,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/steamworks/sdk/tools/ContentBuilder/content/windows_content/dm114_proceduralmesh/Config/DefaultInput.ini",
+			"settings":
+			{
+				"buffer_size": 5264,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/steamworks/sdk/tools/ContentBuilder/content/windows_content/dm114_proceduralmesh/Config/DefaultEditor.ini",
+			"settings":
+			{
+				"buffer_size": 172412,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/steamworks/sdk/tools/ContentBuilder/scripts/app_build_575440.vdf",
+			"settings":
+			{
+				"buffer_size": 534,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/steamworks/sdk/tools/ContentBuilder/scripts/depot_build_575441.vdf",
+			"settings":
+			{
+				"buffer_size": 982,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 72 files for \"TIER_\" (case sensitive)\n\nG:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop\\gamemode\\core\\sh_item.lua:\n   12  -- tier enums\n   13  \n   14: TIER_WORN = 1 -- (White)\n   15: TIER_STANDARD = 2 -- (Green)\n   16: TIER_SPECIALIZED = 3 -- (Blue)\n   17: TIER_SUPERIOR = 4 -- (Purple)\n   18: TIER_HIGHEND = 5 -- (Gold)\n   19: TIER_GEARSET = 6 -- (Turqoise)\n   20  \n   21  -- WoW style tier enums that go off of color (I do prefer using these)\n   22  \n   23: TIER_WHITE = 1\n   24: TIER_GREEN = 2\n   25: TIER_BLUE = 3\n   26: TIER_PURPLE = 4\n   27: TIER_GOLD = 5\n   28: TIER_SET = 6\n   29  \n   30  \n\nG:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop\\gamemode\\raindrop\\items\\base\\sh_blueprint.lua:\n    3  ITEM.Name = \"Blueprint\"\n    4  ITEM.Description = \"Used to craft an item.\"\n    5: ITEM.Tier = TIER_WHTIE\n    6  ITEM.Generation = 1 -- how many times this item has been scanned.\n    7  ITEM.Durability = 100 -- durability of the item that gets created\n\n13 matches across 2 files\n",
+			"settings":
+			{
+				"buffer_size": 1036,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/lua/cl_outputmaplist.lua",
+			"settings":
+			{
+				"buffer_size": 437,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/init.lua",
+			"settings":
+			{
+				"buffer_size": 205,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/core/sv_database.lua",
+			"settings":
+			{
+				"buffer_size": 4641,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/core/config/sv_config.lua",
+			"settings":
+			{
+				"buffer_size": 498,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/core/config/cl_config.lua",
+			"settings":
+			{
+				"buffer_size": 2883,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/sh_init.lua",
+			"settings":
+			{
+				"buffer_size": 860,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/sh_util.lua",
+			"settings":
+			{
+				"buffer_size": 3486,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gamemode/core/sh_inventory.lua",
+			"settings":
+			{
+				"buffer_size": 39469,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/lua/cl_gearvision.lua",
+			"settings":
+			{
+				"buffer_size": 31994,
 				"encoding": "UTF-8",
 				"line_ending": "Windows",
-				"name": "Subject of Art"
-			}
-		},
-		{
-			"file": "README.md",
-			"settings":
-			{
-				"buffer_size": 304,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/Users/Nik-Home/Documents/contract.txt",
-			"settings":
-			{
-				"buffer_size": 869,
-				"line_ending": "Windows"
+				"name": "/*"
 			}
 		}
 	],
@@ -41,12 +346,16 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 0.0,
-		"last_filter": "",
+		"height": 81.0,
+		"last_filter": "package control: install pack",
 		"selected_items":
 		[
+			[
+				"package control: install pack",
+				"Package Control: Install Package"
+			]
 		],
-		"width": 0.0
+		"width": 400.0
 	},
 	"console":
 	{
@@ -68,10 +377,74 @@
 	[
 		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop",
 		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode",
-		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop"
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/config",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/factions",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/hooks",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/gui",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/libraries",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop/factionflags",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop/items",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop/items/base"
 	],
 	"file_history":
 	[
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Config/DefaultEditor.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Saved/Config/WindowsServer/Scalability.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Saved/Config/WindowsServer/Game.ini",
+		"/I/dmbuild/WindowsNoEditor/Engine/Config/BaseEngine.ini",
+		"/I/dmbuild/WindowsNoEditor/Engine/Config/BaseEditor.ini",
+		"/I/dmbuild/WindowsNoEditor/Engine/Config/BaseGame.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Config/DefaultInput.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Config/DefaultGame.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Config/DefaultEngine.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Saved/Config/WindowsServer/Engine.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Saved/Logs/UE4CC-Windows-29B6030F4A33FA76350C2BB645DF8DEA_0000/CrashReportClient.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Saved/Config/WindowsNoEditor/Engine.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Saved/Logs/UE4CC-Windows-4BC4B0394EB3A8FBFD98A0AB533C0980/CrashReportClient.ini",
+		"/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Saved/Logs/UE4CC-Windows-4BC4B0394EB3A8FBFD98A0AB533C0980_0000/CrashReportClient.ini",
+		"/C/dm/Source/Engine415/UnrealEngine-release/Engine/Config/ConsoleVariables.ini",
+		"/C/dm/engine/Engine415/UnrealEngine-release/README.md",
+		"/C/dm/dm114/dm114_proceduralmesh.uproject",
+		"/C/dm/dm114/dm114.uproject",
+		"/C/Users/Nik-Work/Documents/environmental threat",
+		"/C/dm/dm114/Plugins/ProceduralMeshComponent/ProceduralMeshComponent.uplugin",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sh_chat.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/libraries/lib_mysql.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/leveling/sv_init.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/leveling/config.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/ut_loadorder.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/libraries/ut_loadorder.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/libraries/lib_volumes.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop/sh_anomaly.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sh_networking.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/leveling/cl/ui/cl_hud.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop/sh_technician.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/sh_init.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/gui/cl_charselect.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/config/sv_config.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/config/sh_config.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sh_sandboxhooks.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sh_state.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/leveling/rewards/reward_playerKill.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sv_logging.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/leveling/modules/levelupnotify/module.lua",
+		"/D/Users/Nik-Home/Documents/contract.txt",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/leveling/modules/levelupsound/module.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sh_playermeta.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop/sh_suits.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/hooks/sh_hooks.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sh_animation.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sh_character.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sh_inventory.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/libraries/lib_netstream2.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/libraries/lib_profiler.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/hooks/cl_hooks.lua",
+		"/C/Users/Nik-Work/Documents/artstuff.txt",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/core/sv_party.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/sh_util.lua",
+		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/README.md",
 		"/C/dm/dm114/Config/DefaultGame.ini",
 		"/C/dm/dm114/Config/DefaultEditor.ini",
 		"/C/steamworks/sdk/tools/ContentBuilder/scripts/depot_build_575441.vdf",
@@ -79,10 +452,7 @@
 		"/C/steamworks/sdk/tools/ContentBuilder/scripts/app_build_575440.vdf",
 		"/C/dm/dm114/Config/DefaultInput.ini",
 		"/C/Users/Nik-Work/Documents/Unreal Projects/MultiplayerFirstPersonSho/MultiplayerFirstPersonSho.uproject",
-		"/C/dm/dm114/dm114.uproject",
-		"/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/gamemodes/raindrop/gamemode/raindrop/sh_technician.lua",
 		"/C/dm/dm114/Plugins/AdvancedSessions/AdvancedSessions.uplugin",
-		"/C/dm/dm114/Plugins/ProceduralMeshComponent/ProceduralMeshComponent.uplugin",
 		"/C/dm/dm114/Intermediate/Build/Win64/dm114/Development/dm114/dm114.generated.cpp.obj.response",
 		"/C/dm/dm114/Plugins/AdvancedSessions/README.md",
 		"/H/dmbuild/WindowsNoEditor/dm114/Saved/Config/WindowsNoEditor/DeviceProfiles.ini",
@@ -136,15 +506,55 @@
 		"height": 90.0,
 		"where_history":
 		[
+			"G:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop\\gamemode\\gui",
+			"G:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop\\gamemode",
+			"G:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop\\gamemode\\core",
+			"G:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop\\gamemode",
+			"G:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop",
 			"G:\\SteamLibrary\\steamapps\\common\\GarrysMod\\garrysmod\\gamemodes\\raindrop\\gamemode",
 			"C:\\Users\\Nik-Work\\Documents\\MusicBot\\config"
 		]
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"port",
+			"async",
+			"AI",
+			"aisys",
+			"steam",
+			"alpha",
+			"Game",
+			"Output",
+			"alphaServer",
+			"CCStalker",
+			"GetInventorySize",
+			"con",
+			"TIER_",
+			"rainchat",
+			"loading complete",
+			"loading",
+			"tmysql4",
+			"setmodule",
+			"Module",
+			"tmysql",
+			"include",
+			"mysqloo",
+			"if SV then",
+			"if CL then",
+			"if CLIENT then",
+			"if (CLIENT) then",
+			"if (SERVER) then",
+			"if SERVER then",
+			"STATE_",
+			"if CL then",
+			"if CL then\nif CL then\nif CL then",
+			";",
+			"BONE_",
+			"BONE_L_THIGH",
+			"BONE_PELVIS",
 			"SERVER",
 			"r.a",
 			"AOSpecular",
@@ -157,6 +567,18 @@
 		"regex": false,
 		"replace_history":
 		[
+			"dm114",
+			"output",
+			"dm114Server",
+			"RD_Stalker",
+			"E_",
+			"if (SV) then",
+			"if (CL) then",
+			"if CL then",
+			"if SV then",
+			"E_",
+			"E_L_THIGH",
+			"E_PELVIS"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -167,81 +589,646 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 22,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/Nik-Work/Documents/artstuff.txt",
+					"file": "gamemode/libraries/lib_mysql.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1501,
+						"buffer_size": 14895,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								708,
-								708
+								686,
+								686
 							]
 						],
 						"settings":
 						{
-							"auto_name": "Subject of Art",
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 405.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 28,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "gamemode/core/sv_logging.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2960,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								391,
+								391
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 27,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "gamemode/core/sh_item.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4906,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								285,
+								283
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2475.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "gamemode/core/sh_sandboxhooks.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 528,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								79,
+								79
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 29,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "gamemode/raindrop/items/base/sh_blueprint.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 285,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								285,
+								285
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "gamemode/gui/cl_stalkerframe.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6897,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 315.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 33,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "gamemode/gui/cl_stalkeritemholder.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5152,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								578,
+								578
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 26,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/C/dm/Source/Engine415/UnrealEngine-release/Engine/Config/BaseGame.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3040,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								964,
+								964
+							]
+						],
+						"settings":
+						{
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 118.0,
+						"translation.y": 285.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/C/dm/dm114/Source/dm114Server.Target.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 615,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								266,
+								266
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "/C/dm/dm114/dm114_proceduralmesh.uproject",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2273,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								287,
+								287
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/C/dm/dm114/Source/dm114Editor.Target.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 589,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C#/C#.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 21,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/C/dm/dm114/Config/DefaultGame.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 24629,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 577.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 20,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "/C/dm/dm114/Config/DefaultInput.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5264,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3016,
+								3016
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 343.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 18,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "/C/dm/dm114/Config/DefaultEditor.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 172412,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								535,
+								537
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 17,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "/C/dm/dm114/Config/DefaultEngine.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3616,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 360.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "/I/dmbuild/WindowsNoEditor/dm114_proceduralmesh/Config/DefaultEngine.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3643,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								237,
+								237
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "/C/steamworks/sdk/tools/ContentBuilder/content/windows_content/dm114_proceduralmesh/Config/DefaultEngine.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3616,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3616,
+								3616
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1258.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "/C/steamworks/sdk/tools/ContentBuilder/content/windows_content/dm114_proceduralmesh/Config/DefaultGame.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 24629,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1080,
+								1084
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "/G/SteamLibrary/steamapps/common/Dead Matter/dm114_proceduralmesh/Config/DefaultEngine.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3616,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2208,
+								2213
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 810.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "/G/SteamLibrary/steamapps/common/Dead Matter/dm114_proceduralmesh/Config/DefaultGame.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 24629,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								234,
+								237
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "gamemode/core/config/sh_config.lua",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1288,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "/G/SteamLibrary/steamapps/common/Dead Matter/Engine/Config/BaseEngine.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 212313,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								170842,
+								170849
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 34783.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "README.md",
+					"buffer": 22,
+					"file": "/G/SteamLibrary/steamapps/common/Dead Matter/Engine/Config/ConsoleVariables.ini",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 304,
+						"buffer_size": 2654,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								77,
-								77
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/D/Users/Nik-Home/Documents/contract.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 869,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								869,
-								869
+								2653,
+								2627
 							]
 						],
 						"settings":
@@ -249,10 +1236,477 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
+						"translation.y": 630.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 23,
+					"file": "/C/steamworks/sdk/tools/ContentBuilder/content/windows_content/dm114_proceduralmesh/Config/DefaultInput.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5264,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3807,
+								3811
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 463.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 24,
+					"file": "/C/steamworks/sdk/tools/ContentBuilder/content/windows_content/dm114_proceduralmesh/Config/DefaultEditor.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 172412,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								72,
+								72
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 25,
+					"file": "/C/steamworks/sdk/tools/ContentBuilder/scripts/app_build_575440.vdf",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 534,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								73,
+								73
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 26,
+					"file": "/C/steamworks/sdk/tools/ContentBuilder/scripts/depot_build_575441.vdf",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 982,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								476,
+								476
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 27,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1036,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										184,
+										189
+									],
+									[
+										216,
+										221
+									],
+									[
+										252,
+										257
+									],
+									[
+										290,
+										295
+									],
+									[
+										327,
+										332
+									],
+									[
+										361,
+										366
+									],
+									[
+										493,
+										498
+									],
+									[
+										515,
+										520
+									],
+									[
+										537,
+										542
+									],
+									[
+										558,
+										563
+									],
+									[
+										581,
+										586
+									],
+									[
+										602,
+										607
+									],
+									[
+										852,
+										857
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								319,
+								319
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
 						"translation.y": 45.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 25,
+					"type": "text"
+				},
+				{
+					"buffer": 28,
+					"file": "/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/lua/cl_outputmaplist.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 437,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								437,
+								437
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 24,
+					"type": "text"
+				},
+				{
+					"buffer": 29,
+					"file": "gamemode/init.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 205,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								157,
+								157
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 31,
+					"type": "text"
+				},
+				{
+					"buffer": 30,
+					"file": "gamemode/core/sv_database.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4641,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								89,
+								89
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 675.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 32,
+					"type": "text"
+				},
+				{
+					"buffer": 31,
+					"file": "gamemode/core/config/sv_config.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 498,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								498,
+								498
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 35,
+					"type": "text"
+				},
+				{
+					"buffer": 32,
+					"file": "gamemode/core/config/cl_config.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2883,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								520,
+								520
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 36,
+					"type": "text"
+				},
+				{
+					"buffer": 33,
+					"file": "gamemode/sh_init.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 860,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								339,
+								339
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 30,
+					"type": "text"
+				},
+				{
+					"buffer": 34,
+					"file": "gamemode/sh_util.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3486,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								441,
+								441
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 405.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 34,
+					"type": "text"
+				},
+				{
+					"buffer": 35,
+					"file": "gamemode/core/sh_inventory.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 39469,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								38784,
+								38784
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 21645.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 23,
+					"type": "text"
+				},
+				{
+					"buffer": 36,
+					"file": "/G/SteamLibrary/steamapps/common/GarrysMod/garrysmod/lua/cl_gearvision.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 31994,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								509,
+								509
+							]
+						],
+						"settings":
+						{
+							"auto_name": "/*",
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 22,
 					"type": "text"
 				}
 			]
@@ -297,7 +1751,7 @@
 	"project": "raindrop.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
