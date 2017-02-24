@@ -4,3 +4,4 @@ rain.struct:RegisterStruct("S_ChatCommand", {
 	sCommandPrintID = "", 	-- 
 	sCommandDesc = "" 		--
 })
+

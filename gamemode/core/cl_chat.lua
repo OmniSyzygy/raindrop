@@ -5,6 +5,19 @@
 
 rain.chat = {}
 rain.chat.tabs = {}
+rain.chat.ui = vgui.Create("RD_Chatbox")
+
+E_NOMESSAGE 	= 0
+E_ALL			= 1
+E_WHISPERING	= 2
+E_TALKING		= 3
+E_YELLING		= 4
+E_OOC			= 5
+E_PM			= 6
+E_HELP			= 7
+E_ADMIN			= 8
+E_DEV			= 9
+
 
 --[[
 	Initializes the chat
@@ -33,7 +46,8 @@ rain.struct:RegisterStruct("S_ChatTab", {
 rain.struct:RegisterStruct("S_Message", {
 	nTimeStamp = "", 	-- Timestamp of when the message was sent
 	sSenderNick = "", 	-- Nickname of the sender of the message, kept as a string.
-	sMessage = ""
+	sMessage = "",
+	enumMessageType = E_NOMESSAGE
 })
 
 --[[

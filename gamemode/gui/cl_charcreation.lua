@@ -1356,39 +1356,44 @@ end
 
 vgui.Register("RD_CharCreation", PANEL, "EditablePanel")
 
-concommand.Add("testcharcreate", function()
-	if (rain.MainMenuUI) then
-		rain.MainMenuUI:Remove()
-		rain.MainMenuUI = nil	
-	end
 
-	if (TESTUI) then
-		TESTUI:Remove()
-		TESTUI = nil
-	end
+--[[
 
-	TESTUI = vgui.Create("RD_CharCreation")
-	TESTUI:MakePopup()
-end)
+	concommand.Add("testcharcreate", function()					
+		if (rain.MainMenuUI) then
+			rain.MainMenuUI:Remove()
+			rain.MainMenuUI = nil						
+		end
+	
+		if (TESTUI) then
+			TESTUI:Remove()
+			TESTUI = nil
+		end
+	
+		TESTUI = vgui.Create("RD_CharCreation")
+		TESTUI:MakePopup()					
+	end)
+	
+	concommand.Add("testcharremove", function()
+		if (rain.MainMenuUI) then
+			rain.MainMenuUI:Remove()
+			rain.MainMenuUI = nil	
+		end
+						
+		if (TESTUI) then
+			TESTUI:Remove()
+			TESTUI = nil
+		end
+	end)
+						
+	concommand.Add("testmainmenu", function()
+		if (TESTUI) then
+			TESTUI:Remove()
+			TESTUI = nil					
+		end
+	
+		TESTUI = vgui.Create("RD_MainMenu")
+		TESTUI:MakePopup()					
+	end)
 
-concommand.Add("testcharremove", function()
-	if (rain.MainMenuUI) then
-		rain.MainMenuUI:Remove()
-		rain.MainMenuUI = nil	
-	end
-
-	if (TESTUI) then
-		TESTUI:Remove()
-		TESTUI = nil
-	end
-end)
-
-concommand.Add("testmainmenu", function()
-	if (TESTUI) then
-		TESTUI:Remove()
-		TESTUI = nil
-	end
-
-	TESTUI = vgui.Create("RD_MainMenu")
-	TESTUI:MakePopup()
-end)
+--]]
