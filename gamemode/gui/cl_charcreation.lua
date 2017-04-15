@@ -499,7 +499,6 @@ function PANEL:RefreshCategories()
 			button:SetPos(x, self:GetTall() * 0.05)
 			button:SetText(v.name)
 			button:SetTextColor(lightGray)
-			button:SetFont("RD.CategoryButtonFont")
 
 			function button:Paint(w, h)
 				if (parent.activeMenu and parent.activeMenu:GetName() == v.menu) then
