@@ -55,7 +55,7 @@ function ENT:Use( activator, caller, usetype, val )
 	
 	local data = self:GetData()
 
-	if( !activator:CanTakeItem( self:GetItem() ) ) then
+	if( !activator:CanTakeItem( self:GetItemID() ) ) then
 		
 		net.Start( "nTooHeavy" )
 		net.Send( activator )
@@ -67,9 +67,9 @@ function ENT:Use( activator, caller, usetype, val )
 	self:Remove()
 	
 	if (string.len(data) > 0) then
-		activator:GiveItem( self:GetItem(), 1, pon.decode(data) )
+		activator:GiveItem( self:GetItemID(), 1, pon.decode(data) )
 	else
-		activator:GiveItem( self:GetItem(), 1)
+		activator:GiveItem( self:GetItemID(), 1)
 	end
 end
 

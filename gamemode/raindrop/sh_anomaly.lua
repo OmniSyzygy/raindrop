@@ -211,7 +211,9 @@ local function BeadThink(ent)
 		particle:SetAirResistance( 10 )
 	elseif (SV) then
 		if (ent.ExplodeTime and ent.ExplodeTime < CurTime()) then
-				for k,v in pairs( player.GetAll() ) do
+				local plyData = player.GetAll()
+				for k = 1, #plyData do
+					local v = plyData[k]
 					if IsValid( v ) and v:Alive() and ent.Entity:GetPos():Distance( v:GetPos() ) < ent.Distance then
 						local scale = 1 - math.Clamp( ent.Entity:GetPos():Distance( v:GetPos() ) / ent.Distance, 0, 1 ) 
 						util.ScreenShake( v:GetPos(), scale * 25, scale * 25, 2, 100 )
@@ -222,6 +224,7 @@ local function BeadThink(ent)
 						end
 					end
 				end
+				plyData = nil
 			
 				local ed = EffectData()
 				ed:SetOrigin( ent.Entity:GetPos() )
@@ -547,7 +550,8 @@ local function BubbleThink(self)
 			
 			self.Entity:EmitSound( self.Blast2, 100, 70 )
 			
-			for k, ent in pairs( tbl ) do
+			for k = 1, #tbl do
+				local ent = tbl[k]
 				if ent:GetPos():Distance( self.Entity:GetPos() ) < 100 then
 					if ent:IsPlayer() then
 						local dir = ( ent:GetPos() - self.Entity:GetPos()  ):GetNormal()
@@ -663,7 +667,8 @@ local function BurnerThink(self)
 			local tbl = player.GetAll()
 			tbl = table.Add( tbl, ents.FindByClass( "npc*" ) )
 			
-			for k,ent in pairs( tbl ) do
+			for k = 1, #tbl do
+				local ent = tbl[k]
 				if ent:GetPos():Distance( self.Entity:GetPos() ) < 150 then
 					if ent:IsPlayer() then
 						local dmg = DamageInfo()
@@ -874,7 +879,8 @@ local function DamageThink(self)
 	if (SV) then
 		local all = player.GetAll()
 		local ePos = self.Entity:GetPos()
-		for k,user in pairs(all) do
+		for k = 1, #all do
+			local user = all[k]
 			local uPos = user:GetPos()
 			local dist = (ePos-uPos):Length()
 			if dist < self.Warning.Radius then
@@ -887,11 +893,13 @@ local function DamageThink(self)
 		end
 		if CurTime() > self.Damage.NextRad then
 			self.Damage.NextRad = CurTime()+self.Damage.RadInt
-			for k,user in pairs(all) do
+			for k = 1, #all do
+				local user = all[k]
 				local uPos = user:GetPos()
 				local dist = (ePos-uPos):Length()
 			end
 		end
+		all = nil
 	end
 end
 
@@ -1072,7 +1080,9 @@ local function DeathFogThink(self)
 			return 
 		end
 
-		for k,v in pairs( player.GetAll() ) do
+		local plyData = player.GetAll()
+		for k = 1, #plyData do
+			local v = plyData[k]
 			local pos = v:GetPos()
 			pos.z = self.Entity:GetPos().z
 			if pos:Distance( self.Entity:GetPos() ) < self.KillRadius then
@@ -1385,11 +1395,14 @@ local function HoverstoneThink(self)
 	else
 		local active = false
 	
-		for k,v in pairs( player.GetAll() ) do
+		local plyData = player.GetAll()
+		for k = 1, #plyData do
+			local v = plyData[k]
 			if v:GetPos():Distance( self.Entity:GetPos() ) < 2000 then
 				active = true
 			end
 		end
+		plyData = nil
 		
 		self.Active = active
 		
@@ -1551,19 +1564,22 @@ local function MysticThink(self)
 		end
 
 		if self.ExplodeTime and self.ExplodeTime < CurTime() then
-			for k,v in pairs( player.GetAll() ) do
-				if IsValid( v ) and table.HasValue( self.Target, v ) then
-					v:SetDSP( 0, false ) 
+			local plyData = player.GetAll()
+			for k = 1, #plyData do
+				local v = plyData[k]
+				if IsValid(v)
+					if (table.HasValue( self.Target, v )) then
+						v:SetDSP( 0, false ) 
+					end
+					
+					if v:Alive() and self.Entity:GetPos():Distance( v:GetPos() ) < 1000 then
+						local scale = 1 - math.Clamp( self.Entity:GetPos():Distance( v:GetPos() ) / 1000, 0, 1 ) 
+						util.ScreenShake( v:GetPos(), scale * 20, scale * 25, 2, 100 )
+						v:TakeDamage( 75 * scale, self.Entity )
+					end
 				end
 			end
-
-			for k, v in pairs(player.GetAll()) do
-				if IsValid(v) and v:Alive() and self.Entity:GetPos():Distance( v:GetPos() ) < 1000 then
-					local scale = 1 - math.Clamp( self.Entity:GetPos():Distance( v:GetPos() ) / 1000, 0, 1 ) 
-					util.ScreenShake( v:GetPos(), scale * 20, scale * 25, 2, 100 )
-					v:TakeDamage( 75 * scale, self.Entity )
-				end
-			end
+			plyData = nil
 		
 			local ed = EffectData()
 			ed:SetOrigin(self.Entity:GetPos())
@@ -1692,7 +1708,8 @@ local function StaticInit(self)
 			tbl = table.Add( tbl, ents.FindByClass( "npc*" ) )
 			tbl = table.Add( tbl, player.GetAll() )
 			
-			for k,v in pairs( tbl ) do
+			for k = 1, #tbl do
+				local v = tbl[k]
 				if v:GetPos():Distance( self.Entity:GetPos() ) < self.ZapRadius then
 					if ( v:IsPlayer() and not IsValid( v:GetVehicle() ) ) or not v:IsPlayer() then
 						
@@ -1857,7 +1874,8 @@ local function StaticThink(self)
 				tbl = table.Add( tbl, ents.FindByClass( "npc*" ) )
 				tbl = table.Add( tbl, player.GetAll() )
 
-				for k,v in pairs( tbl ) do
+				for k = 1, #tbl do
+					local v = tbl[k]
 					if v:GetPos():Distance( self.Entity:GetPos() ) < self.ZapRadius then
 						v:EmitSound( table.Random( self.PreZap ), 100, math.random(60,80) )
 					end
@@ -1978,7 +1996,8 @@ local function VortexThink(self)
 			tbl = table.Add( tbl, ents.FindByClass( "sent_lootbag" ) )
 			tbl = table.Add( tbl, player.GetAll() )
 			
-			for k,v in pairs( tbl ) do
+			for k = 1, #tbl do
+				local v = tbl[k]
 				if v:GetPos():Distance( self.Entity:GetPos() ) < self.SuckRadius then
 					local vel = ( self.VortexPos - v:GetPos() ):GetNormal()
 					if ( v:IsPlayer() and v:Alive() ) or string.find( v:GetClass(), "npc" ) then
@@ -2015,7 +2034,8 @@ local function VortexThink(self)
 			tbl = table.Add( tbl, ents.FindByClass( "sent_lootbag" ) )
 			tbl = table.Add( tbl, player.GetAll() )
 			
-			for k,v in pairs( tbl ) do
+			for k = 1, #tbl do
+				local v = tbl[k]
 				if v:GetPos():Distance( self.VortexPos ) < self.KillRadius then
 					if v:IsPlayer() then
 						if v:Alive() then

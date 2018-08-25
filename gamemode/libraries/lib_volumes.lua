@@ -89,7 +89,9 @@ function rain:VolumeThink()
 			end
 		end
 	
-		for k, v in pairs(player.GetAll()) do
+		local plyData = player.GetAll()
+		for k = 1, #plyData do
+			local v = plyData[k]
 			if (v.Volumes) then
 				for k2, v2 in pairs(v.Volumes) do
 					if v2 != CurTime() then
@@ -105,6 +107,7 @@ function rain:VolumeThink()
 				end
 			end
 		end
+		plyData = nil
 
 		NextThink = CurTime() + VolumeThinkLimit
 	end

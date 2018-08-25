@@ -223,7 +223,7 @@ function rain.item.loaditems()
 end
 
 function rain.item.get(nItemID)
-	return rain.item.itemin[nItemID]
+	return rain.itemindex[nItemID]
 end
 
 function rain.item.saveitems()
@@ -261,4 +261,8 @@ end
 
 function rainchar:CreateAndAddItem(objItem)
 
+end
+
+function GM:GetItemByID(id)
+	return rain.item[id].ID
 end

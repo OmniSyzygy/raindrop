@@ -131,10 +131,10 @@ hook.Add("HUDPaint", "testblur", function()
 					local x = 144
 					surface.SetDrawColor(255, 255, 255)
 
-					local RNGData = GAMEMODE:GetRNGStats(v:GetItem(), pon.decode(v:GetData()).rng)
+					local RNGData = GAMEMODE:GetRNGStats(v:GetItemID(), pon.decode(v:GetData()).rng)
 
 					local shadowcolor = Color(35*2.5, 35*2.5, 35*2.5, 255)				
-					local text = string.upper(RNGData.." "..GAMEMODE:GetItemByID( v:GetItem() ).Name)
+					local text = string.upper(RNGData.." "..GAMEMODE:GetItemByID( v:GetItemID() ).Name)
 					local font = "Trebuchet24"
 
 					surface.SetFont(font)
@@ -153,7 +153,7 @@ hook.Add("HUDPaint", "testblur", function()
 			
 					y = y + 20
 			
-					text = string.upper("Weight "..GAMEMODE:GetItemByID( v:GetItem() ).Weight.."KG")
+					text = string.upper("Weight "..GAMEMODE:GetItemByID( v:GetItemID() ).Weight.."KG")
 
 					draw.DrawText(text, font, x - 1, y - 1, shadowcolor,  TEXT_ALIGN_RIGHT)
 					draw.DrawText(text, font, x + 1, y + 1, shadowcolor,  TEXT_ALIGN_RIGHT)

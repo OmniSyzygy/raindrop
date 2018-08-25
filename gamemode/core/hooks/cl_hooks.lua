@@ -297,14 +297,18 @@ local function DrawCoPHUD(localPlayer, scrW, scrH)
 	-- Draw the number of players near the client.
 	local nPlayers = 0
 	local pos = localPlayer:GetPos()
+	local plyData = player.GetAll()
 
-	for k, v in pairs(player.GetAll()) do
+	for k = 1, #plyData do
+		local v = plyData[k]
 		if (v == localPlayer or v:GetState() != E_ALIVE or !v:Alive()) then continue end
 
 		if (v:GetPos():Distance(pos) <= 256) then
 			nPlayers = nPlayers + 1
 		end
 	end
+	
+	plyData = nil
 
 	if (nPlayers > 0) then
 		draw.SimpleText(nPlayers, "RD.HUDNormal", radarX + radarSize * 0.945, radarY + radarSize * 0.52, fadedYellow, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)

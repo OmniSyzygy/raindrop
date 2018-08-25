@@ -133,17 +133,21 @@ if (SV) then
 	--]]
 	
 	function rain.net.broadcast(bAdminOnly)
+		local plyData = player.GetAll()
 		if bAdminOnly then
-			for k, v in pairs(player.GetAll()) do
+			for k = 1, #plyData do
+				local v = plyData[k]
 				if v:IsAdmin() then
 					net.Send(v)
 				end
 			end
 		else
-			for k, v in pairs(player.GetAll()) do
+			for k = 1, #plyData do
+				local v = plyData[k]
 				net.Send(v)
 			end
 		end
+		plyData = nil
 	end
 
 end

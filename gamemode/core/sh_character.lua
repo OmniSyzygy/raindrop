@@ -169,7 +169,8 @@ if (SV) then
 		if (pReceiver) then
 			TargetPlayers = {pReceiver}
 		else
-			for k, v in pairs(TargetPlayers) do
+			for k = 1, #TargetPlayers do
+				local v = TargetPlayers[k]
 				local data = {}
 
 				data.target = self:GetOwningClient()
@@ -210,8 +211,9 @@ if (SV) then
 
 	function character_meta:SyncDataByKey(enumDataType, sKey, tNewData, bNoSave)
 		self:SaveByKey(enumDataType)
-
-		for k, v in pairs(player.GetAll()) do
+		local plyData = player.GetAll()
+		for k = 1, #plyData do
+			local v = plyData[k]
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
 			rain.net.WriteTable({target = self:GetOwningClient(), key = sKey, newdata = tNewData})
@@ -222,6 +224,7 @@ if (SV) then
 				net.Send(v)
 			end
 		end
+		plyData = nil
 	end
 
 	--[[
@@ -236,7 +239,9 @@ if (SV) then
 	function character_meta:SyncData(enumDataType, tNewData, bNoSave)
 		self:SaveByKey(enumDataType)
 
-		for k, v in pairs(player.GetAll()) do
+		local plyData = player.GetAll()
+		for k = 1, #plyData do
+			local v = plyData[k]
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
 			rain.net.WriteTable({target = self:GetOwningClient(), newdata = tNewData})
@@ -247,6 +252,7 @@ if (SV) then
 				net.Send(v)
 			end
 		end
+		plyData = nil
 	end
 
 	util.AddNetworkString("rain.charcreate")
