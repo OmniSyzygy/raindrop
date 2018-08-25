@@ -181,8 +181,8 @@ function PANEL:Paint(w, h)
 	-- surface.DrawTexturedRectUV( number x, number y, number width, number height, number startU, number startV, number endU, number endV ) 
 	surface.DrawTexturedRectUV(0, 0, w, h, 1/3, 0, 3/3, 9/12)
 
-	draw.DrawText(LocalPlayer():VisibleRPName(), "NameFont", 506 + 1, 32 + 1, Color(0,0,0,255), TEXT_ALIGN_LEFT) 
-	draw.DrawText(LocalPlayer():VisibleRPName(), "NameFont", 506, 32, Color(190,175,160,255), TEXT_ALIGN_LEFT) 
+	draw.DrawText(LocalPlayer():GetVisibleRPName(), "NameFont", 506 + 1, 32 + 1, Color(0,0,0,255), TEXT_ALIGN_LEFT) 
+	draw.DrawText(LocalPlayer():GetVisibleRPName(), "NameFont", 506, 32, Color(190,175,160,255), TEXT_ALIGN_LEFT) 
 	draw.DrawText(self.Rank, "TitleFont", 506 + 1, 54 + 1, Color(0,0,0,255), TEXT_ALIGN_LEFT) 
 	draw.DrawText(self.Rank, "TitleFont", 506, 54, Color(150,150,150,255), TEXT_ALIGN_LEFT) 
 

@@ -131,6 +131,7 @@ if (SV) then
 		SaveObj:Execute()
 	end
 
+	-- I think this is meta:UpdatePlayerField( field, value )
 	function character_meta:SaveByKey(enumDataType, sNewData)
 		local SaveObj = mysql:Update("characters")
 		SaveObj:Where("id", self:GetCharID())
@@ -209,7 +210,7 @@ if (SV) then
 
 	util.AddNetworkString("rain.charsyncdatabykey")
 
-	function character_meta:SyncDataByKey(enumDataType, sKey, tNewData, bNoSave)
+	function character_meta:SyncDataByKey(enumDataType, sKey, tNewData)
 		self:SaveByKey(enumDataType)
 		local plyData = player.GetAll()
 		for k = 1, #plyData do

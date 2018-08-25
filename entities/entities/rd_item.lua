@@ -12,11 +12,9 @@ ENT.Instructions	= ""
 ENT.Spawnable			= false
 ENT.AdminSpawnable		= false
 
-function ENT:PostEntityPaste( ply, ent, tab )
-	
-	GAMEMODE:LogSecurity( ply:SteamID(), "n/a", ply:VisibleRPName(), "Tried to duplicate " .. ent:GetClass() .. "!" )
+function ENT:PostEntityPaste( ply, ent )
+	rain:LogSecurity( ply:SteamID(), "n/a", ply:GetVisibleRPName(), "[R] Tried to duplicate " .. ent:GetClass() .. "!" );
 	ent:Remove()
-	
 end
 
 function ENT:SetupDataTables()

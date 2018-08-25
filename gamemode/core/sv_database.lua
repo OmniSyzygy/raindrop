@@ -77,8 +77,6 @@ function rain.db.onconnectionsuccess()
 
 	queryObj:PrimaryKey("id")
 	queryObj:Execute()
-	
-	rain.log.onconnectionsuccess()
 
 	local nCachedTime = rain.cfg.db.thinktime
 

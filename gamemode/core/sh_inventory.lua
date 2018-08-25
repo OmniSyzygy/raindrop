@@ -19,21 +19,6 @@
 	Don't mind me, just set up some enums for use later, mostly util functions below.
 --]]
 
---[[
-	Function: Net Replicate
-	Purpose: Replicates a net message that has already been started, based on the Authority it either goes from server to client or client to server
---]]
-
-function net.Replicate(Authority, Received)
-	if (!Received) then
-		if (CL) then
-			net.SendToServer()
-		else
-			net.Send(Authority)
-		end
-	end
-end
-
 local meta = FindMetaTable( "Player" )
 
 --[[
@@ -110,246 +95,149 @@ end
 
 if (CL) then
 
-	local function nLoadInventory()
-		local inv = net.ReadString()
+	netstream.Hook("nLoadInventory", function(inv)
 		LocalPlayer().Inventory = pon.decode(inv)
-	end
-	net.Receive("nLoadInventory", nLoadInventory)
+	end)
 
-	local function nGiveItem()
-		local ItemID = net.ReadString()
-		local n = net.ReadFloat()
-		local d = net.ReadTable()
-
+	netstream.Hook("nGiveItem", function(ItemID, n, d)
 		LocalPlayer():GiveItem(ItemID, n, d)
-	end
-	net.Receive("nGiveItem", nGiveItem)
+	end)
 
-	local function nRemoveItem()
-		local pos = net.ReadVector()
+	netstream.Hook("nRemoveItem", function(pos)
 		LocalPlayer():RemoveItem(pos.x, pos.y)
-	end
-	net.Receive("nRemoveItem", nRemoveItem)
+	end)
 
 	local function nTooHeavy()
 		GAMEMODE:AddChat(Color(200,0,0,255), "CombineControl.ChatNormal", "That's too heavy for you to carry.", {CB_ALL, CB_IC})
 	end
 	net.Receive("nTooHeavy", nTooHeavy)
 
-	local function nOpenContainer()
-		local container = net.ReadEntity()
-		local inventory = net.ReadTable()
+	netstream.Hook("nOpenContainer", function(container, inventory)
 		container.Inventory = inventory
 		LocalPlayer():OpenContainer(container)
-	end
-	net.Receive("nOpenContainer", nOpenContainer)
+	end)
 
-	local function nSetQuickSlot()
-		local slot, itemid = net.ReadInt(3), net.ReadString()
+	netstream.Hook("nSetQuickSlot", function(slot, itemid)
 		LocalPlayer():SetQuickSlot(slot, itemid, true)
-	end
-	net.Receive("nSetQuickSlot", nSetQuickSlot)
+	end)
 
-	local function nResetQuickSlot()
-		local slot = net.ReadInt(3)
+	netstream.Hook("nResetQuickSlot", function(slot)
 		LocalPlayer():ResetQuickSlot(slot, true)
-	end
-	net.Receive("nResetQuickSlot", nResetQuickSlot)
+	end)
 
-	local function nSetArtifactSlot()
-		local slot, itemid = net.ReadInt(4), net.ReadString()
+	netstream.Hook("nSetArtifactSlot", function(slot, itemid)
 		LocalPlayer():SetArtifactSlot(slot, itemid, true)
-	end
-	net.Receive("nSetArtifactSlot", nSetArtifactSlot)
+	end)
 
-	local function nResetArtifactSlot()
-		local slot = net.ReadInt(4)
+	netstream.Hook("nResetArtifactSlot", function(slot)
 		LocalPlayer():ResetArtifactSlot(slot, true)
-	end
-	net.Receive("nResetArtifactSlot", nResetArtifactSlot)
+	end)
 
-	local function nSetGearSlot()
-		local slot, itemid = net.ReadInt(3), net.ReadString()
+	netstream.Hook("nSetGearSlot", function(slot, itemid)
 		LocalPlayer():SetGearSlot(slot, itemid, true)
-	end
-	net.Receive("nSetGearSlot", nSetGearSlot)
+	end)
 
-	local function nResetGearSlot()
-		local slot, itemid = net.ReadInt(3)
+	netstream.Hook("nResetGearSlot", function(slot)
 		LocalPlayer():ResetGearSlot(slot, true)
-	end
-	net.Receive("nResetGearSlot", nResetGearSlot)
+	end)
 
-	local function nSetArtifactDetector()
-		local itemid = net.ReadString()
+	netstream.Hook("nSetArtifactDetector", function(itemid)
 		LocalPlayer():SetArtifactDetector(itemid, true)
-	end
-	net.Receive("nSetArtifactDetector", nSetArtifactDetector)
+	end)
 
-	local function nResetArtifactDetector()
-		local itemid = net.ReadString()
+	netstream.Hook("nResetArtifactDetector", function()
 		LocalPlayer():ResetArtifactDetector(true)
-	end
-	net.Receive("nResetArtifactDetector", nResetArtifactDetector)
+	end)
 
-	local function nEquipArtifactFrom()
-		local PosX = net.ReadInt(5)
-		local PosY = net.ReadInt(5)
-		local Slot = net.ReadInt(4)
-
+	netstream.Hook("nEquipArtifactFrom", function(PosX, PosY, Slot)
 		LocalPlayer():EquipArtifactFrom(PosX, PosY, Slot, true)
-	end
-	net.Receive("nEquipArtifactFrom", nEquipArtifactFrom)
+	end)
 
-	local function nRemoveArtifactFrom()
-		local pos = net.ReadInt(4)
+	netstream.Hook("nRemoveArtifactFrom", function(pos)
 		LocalPlayer():RemoveArtifactFrom(pos, true)
-	end
-	net.Receive("nRemoveArtifactFrom", nRemoveArtifactFrom)
+	end)
 
-	local function nEquipWeaponFrom()
-		local PosX = net.ReadInt(5)
-		local PosY = net.ReadInt(5)
-		local Slot = net.ReadInt(4)
-
+	netstream.Hook("nEquipWeaponFrom", function(PosX, PosY, Slot)
 		LocalPlayer():EquipWeaponFrom(PosX, PosY, Slot, true)
-	end
-	net.Receive("nEquipWeaponFrom", nEquipWeaponFrom)
+	end)
 
-	local function nRemoveWeaponFrom()
-		local pos = net.ReadInt(4)
+	netstream.Hook("nRemoveWeaponFrom", function(pos)
 		LocalPlayer():RemoveWeaponFrom(pos, true)
-	end
-	net.Receive("nRemoveWeaponFrom", nRemoveWeaponFrom)
+	end)
 
 elseif (SV) then
 
-	local function nEquipWeaponFrom(len, ply)
-		local PosX = net.ReadInt(5)
-		local PosY = net.ReadInt(5)
-		local Slot = net.ReadInt(4)
+	netstream.Hook("nEquipWeaponFrom", function(player, PosX, PosY, Slot)
+		player:EquipWeaponFrom(PosX, PosY, Slot, true)
+	end)
 
-		ply:EquipWeaponFrom(PosX, PosY, Slot, true)
-	end
-	net.Receive("nEquipWeaponFrom", nEquipWeaponFrom)
+	netstream.Hook("nRemoveWeaponFrom", function(player, pos)
+		player:RemoveWeaponFrom(pos, true)
+	end)
 
-	local function nRemoveWeaponFrom(len, ply)
-		local pos = net.ReadInt(4)
-		ply:RemoveWeaponFrom(pos, true)
-	end
-	net.Receive("nRemoveWeaponFrom", nRemoveWeaponFrom)
+	netstream.Hook("nEquipArtifactFrom", function(player, PosX, PosY, Slot)
+		player:EquipArtifactFrom(PosX, PosY, Slot, true)
+	end)
 
-	local function nEquipArtifactFrom(len, ply)
-		local PosX = net.ReadInt(5)
-		local PosY = net.ReadInt(5)
-		local Slot = net.ReadInt(4)
+	netstream.Hook("nRemoveArtifactFrom", function(player, pos)
+		player:RemoveArtifactFrom(pos, true)
+	end)
 
-		ply:EquipArtifactFrom(PosX, PosY, Slot, true)
-	end
-	net.Receive("nEquipArtifactFrom", nEquipArtifactFrom)
+	netstream.Hook("nDropItem", function(player, pos)
+		player:DropItem(pos.x, pos.y)
+	end)
 
-	local function nRemoveArtifactFrom(len, ply)
-		local pos = net.ReadInt(4)
-		ply:RemoveArtifactFrom(pos, true)
-	end
-	net.Receive("nRemoveArtifactFrom", nRemoveArtifactFrom)
+	netstream.Hook("nSetQuickSlot", function(player, slot, itemid)
+		player:SetQuickSlot(slot, itemid, true)
+	end)
 
-	local function nDropItem(len, ply)
-		local pos = net.ReadVector()
-		ply:DropItem(pos.x, pos.y)
-	end
-	net.Receive("nDropItem", nDropItem)
+	netstream.Hook("nResetQuickSlot", function(player, slot)
+		player:ResetQuickSlot(slot, true)
+	end)
 
-	local function nSetQuickSlot(len, ply)
-		local slot, itemid = net.ReadInt(3), net.ReadString()
-		ply:SetQuickSlot(slot, itemid, true)
-	end
-	net.Receive("nSetQuickSlot", nSetQuickSlot)
+	netstream.Hook("nSetArtifactSlot", function(player, slot, itemid)
+		player:SetArtifactSlot(slot, itemid, true)
+	end)
 
-	local function nResetQuickSlot(len, ply)
-		local slot = net.ReadInt(3)
-		ply:ResetQuickSlot(slot, true)
-	end
-	net.Receive("nResetQuickSlot", nResetQuickSlot)
+	netstream.Hook("nResetArtifactSlot", function(player, slot)
+		player:ResetArtifactSlot(slot, true)
+	end)
 
-	local function nSetArtifactSlot(len, ply)
-		local slot, itemid = net.ReadInt(4), net.ReadString()
-		ply:SetArtifactSlot(slot, itemid, true)
-	end
-	net.Receive("nSetArtifactSlot", nSetArtifactSlot)
+	netstream.Hook("nSetGearSlot", function(player, slot, itemid)
+		player:SetGearSlot(slot, itemid, true)
+	end)
 
-	local function nResetArtifactSlot(len, ply)
-		local slot = net.ReadInt(4)
-		ply:ResetArtifactSlot(slot, true)
-	end
-	net.Receive("nResetArtifactSlot", nResetArtifactSlot)
+	netstream.Hook("nResetGearSlot", function(player, slot)
+		player:ResetGearSlot(slot, true)
+	end)
 
-	local function nSetGearSlot(len, ply)
-		local slot, itemid = net.ReadInt(3), net.ReadString()
-		ply:SetGearSlot(slot, itemid, true)
-	end
-	net.Receive("nSetGearSlot", nSetGearSlot)
+	netstream.Hook("nSetArtifactDetector", function(player, itemid)
+		player:SetArtifactDetector(itemid, true)
+	end)
 
-	local function nResetGearSlot(len, ply)
-		local slot, itemid = net.ReadInt(3)
-		ply:ResetGearSlot(slot, true)
-	end
-	net.Receive("nResetGearSlot", nResetGearSlot)
+	netstream.Hook("nResetArtifactDetector", function(player)
+		player:ResetArtifactDetector(true)
+	end)
 
-	local function nSetArtifactDetector(len, ply)
-		local itemid = net.ReadString()
-		ply:SetArtifactDetector(itemid, true)
-	end
-	net.Receive("nSetArtifactDetector", nSetArtifactDetector)
+	netstream.Hook("nUseItem", function(player, pos)
+		player:UseItem(pos.x, pos.y)
+	end)
 
-	local function nResetArtifactDetector(len, ply)
-		local itemid = net.ReadString()
-		ply:ResetArtifactDetector(true)
-	end
-	net.Receive("nResetArtifactDetector", nResetArtifactDetector)
+	netstream.Hook("nMoveItemFromTo", function(player, pos, pos2)
+		player:MoveItemFromTo(pos.x, pos.y, pos.z, pos2)
+	end)
 
-	local function nUseItem(len, ply)
-		local pos = net.ReadVector()
-		ply:UseItem(pos.x, pos.y)
-	end
-	net.Receive("nUseItem", nUseItem)
+	netstream.Hook("nOpenContainer", function(player, container)
+		netstream.Start(player, "nOpenContainer", container, container.Inventory)
+	end)
 
-	local function nMoveItemFromTo(len, ply)
-		local pos = net.ReadVector()
-		local pos2 = net.ReadFloat()
+	netstream.Hook("nContainerItemTransfer", function(player, pos1, pos2, cont, from)
+		player:TransferItem(pos1.x, pos1.y, pos1.z, pos2, cont, from)
+	end)
 
-		ply:MoveItemFromTo(pos.x, pos.y, pos.z, pos2)
-	end
-	net.Receive("nMoveItemFromTo", nMoveItemFromTo)
-
-	local function nOpenContainer(len, ply)
-		local container = net.ReadEntity()
-
-		net.Start("nOpenContainer")
-			net.WriteEntity(container)
-			net.WriteTable(container.Inventory)
-		net.Send(ply)
-	end
-	net.Receive("nOpenContainer", nOpenContainer)
-
-	local function nContainerItemTransfer(len, ply)
-		local pos1 = net.ReadVector()
-		local pos2 = net.ReadFloat()
-		local cont = net.ReadEntity()
-		local from = net.ReadBool()
-
-		ply:TransferItem(pos1.x, pos1.y, pos1.z, pos2, cont, from)
-	end
-	net.Receive("nContainerItemTransfer", nContainerItemTransfer)
-
-	local function nMoveItemFromToContainer(len, ply)
-		local pos1 = net.ReadVector()
-		local pos2 = net.ReadFloat()
-		local cont = net.ReadEntity()
-
-		ply:MoveItemFromToContainer(pos1.x, pos1.y, pos1.z, pos2, cont)
-	end
-	net.Receive("nMoveItemFromToContainer", nMoveItemFromToContainer)
+	netstream.Hook("nMoveItemFromToContainer", function(player, pos1, pos2, cont)
+		player:MoveItemFromToContainer(pos1.x, pos1.y, pos1.z, pos2, cont)
+	end)
 
 end
 
@@ -689,9 +577,7 @@ function meta:LoadItemsFromString( str )
 		self.Inventory = SaveData
 	end
 
-	net.Start("nLoadInventory")
-		net.WriteString(pon.encode(self.Inventory))
-	net.Send(self)
+	netstream.Start(self, "nLoadInventory", pon.encode(self.Inventory))
 end
 
 --[[
@@ -705,10 +591,14 @@ end
 
 function meta:SetQuickSlot(nSlot, sItemID, bReceived)
 	self.Inventory.QuickUse[nSlot] = sItemID
-	net.Start("nSetQuickSlot")
-	net.WriteInt(nSlot, 3)
-	net.WriteString(sItemID)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nSetQuickSlot", nSlot, sItemID)
+		else
+			netstream.Start(self, "nSetQuickSlot", nSlot, sItemID)
+		end
+	end
 end
 
 --[[
@@ -718,10 +608,14 @@ end
 
 function meta:ResetQuickSlot(nSlot, bReceived)
 	self.Inventory.QuickUse[nSlot] = {}
-
-	net.Start("nResetQuickSlot")
-	net.WriteInt(nSlot, 3)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nResetQuickSlot", nSlot)
+		else
+			netstream.Start(self, "nResetQuickSlot", nSlot)
+		end
+	end
 end
 
 --[[
@@ -752,11 +646,14 @@ function meta:SetArtifactSlot(nSlot, sItemID, bReceived)
 	if (ItemTable) then
 		if (ItemTable.IsArtifact) then
 			self.Inventory.Artifacts[nSlot] = sItemID
-
-			net.Start("nSetArtifactSlot")
-			net.WriteInt(nSlot, 4)
-			net.WriteString(sItemID)
-			net.Replicate(self, bReceived)
+			
+			if (!bReceived) then
+				if (CL) then
+					netstream.Start("nSetArtifactSlot", nSlot, sItemID)
+				else
+					netstream.Start(self, "nSetArtifactSlot", nSlot, sItemID)
+				end
+			end
 		end
 	end
 end
@@ -768,10 +665,14 @@ end
 
 function meta:ResetArtifactSlot(nSlot, bReceived)
 	self.Inventory.Artifacts[nSlot] = {}
-
-	net.Start("nResetArtifactSlot")
-	net.WriteInt(nSlot, 4)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nResetArtifactSlot", nSlot)
+		else
+			netstream.Start(self, "nSetArtifactSlot", nSlot)
+		end
+	end
 end
 
 --[[
@@ -798,11 +699,14 @@ end
 
 function meta:SetGearSlot(nSlot, sItemID, bReceived)
 	self.Inventory.Gear[nSlot] = sItemID
-
-	net.Start("nSetGearSlot")
-	net.WriteInt(nSlot, 3)
-	net.WriteString(sItemID)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nSetGearSlot", nSlot, sItemID)
+		else
+			netstream.Start(self, "nSetGearSlot", nSlot, sItemID)
+		end
+	end
 end
 
 --[[
@@ -812,10 +716,14 @@ end
 
 function meta:ResetGearSlot(nSlot, bReceived)
 	self.Inventory.Gear[nSlot] = {}
-
-	net.Start("nResetGearSlot")
-	net.WriteInt(nSlot, 3)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nResetGearSlot", nSlot)
+		else
+			netstream.Start(self, "nResetGearSlot", nSlot)
+		end
+	end
 end
 
 --[[
@@ -842,10 +750,14 @@ end
 
 function meta:SetArtifactDetector(sItemID, bReceived)
 	self.Inventory.ArtifactDetector = sItemID
-
-	net.Start("nSetArtifactDetector")
-	net.WriteString(sItemID)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nSetArtifactDetector", sItemID)
+		else
+			netstream.Start(self, "nSetArtifactDetector", sItemID)
+		end
+	end
 end
 
 --[[
@@ -856,8 +768,13 @@ end
 function meta:ResetArtifactDetector(bReceived)
 	self.Inventory.ArtifactDetector = {}
 
-	net.Start("nResetArtifactDetector")
-	net.Replicate(self, bReceived)
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nResetArtifactDetector")
+		else
+			netstream.Start(self, "nResetArtifactDetector")
+		end
+	end
 end
 
 --[[
@@ -900,12 +817,14 @@ function meta:EquipArtifactFrom(nPosX, nPosY, nSlot, bReceived)
 	if (SV) then
 		self:SaveInventory()
 	end
-
-	net.Start("nEquipArtifactFrom")
-	net.WriteInt(nPosX, 5)
-	net.WriteInt(nPosY, 5)
-	net.WriteInt(nSlot, 4)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nEquipArtifactFrom", nPosX, nPosY, nSlot)
+		else
+			netstream.Start(self, "nEquipArtifactFrom", nPosX, nPosY, nSlot)
+		end
+	end
 end
 
 --[[
@@ -920,10 +839,14 @@ function meta:RemoveArtifactFrom(nSlot, bReceived)
 		self:InsertItemEasy(artifact)
 		self:ResetArtifactSlot(nSlot, true)
 	end
-
-	net.Start("nRemoveArtifactFrom")
-	net.WriteInt(nSlot, 4)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nRemoveArtifactFrom", nSlot)
+		else
+			netstream.Start(self, "nRemoveArtifactFrom", nSlot)
+		end
+	end
 end
 
 --[[
@@ -946,12 +869,14 @@ function meta:EquipWeaponFrom(nPosX, nPosY, nSlot, bReceived)
 		if (SV) then
 			self:SaveInventory()
 		end
-	
-		net.Start("nEquipWeaponFrom")
-		net.WriteInt(nPosX, 5)
-		net.WriteInt(nPosY, 5)
-		net.WriteInt(nSlot, 4)
-		net.Replicate(self, bReceived)
+		
+		if (!bReceived) then
+			if (CL) then
+				netstream.Start("nEquipWeaponFrom", nPosX, nPosY, nSlot)
+			else
+				netstream.Start(self, "nEquipWeaponFrom", nPosX, nPosY, nSlot)
+			end
+		end
 	end
 end
 
@@ -967,10 +892,14 @@ function meta:RemoveWeaponFrom(nSlot, bReceived)
 		self:InsertItemEasy(weapon)
 		self:ResetGearSlot(nSlot, true)
 	end
-
-	net.Start("nRemoveWeaponFrom")
-	net.WriteInt(nSlot, 4)
-	net.Replicate(self, bReceived)
+	
+	if (!bReceived) then
+		if (CL) then
+			netstream.Start("nRemoveWeaponFrom", nSlot)
+		else
+			netstream.Start(self, "nRemoveWeaponFrom", nSlot)
+		end
+	end
 end
 
 
@@ -981,7 +910,10 @@ end
 
 function meta:SaveInventory()
 	local str = pon.encode( self.Inventory )
-	self:UpdateCharacterField( "Inventory", str )
+	local char = self:GetCharacter()
+	if (!char) then return end
+	--self:UpdateCharacterField( "Inventory", str )
+	char:SetInventoryData(str)
 end
 
 --[[
@@ -1081,12 +1013,8 @@ function meta:GiveItem(ItemID, n, data)
 
 	if (SV) then
 		self:SaveInventory()
-
-		net.Start("nGiveItem")
-			net.WriteString(ItemID)
-			net.WriteFloat(n)
-			net.WriteTable(data)
-		net.Send(self)
+			
+		netstream.Start(self, "nGiveItem", ItemID, n, data)
 	end
 end
 
@@ -1101,9 +1029,7 @@ function meta:RemoveItem(PosX, PosY)
 	if (SV) then
 		self:SaveInventory()
 
-		net.Start("nRemoveItem")
-			net.WriteVector(Vector(PosX, PosY, 0))
-		net.Send(self)
+		netstream.Start(self, "nRemoveItem", Vector(PosX, PosY, 0))
 	end
 end
 
@@ -1113,21 +1039,11 @@ end
 --]]
 
 function meta:UseItem(PosX, PosY)
-	if (self:PassedOut()) then 
-		return
-	end
-
-	if (self:TiedUp()) then 
-		return
-	end
-
 	if (SV) then
-		GAMEMODE:LogItems( "[R] " .. self:VisibleRPName() .. "'s item " .. self.Inventory[PosX][PosY].ID .. " was removed.", self )
+		rain:LogItems( "[R] " .. self:GetVisibleRPName() .. "'s item " .. self.Inventory[PosX][PosY].ID .. " was removed.", self )
 		self:SaveInventory()
 	else
-		net.Start("nUseItem")
-			net.WriteVector(Vector(PosX, PosY, 0))
-		net.SendToServer()
+		netstream.Start("nUseItem", Vector(PosX, PosY, 0))
 	end
 
 	local ret = GAMEMODE:GetItemByID(self.Inventory[PosX][PosY].ID).OnPlayerUse(self.Inventory[PosX][PosY].ID, self)
@@ -1143,25 +1059,15 @@ end
 --]]
 
 function meta:DropItem(PosX, PosY)
-	if (self:PassedOut()) then 
-		return
-	end
-
-	if (self:TiedUp()) then 
-		return
-	end
-
 	if (SV) then
-		GAMEMODE:LogItems( "[R] " .. self:VisibleRPName() .. "'s drop item " .. self.Inventory[PosX][PosY].ID .. ".", self )
+		rain:LogItems( "[R] " .. self:GetVisibleRPName() .. "'s drop item " .. self.Inventory[PosX][PosY].ID .. ".", self )
 		if (self.Inventory[PosX][PosY].ID) then
 			local ItemID = self.Inventory[PosX][PosY].ID
 			local data = self.Inventory[PosX][PosY].data
 			GAMEMODE:CreateItem(self, ItemID, data)
 		end
 	else
-		net.Start("nDropItem")
-			net.WriteVector(Vector(PosX, PosY, 0))
-		net.SendToServer()
+		netstream.Start("nDropItem", Vector(PosX, PosY, 0))
 	end
 
 	self:RemoveItem(PosX, PosY)
@@ -1220,7 +1126,7 @@ function meta:InsertItemEasy(ItemID, data)
 		self:InsertItemAt(PosX, PosY, ItemID, data)
 
 		if (SV) then
-			GAMEMODE:LogItems( "[G] " .. self:VisibleRPName() .. " obtained item " .. ItemID .. ".", self )
+			rain:LogItems( "[G] " .. self:GetVisibleRPName() .. " obtained item " .. ItemID .. ".", self )
 			GAMEMODE:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
 		end
 	end
@@ -1345,12 +1251,7 @@ function meta:TransferItem(StartX, StartY, EndX, EndY, Container, From)
 		self:SaveInventory()
 		GAMEMODE:SaveContainer(Container)
 	else
-		net.Start("nContainerItemTransfer")
-			net.WriteVector(Vector(StartX, StartY, EndX))
-			net.WriteFloat(EndY)
-			net.WriteEntity(Container)
-			net.WriteBool(From or false)
-		net.SendToServer()
+		netstream.Start("nContainerItemTransfer", Vector(StartX, StartY, EndX), EndY, Container, From or false)
 	end
 end
 
@@ -1405,11 +1306,7 @@ function meta:MoveItemFromToContainer(StartX, StartY, EndX, EndY, Container)
 	self.Inventory[EndX][EndY] = Item
 
 	if (CL) then
-		net.Start("nMoveItemFromToContainer")
-			net.WriteVector(Vector(StartX, StartY, EndX))
-			net.WriteFloat(EndY)
-			net.WriteEntity(Container)
-		net.SendToServer()
+		netstream.Start("nMoveItemFromToContainer", Vector(StartX, StartY, EndX), EndY, Container)
 	end
 end
 
@@ -1432,10 +1329,7 @@ function meta:MoveItemFromTo(StartX, StartY, EndX, EndY)
 		self.Inventory[StartX][StartY] = {}
 		self.Inventory[EndX][EndY] = Item
 
-		net.Start("nMoveItemFromTo")
-			net.WriteVector(Vector(StartX, StartY, EndX))
-			net.WriteFloat(EndY)
-		net.SendToServer()
+		netstream.Start("nMoveItemFromTo", Vector(StartX, StartY, EndX), EndY)
 	end
 end
 
