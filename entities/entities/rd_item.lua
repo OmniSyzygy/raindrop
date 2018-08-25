@@ -54,12 +54,7 @@ function ENT:Use( activator, caller, usetype, val )
 	local data = self:GetData()
 
 	if( !activator:CanTakeItem( self:GetItemID() ) ) then
-		
-		net.Start( "nTooHeavy" )
-		net.Send( activator )
-		
 		return
-		
 	end
 	
 	self:Remove()

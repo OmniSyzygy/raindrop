@@ -57,7 +57,7 @@ end
 --]]
 
 local function GetItemSize(ItemID)
-	local ItemTable = GAMEMODE:GetItemByID(ItemID)
+	local ItemTable = rain:GetItemByID(ItemID)
 
 	return ItemTable.SizeX, ItemTable.SizeY
 end
@@ -74,7 +74,7 @@ local function BuildTraceTable(Inventory)
 	for x = 1, width do 
 		for y = 1, height do 
 			if (Inventory[x][y].ID) then
-				local ItemTable = GAMEMODE:GetItemByID(Inventory[x][y].ID)
+				local ItemTable = rain:GetItemByID(Inventory[x][y].ID)
 				for i = x, (x + (ItemTable.SizeX - 1)) do
 					for i2 = y, (y + (ItemTable.SizeY - 1)) do
 						TraceTable[i][i2] = "OCCUPIED"
@@ -106,11 +106,6 @@ if (CL) then
 	netstream.Hook("nRemoveItem", function(pos)
 		LocalPlayer():RemoveItem(pos.x, pos.y)
 	end)
-
-	local function nTooHeavy()
-		GAMEMODE:AddChat(Color(200,0,0,255), "CombineControl.ChatNormal", "That's too heavy for you to carry.", {CB_ALL, CB_IC})
-	end
-	net.Receive("nTooHeavy", nTooHeavy)
 
 	netstream.Hook("nOpenContainer", function(container, inventory)
 		container.Inventory = inventory
@@ -403,7 +398,7 @@ if (CL) then
 					if (Owner and Owner == LocalPlayer()) then -- this branch of code is used when manipulating items within a players inventory
 						if (item.Owner:GetClass() == "cc_container") then -- this is when the item is in a container and being transfered to the player
 							if (LocalPlayer():CanTransferItem(x, y, item.ItemID, Owner, true)) then
-								local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+								local ItemTable = rain:GetItemByID(item.ItemID)
 	
 								for i = x,  (x + (ItemTable.SizeX - 1)) do
 									for i2 = y, (y + (ItemTable.SizeY - 1)) do
@@ -419,7 +414,7 @@ if (CL) then
 							end
 						elseif (item.Owner == LocalPlayer()) then -- the item being dragged is within the players inventory and the inventory is the players inventory
 							if (LocalPlayer():ItemCanFit(x, y, item.ItemID)) then
-								local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+								local ItemTable = rain:GetItemByID(item.ItemID)
 		
 								for i = x,  (x + (ItemTable.SizeX - 1)) do
 									for i2 = y, (y + (ItemTable.SizeY - 1)) do
@@ -438,7 +433,7 @@ if (CL) then
 					if (Owner and Owner:GetClass() == "cc_container") then -- this branch of code is used when manipulating items within a container
 						if (item.Owner:GetClass() == "cc_container") then -- transfering within a container
 							if (LocalPlayer():ItemCanFitContainer(x, y, item.ItemID, Owner)) then
-								local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+								local ItemTable = rain:GetItemByID(item.ItemID)
 	
 								for i = x,  (x + (ItemTable.SizeX - 1)) do
 									for i2 = y, (y + (ItemTable.SizeY - 1)) do
@@ -453,7 +448,7 @@ if (CL) then
 							end
 						elseif (item.Owner == LocalPlayer()) then -- transfering from player inventory to the container inventory
 							if (LocalPlayer():CanTransferItem(x, y, item.ItemID, Owner)) then
-								local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+								local ItemTable = rain:GetItemByID(item.ItemID)
 	
 								for i = x,  (x + (ItemTable.SizeX - 1)) do
 									for i2 = y, (y + (ItemTable.SizeY - 1)) do
@@ -476,7 +471,7 @@ if (CL) then
 		for x = 1, width do 
 			for y = 1, height do 
 				if (Inventory[x][y].ID) then
-					local ItemTable = GAMEMODE:GetItemByID(Inventory[x][y].ID)
+					local ItemTable = rain:GetItemByID(Inventory[x][y].ID)
 					local InvObject = vgui.Create("CCStalkerIcon", InventoryPanel)
 					InvObject:SetCoords(ItemTable.IconX,ItemTable.IconX + ItemTable.SizeX, ItemTable.IconY,ItemTable.IconY + ItemTable.SizeY)
 					InvObject:SetSize(ItemTable.SizeX * GridSize, ItemTable.SizeY * GridSize)
@@ -641,7 +636,7 @@ end
 --]]
 
 function meta:SetArtifactSlot(nSlot, sItemID, bReceived)
-	local ItemTable = GAMEMODE:GetItemByID(sItemID)
+	local ItemTable = rain:GetItemByID(sItemID)
 
 	if (ItemTable) then
 		if (ItemTable.IsArtifact) then
@@ -805,7 +800,7 @@ end
 
 function meta:EquipArtifactFrom(nPosX, nPosY, nSlot, bReceived)
 	if (self.Inventory[nPosX][nPosY].ID) then
-		local ItemTable = GAMEMODE:GetItemByID(self.Inventory[nPosX][nPosY].ID)
+		local ItemTable = rain:GetItemByID(self.Inventory[nPosX][nPosY].ID)
 		if (ItemTable.IsArtifact) then
 			if (!self:GetArtifactSlot(nSlot)) then
 				self:SetArtifactSlot(nSlot, self.Inventory[nPosX][nPosY].ID, true)
@@ -857,7 +852,7 @@ end
 function meta:EquipWeaponFrom(nPosX, nPosY, nSlot, bReceived)
 	if (nSlot == 1 or nSlot == 2) then
 		if (self.Inventory[nPosX][nPosY].ID) then
-			local ItemTable = GAMEMODE:GetItemByID(self.Inventory[nPosX][nPosY].ID)
+			local ItemTable = rain:GetItemByID(self.Inventory[nPosX][nPosY].ID)
 			if (ItemTable.IsWeapon) then
 				if (!self:GetGearSlot(nSlot)) then
 					self:SetGearSlot(nSlot, self.Inventory[nPosX][nPosY].ID, true)
@@ -926,6 +921,30 @@ function meta:CanTakeItem( ItemID )
 end
 
 --[[
+	Function: Get Num Items
+	Purpose: Gets counts of an item based on the ItemID items in the inventory
+--]]
+
+function meta:GetNumItems(ItemID)
+	if (!self.Inventory) then 
+		return 0 
+	end
+	
+	local c = 0
+	local width, height = self:GetInventorySize()
+
+	for i = 1, width do
+		for i2 = 1, height do
+			if (self.Inventory[i][i2].ID and self.Inventory[i][i2].ID == ItemID) then
+				c = c + 1
+			end
+		end
+	end
+	
+	return c
+end
+
+--[[
 	Function: Has Item
 	Purpose: Returns wether or not a client has an item in their possesion based on the ItemID
 --]]
@@ -977,7 +996,7 @@ function meta:InventoryWeight()
 	for i = 1, SizeX do
 		for i2 = 1, SizeY do
 			if (self.Inventory[i][i2] and self.Inventory[i][i2].ID) then
-				local ItemTable = GAMEMODE:GetItemByID(self.Inventory[i][i2].ID)
+				local ItemTable = rain:GetItemByID(self.Inventory[i][i2].ID)
 				if (ItemTable.Weight) then
 					weight = weight + ItemTable.Weight
 				end
@@ -1004,7 +1023,7 @@ end
 
 function meta:GiveItem(ItemID, n, data)
 	local data = data or {}
-	local ItemTable = GAMEMODE:GetItemByID(ItemID)
+	local ItemTable = rain:GetItemByID(ItemID)
 	local n = n or 1
 
 	for i = 1, n do
@@ -1046,9 +1065,9 @@ function meta:UseItem(PosX, PosY)
 		netstream.Start("nUseItem", Vector(PosX, PosY, 0))
 	end
 
-	local ret = GAMEMODE:GetItemByID(self.Inventory[PosX][PosY].ID).OnPlayerUse(self.Inventory[PosX][PosY].ID, self)
+	local ret = rain:GetItemByID(self.Inventory[PosX][PosY].ID).OnPlayerUse(self.Inventory[PosX][PosY].ID, self)
 
-	if( GAMEMODE:GetItemByID(self.Inventory[PosX][PosY].ID).DeleteOnUse and !ret ) then
+	if( rain:GetItemByID(self.Inventory[PosX][PosY].ID).DeleteOnUse and !ret ) then
 		self:RemoveItem(PosX, PosY)
 	end
 end
@@ -1118,7 +1137,7 @@ end
 --]]
 
 function meta:InsertItemEasy(ItemID, data)
-	local ItemTable = GAMEMODE:GetItemByID(ItemID)
+	local ItemTable = rain:GetItemByID(ItemID)
 	local SizeX, SizeY = ItemTable.SizeX, ItemTable.SizeY
 
 	if (self:FindSlot(ItemID)) then
@@ -1127,7 +1146,7 @@ function meta:InsertItemEasy(ItemID, data)
 
 		if (SV) then
 			rain:LogItems( "[G] " .. self:GetVisibleRPName() .. " obtained item " .. ItemID .. ".", self )
-			GAMEMODE:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
+			rain:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
 		end
 	end
 end

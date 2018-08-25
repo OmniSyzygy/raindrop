@@ -1,268 +1,156 @@
---[[
-	Filename: sh_item.lua
---]]
+local rain = rain -- # Micro-ops
+rain.items = {}
 
-rain.item = {}
-rain.itembuffer = {} -- this is where all base items are stored
-rain.itemindex = {} -- this is where all current and unique items are stored
-rain.itemsavequeue = {} -- this is the item save queue
+local path = GM.FolderName.."/gamemode/raindrop/items/"
+local files = file.Find(path.."*.lua", "LUA", "namedesc")
 
-local item_meta = {}
+if (#files > 0) then
+	for k = 1, #files do
+		local v = files[k]
 
--- tier enums
-
-E_WORN = 1 -- (White)
-E_STANDARD = 2 -- (Green)
-E_SPECIALIZED = 3 -- (Blue)
-E_SUPERIOR = 4 -- (Purple)
-E_HIGHEND = 5 -- (Gold)
-E_GEARSET = 6 -- (Turqoise)
-
--- WoW style tier enums that go off of color (I do prefer using these)
-
-E_WHITE = 1
-E_GREEN = 2
-E_BLUE = 3
-E_PURPLE = 4
-E_GOLD = 5
-E_SET = 6
-
-
-function item_meta:GetID()
-	return self.id or 0
-end
-
-function item_meta:Save()
-	table.insert(rain.itemsavequeue, self:GetID())
-end
-
-function item_meta:Sync(tVarArgs)
-	if (CL) then -- this function called clientside syncs the item info on the client itself
-
-	else
-
+		ITEM = {}
+		ITEM.ID				= ""
+		ITEM.Name 			= ""
+		ITEM.Description	= ""
+		ITEM.Model			= ""
+		ITEM.Weight			= 1
+		ITEM.SizeX			= 1
+		ITEM.SizeY			= 1
+		
+		ITEM.ProcessEntity	= function() end
+		ITEM.IconMaterial	= nil
+		ITEM.IconColor		= nil
+		
+		ITEM.Usable			= false
+		ITEM.Droppable		= true
+		ITEM.Throwable		= true
+		ITEM.UseText		= nil
+		ITEM.DeleteOnUse	= false
+		
+		ITEM.OnPlayerUse	= function() end
+		ITEM.OnPlayerSpawn	= function() end
+		ITEM.OnPlayerPickup	= function() end
+		ITEM.OnPlayerDeath	= function() end
+		ITEM.OnRemoved		= function() end
+		ITEM.Think			= function() end
+		
+		AddCSLuaFile(path..v)
+		include(path..v)
+		MsgC(Color(200, 200, 200, 255), "Item "..v.." loaded.\n")
+		
+		table.insert(rain.items, ITEM)
+	end
+else
+	if (SV) then
+		rain:LogBug( "[R] Warning: No items found.", true )
 	end
 end
 
-function item_meta:SyncMetaData(tVarArgs)
-	if (CL) then
+path, files = nil, nil -- # Don't need.
 
-	else
-
-	end
-end
-
-function item_meta:GetSeed()
-	if self.randseed then
-		return self.randseed
-	else
-		self.randseed = math.random() + (self:GetID() * 100)
-	end
-end
-
-function item_meta:SetBase()
-
-end
-
-function item_meta:GetBase()
-
-end
-
-function item_meta:SetOwningEntity(eOwningEntity)
-	self.owningentity = eOwningEntity
-end
-
-function item_meta:GetOwningEntity()
-	return self.owningentity or false
-end
-
-function item_meta:GetInWorld()
-	return self.inworld
-end
-
-function item_meta:SetInWorld(bNewInWorld)
-	self.inworld = bNewInWorld
-end
-
-function item_meta:SetDropSound(sNewSound)
-	self.dropsound = Sound(sNewDropSoundPath)
-end
-
-function item_meta:GetDropSound()
-	return self.dropsound or Sound(rain.cfg.items.dropsound)
-end
-
-function item_meta:SetPickupSound(sNewSound)
-	self.pickupsound = Sound(sNewSound)
-end 
-
-function item_meta:GetPickupSound()
-	return self.pickupsound or Sound(rain.cfg.items.dropsound)
-end
-
-function item_meta:SetUseSound(sNewSound)
-	self.usesound = sNewSound
-end
-
-function item_meta:GetUseSound(sNewSound)
-	return self.usesound or Sound(rain.cfg.items.usesound)
-end
-
-function item_meta:SetMoveSound(sNewSound)
-	self.movesound = sNewSound
-end
-
-function item_meta:GetMoveSound()
-	return self.movesound or Sound(rain.cfg.items.movesound)
-end
-
-function item_meta:SetModel(sNewModelPath)
-	self.model = Model(sNewModelPath)
-end
-
-function item_meta:GetModel()
-	return self.model or "models/props_junk/watermelon01.mdl"
-end
-
-function item_meta:SetWeight(nWeight)
-	self.weight = nWeight
-end
-
-function item_meta:GetWeight()
-	return self.weight or 1
-end
-
-function item_meta:SetDescription(sNewDescription)
-	self.description = sNewDescription
-end
-
-function item_meta:GetDescription()
-	return self.description or "Item description not loaded."
-end
-
-function item_meta:SetName(sNewName)
-	self.itemname = sNewName
-end
-
-function item_meta:GetName()
-	return self.itemname or "Item name not loaded."
-end
-
-function item_meta:OverrideImpactSounds(bOverride, tOverrideSounds)
-	self.overrideimpactsounds = bOverride
-	self.newimpactsounds = tOverrideSounds
-end
-
-function item_meta:GetOverrideImpactSounds()
-	if self.overrideimpactsounds then
-		return self.newimpactsounds
-	else
-		return self.overrideimpactsounds
-	end
-end
-
-function item_meta:SetMetaData(tNewMetaData)
-	self.metadata = tNewMetaData
-	self:SyncMetaData()
-end
-
-if (SV) then
-	function item_meta:SpawnEntity(vPos, aAngs)
-		if self:GetInWorld() then
-			return
-		end
-
-		self:SetInWorld(true)
-		local item = ents.Create("rd_item")
-
-		item:SetModel(self:GetModel())
-		item:SetPos(vPos)
-		item:SetAngs(aAngs)
-		item:SetItemID(self:GetItemID())
-		item:Spawn()
-		self:SetOwningEntity(item)
-	end
-end
-
-function item_meta:New(sUniqueID, tMetaData)
-
-end
-
-function item_meta:DestroyItem()
-	if self:GetInWorld() then
-		self:GetWorldEntity():Remove()
-	end
-end
-
-function item_meta:SetBaseItem(sNewBase)
-	self.ItemBase = sNewBase or false
-end
-
-function item_meta:GetBaseItem()
-	return self.ItemBase
-end
-
-item_meta.__index = item_meta
-local RAIN_ITEMMETA = item_meta
-
-function rain.item.getmeta()
-	return RAIN_ITEMMETA
-end
-
-function rain.item.destroyitembyid(nItemID)
-	rain.itemindex[nItemID] = nil
-	-- do mysql removal here
-end
-
-function rain.item.loaddefaultitems()
-
-end
-
-function rain.item.loaditems()
-	-- load items from mysql then insert them into the index, the item bases must be loaded first.
-end
-
-function rain.item.get(nItemID)
-	return rain.itemindex[nItemID]
-end
-
-function rain.item.saveitems()
-	for _, ItemID in pairs(rain.itemsavequeue) do
-		rain.item.get(ItemID):Save()
-	end
-end
-
-if (SV) then
-	local newthink = 0
-	function rain.item.think()
-		if CurTime() > newthink then
-			rain.item.saveitems()
-			newthink = CurTime() + 3
+function rain:LoadWeaponItems()
+	for k = 1, #weapons.GetList() do
+		local v = weapons.GetList()[k]
+		if (v.Itemize) then
+			ITEM = {}
+			ITEM.ID				= v.ClassName
+			ITEM.Name 			= v.PrintName
+			ITEM.Description	= v.ItemDescription or ""
+			ITEM.Model			= v.WorldModel
+			ITEM.Weight			= v.ItemWeight or 1
+			ITEM.SizeX			= v.ItemSizeX or 1
+			ITEM.SizeY			= v.ItemSizeY or 1
+			
+			ITEM.FOV			= v.ItemFOV
+			ITEM.CamPos			= v.ItemCamPos
+			ITEM.LookAt			= v.ItemLookAt
+			
+			ITEM.ProcessEntity	= v.ItemProcessEntity
+			ITEM.PProcessEntity	= v.ItemPProcessEntity
+			ITEM.IconMaterial	= v.ItemIconMaterial
+			ITEM.IconColor		= v.ItemIconColor
+			
+			ITEM.BulkPrice		= v.ItemBulkPrice
+			ITEM.SinglePrice	= v.ItemSinglePrice
+			ITEM.License		= v.ItemLicense
+			
+			ITEM.Droppable		= true
+			ITEM.Throwable		= true
+			ITEM.Usable			= false
+			ITEM.UseText		= nil
+			
+			function ITEM.OnPlayerSpawn( item, ply )
+				if( SERVER ) then
+					ply:Give( item )
+				end
+			end
+			
+			function ITEM.OnPlayerPickup( item, ply )
+				if( SERVER ) then
+					ply:Give( item )
+				end
+			end
+			
+			function ITEM.OnRemoved( item, ply )
+				if( SERVER and ply:GetNumItems( item ) < 2 ) then
+					ply:StripWeapon( item )
+				end
+			end
+			
+			table.insert(self.Items, ITEM)
+			MsgC(Color(200, 200, 200, 255 , "Weapon item " .. v.ClassName .. " loaded.\n"))
 		end
 	end
 end
 
--- constructs and returns a new item object
-
-function rain.item:New(sItemBase)
-	local itemObj = {}
-	return itemObj
+function rain:GetItemByID(id)
+	if (id and #self.items > 0) then
+		for k = 1, #self.items do
+			local item = self.items[k]
+			if (item.ID == id) then
+				return item
+			end
+		end
+	end
 end
 
-local rainchar = rain.character.getmeta()
+function rain:CreateItem(player, item)
+	local trace = {}
+	trace.start = player:GetShootPos()
+	trace.endpos = trace.start + player:GetAimVector() * 50
+	trace.filter = player
+	
+	local tr = util.TraceLine(trace)
+	local ent = self:CreatePhysicalItem(item, tr.HitPos + tr.HitNormal * 10, Angle())
+	
+	if (ent and IsValid(player)) then
+		ent.rainSteamID = player:SteamID()
+	end
 
-function rainchar:DropItem(objItem)
-
+	return ent
 end
 
-function rainchar:AddItem(objItem)
-
-end
-
-function rainchar:CreateAndAddItem(objItem)
-
-end
-
-function GM:GetItemByID(id)
-	return rain.item[id].ID
+function rain:CreatePhysicalItem(item, pos, ang)
+	local e = ents.Create("rd_item")
+	e:SetItemID(item)
+	e:SetModel(self:GetItemByID(item).Model)
+	e:SetPos(pos)
+	e:SetAngles(ang)
+	
+	if (self:GetItemByID(item).ProcessEntity) then
+		self:GetItemByID(item).ProcessEntity(item, e)
+	end
+	
+	e:Spawn()
+	e:Activate()
+	
+	if (self:GetItemByID(item).PProcessEntity) then
+		self:GetItemByID(item).PProcessEntity(item, e)
+	end
+	
+	if (IsValid(e:GetPhysicsObject())) then
+		e:GetPhysicsObject():Wake()
+	end
+	
+	return e
 end

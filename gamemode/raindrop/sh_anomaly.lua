@@ -95,7 +95,7 @@ end
 --]]
 
 function rain:ReloadAnomalies()
-	for k, v in pairs(ents.FindByClass("cc_anomaly")) do
+	for k, v in ipairs(ents.FindByClass("cc_anomaly")) do
 		v:Reload()
 	end
 end
@@ -1567,7 +1567,7 @@ local function MysticThink(self)
 			local plyData = player.GetAll()
 			for k = 1, #plyData do
 				local v = plyData[k]
-				if IsValid(v)
+				if IsValid(v) then
 					if (table.HasValue( self.Target, v )) then
 						v:SetDSP( 0, false ) 
 					end
@@ -2236,7 +2236,7 @@ end
 local function ElectroThink(self)
 	local nearbyPlayers = ents.FindByClass("player")
 	
-	for k, v in pairs(nearbyPlayers) do
+	for k, v in ipairs(nearbyPlayers) do
 		if (IsValid(v) and v:IsPlayer() and v:Alive()) then
 			local dist = v:GetPos():Distance(self:GetPos())
 			if (dist > self.Radius) then continue end -- skip players outside of the radius

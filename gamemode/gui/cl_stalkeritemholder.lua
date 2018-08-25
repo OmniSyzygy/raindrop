@@ -18,20 +18,20 @@ function PANEL:Init()
 
 		if (item.Owner == LocalPlayer() and dropped) then 			
 			if (self:GetSlotType() == SLOT_QUICKUSE) then
-				local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+				local ItemTable = rain:GetItemByID(item.ItemID)
 				if (ItemTable.SizeX == 1) and (ItemTable.SizeY == 1) then -- only 1x1 items, mostly consumables can be quick used.
 					LocalPlayer():SetQuickSlot(self:GetSlot(), item.ItemID)
 					self:UpdateSlot()
 				end
 			elseif (self:GetSlotType() == SLOT_ARTIFACT) then
-				local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+				local ItemTable = rain:GetItemByID(item.ItemID)
 				if (ItemTable.IsArtifact) then
 					LocalPlayer():EquipArtifactFrom(item.Coords[1], item.Coords[2], self:GetSlot())
 					LocalPlayer():RefreshInventoryPanel()
 					self:UpdateSlot()
 				end
 			elseif (self:GetSlotType() == SLOT_GUN) then
-				local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
+				local ItemTable = rain:GetItemByID(item.ItemID)
 				if (ItemTable.IsWeapon) then
 					LocalPlayer():EquipWeaponFrom(item.Coords[1], item.Coords[2], self:GetSlot())
 					LocalPlayer():RefreshInventoryPanel()
@@ -66,7 +66,7 @@ end
 function PANEL:UpdateSlot()
 	if (self:GetSlotType() == SLOT_QUICKUSE) then
 		if (LocalPlayer():GetQuickSlot(self:GetSlot())) then
-			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetQuickSlot(self:GetSlot()))
+			local ItemTable = rain:GetItemByID(LocalPlayer():GetQuickSlot(self:GetSlot()))
 			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			local w, h = self:GetSize()
 			w = w * 0.8
@@ -85,7 +85,7 @@ function PANEL:UpdateSlot()
 		end
 	elseif (self:GetSlotType() == SLOT_ARTIFACT) then
 		if (LocalPlayer():GetArtifactSlot(self:GetSlot())) then
-			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetArtifactSlot(self:GetSlot()))
+			local ItemTable = rain:GetItemByID(LocalPlayer():GetArtifactSlot(self:GetSlot()))
 			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			local w, h = self:GetSize()
 			w = w * 0.8
@@ -107,7 +107,7 @@ function PANEL:UpdateSlot()
 		end
 	elseif (self:GetSlotType() == SLOT_GUN) then
 		if (LocalPlayer():GetGearSlot(self:GetSlot())) then
-			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetGearSlot(self:GetSlot()))
+			local ItemTable = rain:GetItemByID(LocalPlayer():GetGearSlot(self:GetSlot()))
 			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			self.ItemPanel:SetRotated(true)
 			local w, h = self:GetSize()

@@ -14,7 +14,7 @@ if (!pon) then
 	include("pon.lua")
 end
 
-AddCSLuaFile();
+AddCSLuaFile()
 
 netstream = netstream or {}
 
