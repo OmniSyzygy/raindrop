@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 rain.pdata = rain.pdata or {}
 rain.pdata.cache = rain.pdata.cache or {}
 rain.pdata.characters = rain.pdata.characters or {}

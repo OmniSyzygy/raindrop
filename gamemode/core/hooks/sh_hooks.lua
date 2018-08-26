@@ -28,10 +28,11 @@ PLAYER_HOLDTYPE_TRANSLATOR["knife"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["duel"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["bugbait"] = "normal"
 
+-- # Micro-ops
+local rain = rain
 local string = string
 local stringLower = string.lower
 local stringFind = string.find
-
 local getModelClass = rain.anim.getModelClass
 local IsValid = IsValid
 local type = type

@@ -2,6 +2,9 @@
 	Filename: sh_traits.lua
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.traits = {}
 rain.traitbuffer = {}
 

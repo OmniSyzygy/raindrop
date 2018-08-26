@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 surface.CreateFont("RD.CategoryButtonFont", {
 	font = "Constantia",
 	size = 25,
@@ -425,8 +428,10 @@ function PANEL:Init()
 
 		local gender = parent.selectedGender or parent.creationData.data.gender
 
-		for k, v in pairs(availableModels) do
-			self:AddModel(v)
+		for k = 1, #availableModels do
+			local x = availableModels[k]
+			self:AddModel(x)
+			x = nil
 		end
 	end
 

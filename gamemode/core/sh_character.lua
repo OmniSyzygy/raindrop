@@ -11,6 +11,9 @@ DATA_ADMINONLY = 3
 DATA_NAME = 4
 DATA_FACTIONS = 5
 
+-- # Micro-ops
+local rain = rain
+
 rain.character = {}
 
 if (SV) then

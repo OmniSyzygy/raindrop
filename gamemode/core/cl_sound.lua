@@ -4,6 +4,9 @@
 	Also allows for sound cues which allow mixing, crossfading, adding noise, etc.
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.sound = {}
 
 function rain.sound:PlayMenuMusic()

@@ -3,6 +3,9 @@
 	Purpose: utility library to make networking a touch easier
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.net = {} -- net wrapper
 rain.repvars = {} -- all replicated vars in the gm
 rain.repvar = {} -- repvar library

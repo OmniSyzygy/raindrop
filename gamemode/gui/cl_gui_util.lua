@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 local blur = Material("pp/blurscreen")
 
 function rain.dpi(nUnscaledX, nUnscaledY)

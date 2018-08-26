@@ -41,7 +41,6 @@ function SLerpVector(nFraction, vOrigin, vTarget)
 end
 
 function rain.util.log(sText, sTag)
-
 	if !sTag then
 		sTag = "PRINT"
 	else

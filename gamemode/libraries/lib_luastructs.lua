@@ -3,6 +3,9 @@
 	Notes: I'm too used to C++ and I hate having to constantly do type checking bullshit.
 	Now with metatables!
 --]]
+-- # Micro-ops
+local rain = rain
+
 rain.struct = {}
 rain.structs = {} -- table containing all structs
 

@@ -13,44 +13,33 @@ ENT.Spawnable			= false
 ENT.AdminSpawnable		= false
 
 function ENT:PostEntityPaste( ply, ent )
-	rain:LogSecurity( ply:SteamID(), "n/a", ply:GetVisibleRPName(), "[R] Tried to duplicate " .. ent:GetClass() .. "!" );
+	rain:LogSecurity( ply:SteamID(), "n/a", ply:GetVisibleRPName(), "[SECURITY] Tried to duplicate " .. ent:GetClass() .. "!" );
 	ent:Remove()
 end
 
 function ENT:SetupDataTables()
-	
 	self:NetworkVar( "Number", 0, "ItemID" )
-	
 end
 
 function ENT:Initialize()
-	
 	if( CLIENT ) then return end
 	
 	self:PhysicsInit( SOLID_VPHYSICS )
-	
 	local phys = self:GetPhysicsObject()
 	
-	if( phys and phys:IsValid() ) then
-		
+	if(IsValid(phys)) then
 		phys:Wake()
-		
 	end
 	
 	self:SetUseType( SIMPLE_USE )
-	
 	self.KillTime = CurTime() + 21600 -- 6 hours
-	
 end
 
 function ENT:OnTakeDamage( dmginfo )
-
 	self:TakePhysicsDamage( dmginfo )
-	
 end
 
 function ENT:Use( activator, caller, usetype, val )
-	
 	local data = self:GetData()
 
 	if( !activator:CanTakeItem( self:GetItemID() ) ) then
@@ -67,19 +56,12 @@ function ENT:Use( activator, caller, usetype, val )
 end
 
 function ENT:Think()
-	
 	if( CLIENT ) then return end
-	
 	if( CurTime() > self.KillTime ) then
-		
 		self:Remove()
-		
 	end
-	
 end
 
 function ENT:Draw()
-
 	self:DrawModel()
-
 end

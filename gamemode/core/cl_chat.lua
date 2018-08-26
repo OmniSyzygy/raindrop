@@ -3,6 +3,9 @@
 	Description: Tabbed chat
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.chat = {}
 rain.chat.tabs = {}
 rain.chat.ui = rain.chat.ui or nil

@@ -1,4 +1,6 @@
-local rain = rain -- # Micro-ops
+-- # Micro-ops
+local rain = rain
+
 rain.items = {}
 
 local path = GM.FolderName.."/gamemode/raindrop/items/"
@@ -42,7 +44,7 @@ if (#files > 0) then
 	end
 else
 	if (SV) then
-		rain:LogBug( "[R] Warning: No items found.", true )
+		rain:LogBug( "[BUG] Warning: No items found.", true )
 	end
 end
 

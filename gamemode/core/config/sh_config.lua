@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 rain.cfg = rain.cfg or {}
 
 rain.cfg.item = {}

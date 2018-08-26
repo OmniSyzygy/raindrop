@@ -3,6 +3,9 @@
 	Notes: This is the file that new anomalies are registered in.
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.anomalies = {}
 rain.elements = {}
 

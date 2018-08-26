@@ -9,11 +9,14 @@
 	So far though, the result is clean networking that is very well predicted. So that's good.
 --]]
 
-	E_QUICKUSE 	= 0
-	E_GEAR 		= 1
-	E_ARTIFACT 	= 2
-	E_GUN 		= 3
-	E_DETECTOR 	= 4
+-- # You like micro-ops? Me too.
+local rain = rain
+
+E_QUICKUSE 	= 0
+E_GEAR 		= 1
+E_ARTIFACT 	= 2
+E_GUN 		= 3
+E_DETECTOR 	= 4
 
 --[[
 	Don't mind me, just set up some enums for use later, mostly util functions below.
@@ -233,7 +236,6 @@ elseif (SV) then
 	netstream.Hook("nMoveItemFromToContainer", function(player, pos1, pos2, cont)
 		player:MoveItemFromToContainer(pos1.x, pos1.y, pos1.z, pos2, cont)
 	end)
-
 end
 
 --[[
@@ -1058,7 +1060,7 @@ end
 
 function meta:UseItem(PosX, PosY)
 	if (SV) then
-		rain:LogItems( "[R] " .. self:GetVisibleRPName() .. "'s item " .. self.Inventory[PosX][PosY].ID .. " was removed.", self )
+		rain:LogItems( "[ITEMS] " .. self:GetVisibleRPName() .. "'s item " .. self.Inventory[PosX][PosY].ID .. " was removed.", self )
 		self:SaveInventory()
 	else
 		netstream.Start("nUseItem", Vector(PosX, PosY, 0))
@@ -1078,11 +1080,10 @@ end
 
 function meta:DropItem(PosX, PosY)
 	if (SV) then
-		rain:LogItems( "[R] " .. self:GetVisibleRPName() .. "'s drop item " .. self.Inventory[PosX][PosY].ID .. ".", self )
+		rain:LogItems( "[ITEMS] " .. self:GetVisibleRPName() .. "'s drop item " .. self.Inventory[PosX][PosY].ID .. ".", self )
 		if (self.Inventory[PosX][PosY].ID) then
 			local ItemID = self.Inventory[PosX][PosY].ID
-			local data = self.Inventory[PosX][PosY].data
-			GAMEMODE:CreateItem(self, ItemID, data)
+			rain:CreateItem(self, ItemID)
 		end
 	else
 		netstream.Start("nDropItem", Vector(PosX, PosY, 0))
@@ -1144,7 +1145,7 @@ function meta:InsertItemEasy(ItemID, data)
 		self:InsertItemAt(PosX, PosY, ItemID, data)
 
 		if (SV) then
-			rain:LogItems( "[R] " .. self:GetVisibleRPName() .. " obtained item " .. ItemID .. ".", self )
+			rain:LogItems( "[ITEMS] " .. self:GetVisibleRPName() .. " obtained item " .. ItemID .. ".", self )
 			rain:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
 		end
 	end

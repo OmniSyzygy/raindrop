@@ -1,16 +1,19 @@
+-- # Micro-ops
+local rain = rain
+
 rain.faction = {}
 if (CL) then
 	
 	concommand.Add("dev_testcreatefaction",function()
-	creationData = {}
-	creationData.Name = {"Soren's Faction"}
-	creationData.RankNames = {"Owner", "Lieutenant", "Peasant"}
-	creationData.Desc = {"A faction about worshipping me, Soren."}
-	creationData.Uniforms = {"models/cakez/rxstalker/stalker_dolg/stalker_dolg1a.mdl", "models/gman_high.mdl", "models/Humans/Group02/male_03.mdl"}
+		creationData = {}
+		creationData.Name = {"Soren's Faction"}
+		creationData.RankNames = {"Owner", "Lieutenant", "Peasant"}
+		creationData.Desc = {"A faction about worshipping me, Soren."}
+		creationData.Uniforms = {"models/cakez/rxstalker/stalker_dolg/stalker_dolg1a.mdl", "models/gman_high.mdl", "models/Humans/Group02/male_03.mdl"}
 
-			net.Start("rain.factioncreate")
-				rain.net.WriteTable(creationData)
-			net.SendToServer()
+		net.Start("rain.factioncreate")
+			rain.net.WriteTable(creationData)
+		net.SendToServer()
 	end) 
 
 	concommand.Add("dev_testfactiondelete",function()
@@ -58,7 +61,7 @@ if (SV) then
 		print("tFactCreateData doesn't exist.")
 			return
 		end
-print("tFactCreateData exists.")
+		print("tFactCreateData exists.")
 		local name, factionData = "error", "{}"
 		--thinking this should just be converted to a string? but this is a really quick fix atm.
 		local name = "{}"

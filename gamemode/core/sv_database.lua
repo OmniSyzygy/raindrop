@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 rain.db = {}
 
 function rain.db.connect(sAddress, sUsername, sPassword, sDatabase, nPort)

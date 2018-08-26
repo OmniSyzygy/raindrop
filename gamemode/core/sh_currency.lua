@@ -3,6 +3,9 @@
 	Description: Raindrop has support for multiple currencies, there is a single 'primary' curreny and then secondary currencies.
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.currency = {}
 rain.currencybuffer = {}
 

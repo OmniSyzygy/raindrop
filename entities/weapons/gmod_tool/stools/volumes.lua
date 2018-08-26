@@ -56,9 +56,7 @@ function TOOL:LeftClick( trace )
 			end
 		elseif (self:GetStage() == STAGE_SENDTOSERVER) then
 			if (SERVER) then
-			
-							print("hello volume")
-			
+				print("hello volume")
 				local NewVolume = GAMEMODE.struct:GetStruct("VolumeType")
 
 				NewVolume.Min = Vector(self:GetClientInfo("min"))

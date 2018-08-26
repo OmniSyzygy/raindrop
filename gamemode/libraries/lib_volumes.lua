@@ -3,6 +3,9 @@
 	Notes: This is the file that handles volume creation, enter/exit events, etc.
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.volumeindex = {} -- all the types of volumes are stored here
 rain.volumes = {} -- this is where actual volume data is stored
 

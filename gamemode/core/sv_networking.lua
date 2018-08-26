@@ -1,6 +1,9 @@
 local entityMeta = FindMetaTable("Entity")
 local playerMeta = FindMetaTable("Player")
 
+-- # Micro-ops
+local rain = rain
+
 rain.netvar = rain.netvar or {}
 rain.netvar.globals = rain.netvar.globals or {}
 

@@ -13,6 +13,9 @@ local tHeadBobTarget = {}
 tHeadBobTarget[1] = {v = Vector(-0.15,0.1,0.45), a = Angle(-0.25,-0.25,0)}
 tHeadBobTarget[2] = {v = Vector(0.2,-0.05,-0.3), a = Angle(0.25,0.1,0)}
 
+-- # Micro-ops
+local rain = rain
+
 function rain:CalcView(pClient, vPos, aAngs, nFOV, nNearZ, nFarZ)
 	--[[
 	local velocity = pClient:GetVelocity():Length()

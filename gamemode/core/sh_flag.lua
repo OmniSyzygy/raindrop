@@ -2,6 +2,9 @@
 	Filename: sh_flag.lua
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.flag = {}
 rain.flagbuffer = {}
 

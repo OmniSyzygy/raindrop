@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 surface.CreateFont("RD.DeleteFont", {
 	font = "Constantia",
 	size = 30,

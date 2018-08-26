@@ -2,6 +2,9 @@
 	Filename: sh_chatcommands.lua
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.cc = {}
 rain.ccbuffer = {}
 
