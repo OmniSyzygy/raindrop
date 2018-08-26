@@ -1032,7 +1032,6 @@ function meta:GiveItem(ItemID, n, data)
 
 	if (SV) then
 		self:SaveInventory()
-			
 		netstream.Start(self, "nGiveItem", ItemID, n, data)
 	end
 end
@@ -1145,7 +1144,7 @@ function meta:InsertItemEasy(ItemID, data)
 		self:InsertItemAt(PosX, PosY, ItemID, data)
 
 		if (SV) then
-			rain:LogItems( "[G] " .. self:GetVisibleRPName() .. " obtained item " .. ItemID .. ".", self )
+			rain:LogItems( "[R] " .. self:GetVisibleRPName() .. " obtained item " .. ItemID .. ".", self )
 			rain:GetItemByID( ItemID ).OnPlayerPickup( ItemID, self )
 		end
 	end

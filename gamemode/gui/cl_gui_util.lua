@@ -131,10 +131,8 @@ hook.Add("HUDPaint", "testblur", function()
 					local x = 144
 					surface.SetDrawColor(255, 255, 255)
 
-					local RNGData = GAMEMODE:GetRNGStats(v:GetItemID(), pon.decode(v:GetData()).rng)
-
 					local shadowcolor = Color(35*2.5, 35*2.5, 35*2.5, 255)				
-					local text = string.upper(RNGData.." "..rain:GetItemByID( v:GetItemID() ).Name)
+					local text = string.upper(rain:GetItemByID( v:GetItemID() ).Name)
 					local font = "Trebuchet24"
 
 					surface.SetFont(font)
