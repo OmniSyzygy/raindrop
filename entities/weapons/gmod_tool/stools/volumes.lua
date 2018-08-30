@@ -136,7 +136,6 @@ if (CLIENT) then
 
 		cam.Start3D()
 		if (self.radial) then
-
 			render.DrawWireframeSphere(self.MinPoint, self.MaxPoint:Distance(self.MinPoint), 9, 9, voldata.DrawColor)
 		else
 			render.DrawWireframeBox(Vector(0,0,0), Angle(0,0,0), self.MinPoint, self.MaxPoint, voldata.DrawColor, true) 

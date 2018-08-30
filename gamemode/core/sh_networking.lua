@@ -45,7 +45,7 @@ end
 --]]
 
 function rain.net.WriteShortInt(nInt)
-	net.WriteInt(nInt, 16 + 1)
+	net.WriteInt(nInt, 17)
 end
 
 --[[
@@ -54,7 +54,7 @@ end
 --]]
 
 function rain.net.WriteLongInt(nInt)
-	net.WriteInt(nInt, 31 + 1)
+	net.WriteInt(nInt, 32)
 end
 
 --[[
@@ -63,7 +63,7 @@ end
 --]]
 
 function rain.net.WriteTinyUInt(nUInt)
-	net.WriteUInt(nUInt, 2 + 1)
+	net.WriteUInt(nUInt, 3)
 end
 
 --[[
@@ -72,7 +72,7 @@ end
 --]]
 
 function rain.net.WriteNibbleUInt(nUInt)
-	net.WriteUInt(nUInt, 4 + 1)
+	net.WriteUInt(nUInt, 5)
 end
 
 --[[

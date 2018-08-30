@@ -152,11 +152,9 @@ end
 
 function rain:SendVolumes(pClient)
 	if (SV) then
-		
-			net.Start("nSendVolumes")
-			net.WriteTable(rain.volumes)
-			net.Send(pClient)
-		
+		net.Start("nSendVolumes")
+		net.WriteTable(rain.volumes)
+		net.Send(pClient)
 	end
 end
 
@@ -179,11 +177,10 @@ function rain:AddVolume(tVolume, new, index)
 		if new then
 			rain:SaveVolume(NewVolume)
 		end
-			net.Start("nAddVolume")
-			net.WriteInt(newindex, 11) -- since I assume there will be a lot of volumes created I'm using a fairly larger int, this allows for up to 1,024 volumes which is more than enough
-			net.WriteTable(NewVolume)
-			net.Broadcast()
-		
+		net.Start("nAddVolume")
+		net.WriteInt(newindex, 11) -- since I assume there will be a lot of volumes created I'm using a fairly larger int, this allows for up to 1,024 volumes which is more than enough
+		net.WriteTable(NewVolume)
+		net.Broadcast()
 	end
 end
 
@@ -220,13 +217,13 @@ if (CL) then
 		local Index = net.ReadInt(11)
 		local NewVolume = net.ReadTable()
 
-		GAMEMODE:AddVolume(NewVolume, false, Index)
+		rain:AddVolume(NewVolume, false, Index)
 	end
 	net.Receive("nAddVolume", nAddVolume)
 
 	local function nRemoveVolume(len)
 		local Pos = net.ReadVector()
-		GAMEMODE:RemoveVolume(Pos)
+		rain:RemoveVolume(Pos)
 	end
 	net.Receive("nRemoveVolume", nRemoveVolume)
 
@@ -234,14 +231,14 @@ if (CL) then
 		local ChangeType = net.ReadInt(4)
 		local Index = net.ReadInt(11)
 
-		local voldata = GAMEMODE.volumeindex[GAMEMODE.volumes[Index].Type]
+		local voldata = rain.volumeindex[rain.volumes[Index].Type]
 
 		if (ChangeType == E_ENTERVOLUME) then
-			voldata.OnEnter(LocalPlayer(), GAMEMODE.volumes[Index].Type)
+			voldata.OnEnter(LocalPlayer(), rain.volumes[Index].Type)
 		elseif (ChangeType == E_INVOLUME) then
-			voldata.WhileInside(LocalPlayer(), GAMEMODE.volumes[Index].Type)
+			voldata.WhileInside(LocalPlayer(), rain.volumes[Index].Type)
 		elseif (ChangeType == E_EXITVOLUME) then
-			voldata.OnExit(LocalPlayer(), GAMEMODE.volumes[Index].Type)
+			voldata.OnExit(LocalPlayer(), rain.volumes[Index].Type)
 		end
 	end
 	net.Receive("nVolume", nVolume)
@@ -261,7 +258,7 @@ rain:RegisterVolumeType(
 	{}, 
 	Color(100, 255, 100, 255),
 	function(ent, sType, tMetadata)
-			print(ent, "has entered the", sType, "volume")
+		print(ent, "has entered the", sType, "volume")
 	end)
  
 rain:RegisterVolumeType("AreaTrigger", "Area Trigger", 1, true, {}, Color(100, 100, 255, 255))

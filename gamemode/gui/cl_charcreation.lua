@@ -1111,9 +1111,7 @@ function PANEL:Init()
 		button:SetText("Create")
 
 		function button:DoClick()
-			net.Start("rain.charcreate")
-				rain.net.WriteTable(parent.creationData)
-			net.SendToServer()
+			netstream.Start("rain.charcreate", parent.creationData)
 
 			parent:Remove()
 
@@ -1245,9 +1243,7 @@ function PANEL:Init()
 				if (v.name == "Finish") then
 					--	Add checks here for valid information being entered.
 					
-					net.Start("rain.charcreate")
-						rain.net.WriteTable(parent.creationData)
-					net.SendToServer()
+					netstream.Start("rain.charcreate", parent.creationData)
 
 					parent:Remove()
 

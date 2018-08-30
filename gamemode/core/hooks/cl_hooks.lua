@@ -360,9 +360,8 @@ local function DrawCoPHUD(localPlayer, scrW, scrH)
 	if !prevent_map then
 		DrawMinimap()
 	end
-	
-	
-		prevent_map = false
+
+	prevent_map = false
 end
 
 local function DrawClockworkHUD(localPlayer, scrW, scrH)
@@ -584,13 +583,19 @@ for i = 1, 8 do
 	cursorMats[i] = Material("stalker/animcursor/cursor_0"..i..".png")
 end
 
-timer.Create("AnimCursor", 0.05, 0, function()
-	curMat = curMat + 1
+local delay = 0.05
+local lastTick = CurTime() + delay
+function rain:Tick()
+	if (lastTick < CurTime()) then
+		curMat = curMat + 1
 
-	if (curMat == 9) then
-		curMat = 1
+		if (curMat == 9) then
+			curMat = 1
+		end
+		
+		lastTick = CurTime() + delay
 	end
-end)
+end
 
 --[[ 
 	Draw the STALKER cursor. This NEEDS to be after everything else, so the
@@ -696,6 +701,5 @@ function rain:OnClientInitialized()
 --	rain.chat.clientspawn()
 
 	rain.MainMenuUI = vgui.Create("RD_MainMenu")
-
 	rain.MainMenuUI:MakePopup()
 end

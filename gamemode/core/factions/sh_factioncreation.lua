@@ -24,13 +24,14 @@ if (CL) then
 	concommand.Add("dev_testfactionjoin",function()
 		net.Start("rain.testfactionjoin")
 		net.SendToServer()
-	end) 
+	end)
 	
-end
-
-if (SV) then
-
-
+	function cNewFaction(factionData)
+		net.Start( "rain.factioncreate" )
+			rain.net.WriteTable( factionData )
+		net.SendToServer()
+	end
+else
 	local charmeta = rain.character.getmeta()
 	
 	util.AddNetworkString("rain.testfactiondelete")
@@ -41,7 +42,6 @@ if (SV) then
 	end)
 
 	util.AddNetworkString("rain.testfactionjoin")
-	
 	net.Receive("rain.testfactionjoin", function(len, ply)
 		if ( IsValid( ply ) ) then
 			ply:GetCharacter():JoinFaction("3","1")
@@ -52,13 +52,27 @@ if (SV) then
 	net.Receive("rain.factioncreate", function(len, ply)
 		if ( IsValid( ply ) ) then
 			local factionData = rain.net.ReadTable()
-			rain:LoadVolumes()
+			rain.faction.create(ply, factionData)
+			--rain:LoadVolumes()
 		end
+	end)
+	
+	concommand.Add("dev_createitem",function(player)
+		player:GiveItem("357", 1)
+		rain.util.print("player.character.data_inventory", player.character.data_inventory)
+
+		/*local droppos = player:GetEyeTrace().HitPos
+		local item = ents.Create("rd_item")
+		item:SetModel("models/props_junk/watermelon01.mdl")
+		item:SetPos(droppos)
+		item:SetAngles(Angle(0, 0, 0))
+		item:SetItemID(0)
+		item:Spawn()*/
 	end)
 
 	function rain.faction.create(pOwningClient, tFactCreateData)
 		if !tFactCreateData then
-		print("tFactCreateData doesn't exist.")
+			print("tFactCreateData doesn't exist.")
 			return
 		end
 		print("tFactCreateData exists.")
@@ -85,10 +99,8 @@ if (SV) then
 		end
 		
 		local resources = "{}"
-		
 		local inventory = "{}"
 
-		
 		local InsertObj = mysql:Insert("factions")
 		InsertObj:Insert("fact_name", name)
 		InsertObj:Insert("fact_steamid", pOwningClient:SteamID64())

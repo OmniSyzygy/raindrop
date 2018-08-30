@@ -229,7 +229,7 @@ end
 
 --local chatAddText = chatAddText or chat.AddText()
 
-function chat.AddText( ... )
+/*function chat.AddText( ... )
 
 	local tArgs = { ... }
 
@@ -244,7 +244,7 @@ function chat.AddText( ... )
 	end
 
 	--chatAddText(...)
-end
+end*/
 
 
 hook.Add("PlayerBindPress", "rain.chat.playerinput", function(client, sBind, bPressed)

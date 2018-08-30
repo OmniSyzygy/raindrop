@@ -129,7 +129,7 @@ if (SV) then
 				SaveObj:Update(k, v)
 			end
 		end
-					
+
 		SaveObj:Update("charname", self:GetName())
 		SaveObj:Execute()
 	end
@@ -172,35 +172,36 @@ if (SV) then
 
 		if (pReceiver) then
 			TargetPlayers = {pReceiver}
-		else
-			for k = 1, #TargetPlayers do
-				local v = TargetPlayers[k]
-				local data = {}
+		end
+		
+		for k = 1, #TargetPlayers do
+			local v = TargetPlayers[k]
+			local data = {}
 
-				data.target = self:GetOwningClient()
+			data.target = self:GetOwningClient()
+			print(self:GetOwningClient())
 
-				if v:IsAdmin() then
-					data.adminonly = self:GetAdminOnlyData()
-				else
-					data.adminonly = {}
-				end
-
-				data.character = self:GetData()
-				data.appearance = self:GetAppearanceData()
-
-				if (v == self:GetOwningClient()) or v:IsAdmin() then
-					data.inventory = self:GetInventory()
-				else
-					data.inventory = {}
-				end
-
-				data.name = self:GetName()
-				data.id = self:GetCharID()
-
-				net.Start("rain.charsync")
-					rain.net.WriteTable(data)
-				net.Send(v)
+			if v:IsAdmin() then
+				data.adminonly = self:GetAdminOnlyData()
+			else
+				data.adminonly = {}
 			end
+
+			data.character = self:GetData()
+			data.appearance = self:GetAppearanceData()
+
+			if (v == self:GetOwningClient()) or v:IsAdmin() then
+				data.Inventory = self:GetInventory()
+			else
+				data.Inventory = {}
+			end
+
+			data.name = self:GetName()
+			data.id = self:GetCharID()
+
+			net.Start("rain.charsync")
+				rain.net.WriteTable(data)
+			net.Send(v)
 		end
 	end
 
@@ -259,12 +260,9 @@ if (SV) then
 		plyData = nil
 	end
 
-	util.AddNetworkString("rain.charcreate")
-
-	net.Receive("rain.charcreate", function(len, ply)
-	if ( IsValid( ply ) ) then
-		local charData = rain.net.ReadTable()
-		rain.character.create(ply, charData.data, charData.appearance)
+	netstream.Hook("rain.charcreate", function(ply, charData)
+		if ( IsValid( ply ) ) then
+			rain.character.create(ply, charData.data, charData.appearance, BuildEmptyInventory(rain.InventorySizeX, rain.InventorySizeY))
 		end
 	end)
 
@@ -523,7 +521,7 @@ if (CL) then
 		local adminonly = charsyncdata.adminonly
 		local character = charsyncdata.character
 		local appearance = charsyncdata.appearance
-		local inventory = charsyncdata.inventory
+		local inventory = charsyncdata.Inventory
 		local name = charsyncdata.name
 		local id = charsyncdata.id
 
@@ -545,7 +543,6 @@ if (CL) then
 	net.Receive("rain.charsyncdatabykey", function()
 		local datatype = rain.net.ReadTinyInt(enumDataType)
 		local data = rain.net.ReadTable()
-
 		local target = data.target.character
 
 		if datatype == DATA_CHARACTER then
@@ -562,7 +559,6 @@ if (CL) then
 	net.Receive("rain.charsyncdata", function()
 		local datatype = rain.net.ReadTinyInt(enumDataType)
 		local data = rain.net.ReadTable()
-
 		local target = data.target.character
 
 		if datatype == DATA_CHARACTER then
@@ -577,19 +573,15 @@ if (CL) then
 	end)
 
 	function rain.character.loadcharacter(charid)
-		net.Start("rain.loadcharacter")
-			rain.net.WriteLongInt(charid)
-		net.SendToServer()
+		netstream.Start("rain.loadcharacter", charid)
 	end
 end
 
 if (SV) then
-
-	util.AddNetworkString("rain.loadcharacter")
-	net.Receive("rain.loadcharacter", function(nLen, pClient)
-		local charid = rain.net.ReadLongInt()
+	netstream.Hook("rain.loadcharacter", function(player, charid)
 		if charid then
-			pClient:LoadCharacter(charid)
+			player:LoadCharacter(charid)
+			--rain:SyncInventoryItems(rain.characterindex[charid].data_inventory, pClient)
 		end 
 	end)
 
@@ -623,6 +615,7 @@ if (SV) then
 		if tInventory then
 			inventory = pon.encode(tInventory)
 		end
+		
 		local InsertObj = mysql:Insert("characters")
 		InsertObj:Insert("charname", name)
 		InsertObj:Insert("data_character", chardata)
@@ -671,7 +664,7 @@ if (SV) then
 		Desc: Syncs a single character
 	--]]
 
-	function rain.character.sync()
+	function rain.character.sync(pClient)
 		-- this will be written once I figure out some networking backend stuff
 	end
 
@@ -681,16 +674,26 @@ if (SV) then
 		Desc: Syncs the character index to all clients in the server
 	--]]
 
-	function rain.character.syncindex()
+	function rain.character.syncindex(pClient)
 		-- this will be written once I figure out some networking backend stuff
+		local tPlayers = player.GetAll()
+		for k = 1, #tPlayers do
+			local v = tPlayers[k]
+			if v:GetState() == STATE_ALIVE then
+				v:GetCharacter():Sync(pClient) 
+			end
+			v = nil
+		end
+		tPlayers = nil
 	end
 
 	function rain.character.playerspawn(pClient, tCharacter)
 		if (istable(tCharacter)) then
 			local appearTable = tCharacter.data_appearance
-
+			rain.character.syncindex(pClient)
 			pClient:SetModel(appearTable.model)
 			pClient:SetSkin(appearTable.skin)
+			--pClient:LoadItemsFromString(pon.encode(tCharacter.data_inventory))
 		end
 	end
 
@@ -765,7 +768,9 @@ if (SV) then
 							self.character:SetNameAndID(tResult.charname, nCharID)
 							self.character:SetOwningClient(self)
 							self.character:Sync()
-
+							
+							rain:SyncInventoryItems(self.character.data_inventory, self)
+							--rain:SyncItem(2, self)
 							self:Spawn()
 						end
 					end)

@@ -1,7 +1,6 @@
 -- # Micro-ops
 local rain = rain
-
-rain.items = {}
+rain.items = rain.items or {}
 
 local path = GM.FolderName.."/gamemode/raindrop/items/"
 local files = file.Find(path.."*.lua", "LUA", "namedesc")
@@ -11,16 +10,18 @@ if (#files > 0) then
 		local v = files[k]
 
 		ITEM = {}
-		ITEM.ID				= ""
+		ITEM.ID				= v:match("([_%w]+)%.lua") -- # UniqueID
 		ITEM.Name 			= ""
-		ITEM.Description	= ""
+		ITEM.Desc			= ""
 		ITEM.Model			= ""
 		ITEM.Weight			= 1
 		ITEM.SizeX			= 1
 		ITEM.SizeY			= 1
+		ITEM.IconX			= 1
+		ITEM.IconY			= 1
 		
 		ITEM.ProcessEntity	= function() end
-		ITEM.IconMaterial	= nil
+		ITEM.IconMat		= nil
 		ITEM.IconColor		= nil
 		
 		ITEM.Usable			= false
@@ -28,6 +29,8 @@ if (#files > 0) then
 		ITEM.Throwable		= true
 		ITEM.UseText		= nil
 		ITEM.DeleteOnUse	= false
+		ITEM.IsWeapon		= false
+		ITEM.IsArtifact		= false
 		
 		ITEM.OnPlayerUse	= function() end
 		ITEM.OnPlayerSpawn	= function() end
@@ -40,14 +43,15 @@ if (#files > 0) then
 		include(path..v)
 		MsgC(Color(200, 200, 200, 255), "Item "..v.." loaded.\n")
 		
-		table.insert(rain.items, ITEM)
+		rain.items[#rain.items + 1] = ITEM
+		
+		v = nil
 	end
 else
 	if (SV) then
 		rain:LogBug( "[BUG] Warning: No items found.", true )
 	end
 end
-
 path, files = nil, nil -- # Don't need.
 
 function rain:LoadWeaponItems()
@@ -57,11 +61,13 @@ function rain:LoadWeaponItems()
 			ITEM = {}
 			ITEM.ID				= v.ClassName
 			ITEM.Name 			= v.PrintName
-			ITEM.Description	= v.ItemDescription or ""
+			ITEM.Desc			= v.ItemDescription or ""
 			ITEM.Model			= v.WorldModel
 			ITEM.Weight			= v.ItemWeight or 1
 			ITEM.SizeX			= v.ItemSizeX or 1
 			ITEM.SizeY			= v.ItemSizeY or 1
+			ITEM.IconX			= v.ItemIconX or 1
+			ITEM.IconY			= v.ItemIconY or 1
 			
 			ITEM.FOV			= v.ItemFOV
 			ITEM.CamPos			= v.ItemCamPos
@@ -80,26 +86,24 @@ function rain:LoadWeaponItems()
 			ITEM.Throwable		= true
 			ITEM.Usable			= false
 			ITEM.UseText		= nil
+			ITEM.IsWeapon		= false
+			ITEM.IsArtifact		= false
 			
-			function ITEM.OnPlayerSpawn( item, ply )
-				if( SERVER ) then
-					ply:Give( item )
+			function ITEM.OnPlayerSpawn(item, player)
+				if (SV) then player:Give(item) end
+			end
+			
+			function ITEM.OnPlayerPickup(item, player)
+				if (SV) then player:Give(item) end
+			end
+			
+			function ITEM.OnRemoved(item, player)
+				if (SV and player:GetNumItems(item) < 2) then
+					player:StripWeapon(item)
 				end
 			end
 			
-			function ITEM.OnPlayerPickup( item, ply )
-				if( SERVER ) then
-					ply:Give( item )
-				end
-			end
-			
-			function ITEM.OnRemoved( item, ply )
-				if( SERVER and ply:GetNumItems( item ) < 2 ) then
-					ply:StripWeapon( item )
-				end
-			end
-			
-			table.insert(self.Items, ITEM)
+			self.items[#self.items + 1] = ITEM
 			MsgC(Color(200, 200, 200, 255 , "Weapon item " .. v.ClassName .. " loaded.\n"))
 		end
 	end
@@ -108,12 +112,13 @@ end
 function rain:GetItemByID(id)
 	if (id and #self.items > 0) then
 		for k = 1, #self.items do
-			local item = self.items[k]
-			if (item.ID == id) then
+			if (self.items[k].ID == id) then
 				return item
 			end
 		end
 	end
+	
+	return false
 end
 
 function rain:CreateItem(player, item)
@@ -134,7 +139,6 @@ end
 
 function rain:CreatePhysicalItem(item, pos, ang)
 	local e = ents.Create("rd_item")
-	e:SetItemID(item)
 	e:SetModel(self:GetItemByID(item).Model)
 	e:SetPos(pos)
 	e:SetAngles(ang)
@@ -143,6 +147,7 @@ function rain:CreatePhysicalItem(item, pos, ang)
 		self:GetItemByID(item).ProcessEntity(item, e)
 	end
 	
+	e:SetItemID(item)
 	e:Spawn()
 	e:Activate()
 	
@@ -156,3 +161,6 @@ function rain:CreatePhysicalItem(item, pos, ang)
 	
 	return e
 end
+
+print("rain.items")
+PrintTable(rain.items)

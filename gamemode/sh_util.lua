@@ -69,6 +69,10 @@ function rain.util.rawinclude(sFilePath)
 end
 
 function rain.util.include(sFilePath)
+	if (!sFilePath) then
+		error("[RAINDROP] No file name specified for including.")
+	end
+	
 	if (!SV and string.find(sFilePath, "sv_")) then
 		return
 	end
@@ -140,7 +144,14 @@ end
 if (SV) then
 	function rain.util.initraindrop()
 		rain.db.connect(rain.cfg.db.address, rain.cfg.db.username, rain.cfg.db.password, rain.cfg.db.database, rain.cfg.db.port)
-		rain.db.onconnectionsuccess()
+		
+		hook.Add("DatabaseConnected", "rain.DatabaseConnected", function()
+			if (mysql:IsConnected()) then
+				rain.db.onconnectionsuccess()
+				rain:LoadVolumes()
+				rain.item.loadFromDir(GAMEMODE.FolderName.."/gamemode/raindrop/items")
+			end
+		end)
 	end
 end	
 
@@ -219,4 +230,13 @@ function rain.util.isType(wToTest, wType)
 	end
 
 	return false
+end
+
+function rain.util.print(name, ...)
+	if (istable({...})) then
+		print(name)
+		PrintTable(unpack({...}))
+	else
+		print(name, unpack({...}))
+	end
 end

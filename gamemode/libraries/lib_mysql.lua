@@ -1,7 +1,6 @@
 --[[
 	mysql - 1.0.2
 	A simple MySQL wrapper for Garry's Mod.
-
 	Alexander Grist-Hucker
 	http://www.alexgrist.com
 --]]
@@ -412,7 +411,8 @@ function mysql:Connect(host, username, password, database, port, socket, flags)
 			self.connection.onConnectionFailed = function(database, errorText)
 				mysql:OnConnectionFailed(errorText);
 			end;		
-
+			
+			self.connection:setAutoReconnect(true)
 			self.connection:connect();
 		else
 			ErrorNoHalt(string.format(MODULE_NOT_EXIST, Module));
