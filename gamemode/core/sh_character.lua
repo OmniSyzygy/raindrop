@@ -581,7 +581,6 @@ if (SV) then
 	netstream.Hook("rain.loadcharacter", function(player, charid)
 		if charid then
 			player:LoadCharacter(charid)
-			--rain:SyncInventoryItems(rain.characterindex[charid].data_inventory, pClient)
 		end 
 	end)
 
@@ -768,9 +767,7 @@ if (SV) then
 							self.character:SetNameAndID(tResult.charname, nCharID)
 							self.character:SetOwningClient(self)
 							self.character:Sync()
-							
-							rain:SyncInventoryItems(self.character.data_inventory, self)
-							--rain:SyncItem(2, self)
+
 							self:Spawn()
 						end
 					end)
