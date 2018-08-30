@@ -149,7 +149,6 @@ if (SV) then
 			if (mysql:IsConnected()) then
 				rain.db.onconnectionsuccess()
 				rain:LoadVolumes()
-				rain.item.loadFromDir(GAMEMODE.FolderName.."/gamemode/raindrop/items")
 			end
 		end)
 	end
@@ -232,11 +231,17 @@ function rain.util.isType(wToTest, wType)
 	return false
 end
 
-function rain.util.print(name, ...)
-	if (istable({...})) then
-		print(name)
-		PrintTable(unpack({...}))
+local plyMeta = FindMetaTable("Player")
+function plyMeta:AddChat(...)
+	if (SV) then
+		netstream.Start(self, "rain.AddChat", {...})
 	else
-		print(name, unpack({...}))
+		chat.AddText(unpack({...}))
 	end
+end
+
+if (CL) then
+	netstream.Hook("rain.AddChat", function(table)
+		chat.AddText(unpack(table))
+	end)
 end

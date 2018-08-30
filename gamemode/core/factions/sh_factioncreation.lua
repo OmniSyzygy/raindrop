@@ -58,26 +58,15 @@ else
 	end)
 	
 	concommand.Add("dev_createitem",function(player)
-		player:GiveItem("357", 1)
-		rain.util.print("player.character.data_inventory", player.character.data_inventory)
-
-		/*local droppos = player:GetEyeTrace().HitPos
-		local item = ents.Create("rd_item")
-		item:SetModel("models/props_junk/watermelon01.mdl")
-		item:SetPos(droppos)
-		item:SetAngles(Angle(0, 0, 0))
-		item:SetItemID(0)
-		item:Spawn()*/
+		rain:CreateItem("vodka", player)
 	end)
 
 	function rain.faction.create(pOwningClient, tFactCreateData)
 		if !tFactCreateData then
-			print("tFactCreateData doesn't exist.")
-			return
+			return print("tFactCreateData doesn't exist.")
 		end
 		print("tFactCreateData exists.")
 		local name, factionData = "error", "{}"
-		--thinking this should just be converted to a string? but this is a really quick fix atm.
 		local name = "{}"
 		if tFactCreateData.Name then
 			name = pon.encode(tFactCreateData.Name)

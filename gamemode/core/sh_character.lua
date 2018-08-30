@@ -179,7 +179,6 @@ if (SV) then
 			local data = {}
 
 			data.target = self:GetOwningClient()
-			print(self:GetOwningClient())
 
 			if v:IsAdmin() then
 				data.adminonly = self:GetAdminOnlyData()
@@ -711,7 +710,6 @@ if (SV) then
 			local LoadObj = mysql:Select("characters")
 			LoadObj:Where("id", tostring(v))
 			LoadObj:Callback(function(wResult, sStatus, nLastID)
-				PrintTable(wResult)
 				if (type(wResult) == "table") and (#wResult > 0) then
 					local tResult = wResult[1]
 					tResult.data_character = pon.decode(tResult.data_character or "{}")

@@ -40,3 +40,20 @@ function rainclient:GetCharacter()
 
 	return false
 end
+
+-- # Returns a good position in front of the player for an entity.
+-- # Nutscript
+function rainclient:GetItemDropPos()
+	-- Start a trace.
+	local data = {}
+		data.start = self:GetShootPos()
+		data.endpos = self:GetShootPos() + self:GetAimVector()*86
+		data.filter = self
+	local trace = util.TraceLine(data)
+		data.start = trace.HitPos
+		data.endpos = data.start + trace.HitNormal*46
+		data.filter = {}
+	trace = util.TraceLine(data)
+
+	return trace.HitPos
+end

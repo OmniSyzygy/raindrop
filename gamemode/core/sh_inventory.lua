@@ -12,11 +12,12 @@
 -- # You like micro-ops? Me too.
 local rain = rain
 
-E_QUICKUSE 	= 0
-E_GEAR 		= 1
-E_ARTIFACT 	= 2
-E_GUN 		= 3
-E_DETECTOR 	= 4
+-- # SetSlotType
+SLOT_QUICKUSE 	= 0
+SLOT_GEAR 		= 1
+SLOT_ARTIFACT 	= 2
+SLOT_GUN 		= 3
+SLOT_DETECTOR 	= 4
 
 --[[
 	Don't mind me, just set up some enums for use later, mostly util functions below.
@@ -60,8 +61,12 @@ end
 --]]
 
 local function GetItemSize(ItemID)
-	local ItemTable = rain:GetItemByID(ItemID)
-	return ItemTable.SizeX, ItemTable.SizeY
+	if (ItemID) then
+		local ItemTable = rain:GetItemByID(ItemID)
+		if (ItemTable) then
+			return ItemTable.SizeX, ItemTable.SizeY
+		end
+	end
 end
 
 --[[
@@ -351,7 +356,6 @@ if (CL) then
 	--]]
 
 	function CreateInventoryUI(Inventory, Owner, GridSize)
-		PrintTable(Inventory)
 		local width, height = GetInventorySize(Inventory)
 		local GridSize = GridSize or 50
 
@@ -555,7 +559,6 @@ if (CL) then
 
 	concommand.Add("dev_openinventory", function()
 		LocalPlayer():OpenInventory()
-		PrintTable(LocalPlayer().character.data_inventory)
 	end)
 
 	concommand.Add("dev_stalkertest", function()
@@ -1015,7 +1018,6 @@ function meta:GiveItem(ItemID, n, data)
 		self:SaveInventory()
 		
 		netstream.Start(self, "nGiveItem", ItemID, n, data)
-		PrintTable(self.character.data_inventory)
 	end
 end
 
@@ -1063,8 +1065,8 @@ function meta:DropItem(PosX, PosY)
 		rain:LogItems( "[ITEMS] " .. self:GetVisibleRPName() .. "'s drop item " .. self.character.data_inventory[PosX][PosY].ID .. ".", self )
 		if (self.character.data_inventory[PosX][PosY].ID) then
 			local ItemID = self.character.data_inventory[PosX][PosY].ID
-			local data = self.character.data_inventory[PosX][PosY].data
-			rain:CreateItem(self, ItemID)
+			--local data = self.character.data_inventory[PosX][PosY].data
+			rain:CreateItem(ItemID, self)
 		end
 	else
 		netstream.Start("nDropItem", Vector(PosX, PosY, 0))

@@ -32,7 +32,6 @@ function rain:LoadVolumes()
 		if (type(tResult) == "table") and (#tResult > 0) then
 			for _, volumes in pairs(tResult) do
 				rain:AddVolume(volumes, false)
-				PrintTable(volumes)
 			end
 		end
 	end)

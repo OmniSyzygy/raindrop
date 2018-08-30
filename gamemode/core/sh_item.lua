@@ -8,9 +8,10 @@ local files = file.Find(path.."*.lua", "LUA", "namedesc")
 if (#files > 0) then
 	for k = 1, #files do
 		local v = files[k]
+		local id = v:match("([_%w]+)%.lua")
 
 		ITEM = {}
-		ITEM.ID				= v:match("([_%w]+)%.lua") -- # UniqueID
+		ITEM.UniqueID		= id
 		ITEM.Name 			= ""
 		ITEM.Desc			= ""
 		ITEM.Model			= ""
@@ -43,9 +44,9 @@ if (#files > 0) then
 		include(path..v)
 		MsgC(Color(200, 200, 200, 255), "Item "..v.." loaded.\n")
 		
-		rain.items[#rain.items + 1] = ITEM
+		rain.items[id] = ITEM
 		
-		v = nil
+		v, id = nil, nil
 	end
 else
 	if (SV) then
@@ -54,113 +55,37 @@ else
 end
 path, files = nil, nil -- # Don't need.
 
-function rain:LoadWeaponItems()
-	for k = 1, #weapons.GetList() do
-		local v = weapons.GetList()[k]
-		if (v.Itemize) then
-			ITEM = {}
-			ITEM.ID				= v.ClassName
-			ITEM.Name 			= v.PrintName
-			ITEM.Desc			= v.ItemDescription or ""
-			ITEM.Model			= v.WorldModel
-			ITEM.Weight			= v.ItemWeight or 1
-			ITEM.SizeX			= v.ItemSizeX or 1
-			ITEM.SizeY			= v.ItemSizeY or 1
-			ITEM.IconX			= v.ItemIconX or 1
-			ITEM.IconY			= v.ItemIconY or 1
-			
-			ITEM.FOV			= v.ItemFOV
-			ITEM.CamPos			= v.ItemCamPos
-			ITEM.LookAt			= v.ItemLookAt
-			
-			ITEM.ProcessEntity	= v.ItemProcessEntity
-			ITEM.PProcessEntity	= v.ItemPProcessEntity
-			ITEM.IconMaterial	= v.ItemIconMaterial
-			ITEM.IconColor		= v.ItemIconColor
-			
-			ITEM.BulkPrice		= v.ItemBulkPrice
-			ITEM.SinglePrice	= v.ItemSinglePrice
-			ITEM.License		= v.ItemLicense
-			
-			ITEM.Droppable		= true
-			ITEM.Throwable		= true
-			ITEM.Usable			= false
-			ITEM.UseText		= nil
-			ITEM.IsWeapon		= false
-			ITEM.IsArtifact		= false
-			
-			function ITEM.OnPlayerSpawn(item, player)
-				if (SV) then player:Give(item) end
-			end
-			
-			function ITEM.OnPlayerPickup(item, player)
-				if (SV) then player:Give(item) end
-			end
-			
-			function ITEM.OnRemoved(item, player)
-				if (SV and player:GetNumItems(item) < 2) then
-					player:StripWeapon(item)
-				end
-			end
-			
-			self.items[#self.items + 1] = ITEM
-			MsgC(Color(200, 200, 200, 255 , "Weapon item " .. v.ClassName .. " loaded.\n"))
+function rain:GetItemByID(ItemID)
+	if (ItemID) then
+		return self.items[ItemID]
+	end
+end
+
+function rain:CreateItem(item, pos, ang)
+	if (self:GetItemByID(item)) then
+		local client
+
+		-- If the first argument is a player, then we will find a position to drop
+		-- the item based off their aim.
+		if (type(pos) == "Player") then
+			client = pos
+			pos = pos:GetItemDropPos()
 		end
-	end
-end
 
-function rain:GetItemByID(id)
-	if (id and #self.items > 0) then
-		for k = 1, #self.items do
-			if (self.items[k].ID == id) then
-				return item
-			end
+		-- Spawn the actual item entity.
+		local entity = ents.Create("rd_item")
+		entity:Spawn()
+		entity:SetPos(pos)
+		entity:SetAngles(ang or Angle(0, 0, 0))
+		-- Make the item represent this item.
+		entity:SetItem(item)
+
+		if (IsValid(client)) then
+			entity.rainSteamID = client:SteamID()
+			entity.rainCharID = client:GetCharacter():GetCharID()
 		end
+
+		-- Return the newly created entity.
+		return entity
 	end
-	
-	return false
 end
-
-function rain:CreateItem(player, item)
-	local trace = {}
-	trace.start = player:GetShootPos()
-	trace.endpos = trace.start + player:GetAimVector() * 50
-	trace.filter = player
-	
-	local tr = util.TraceLine(trace)
-	local ent = self:CreatePhysicalItem(item, tr.HitPos + tr.HitNormal * 10, Angle())
-	
-	if (ent and IsValid(player)) then
-		ent.rainSteamID = player:SteamID()
-	end
-
-	return ent
-end
-
-function rain:CreatePhysicalItem(item, pos, ang)
-	local e = ents.Create("rd_item")
-	e:SetModel(self:GetItemByID(item).Model)
-	e:SetPos(pos)
-	e:SetAngles(ang)
-	
-	if (self:GetItemByID(item).ProcessEntity) then
-		self:GetItemByID(item).ProcessEntity(item, e)
-	end
-	
-	e:SetItemID(item)
-	e:Spawn()
-	e:Activate()
-	
-	if (self:GetItemByID(item).PProcessEntity) then
-		self:GetItemByID(item).PProcessEntity(item, e)
-	end
-	
-	if (IsValid(e:GetPhysicsObject())) then
-		e:GetPhysicsObject():Wake()
-	end
-	
-	return e
-end
-
-print("rain.items")
-PrintTable(rain.items)

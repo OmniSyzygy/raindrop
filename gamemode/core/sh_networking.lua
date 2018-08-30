@@ -161,8 +161,7 @@ end
 --]]
 
 function rain.net.ReadTable()
-print("attempting to print string")
-
+	print("attempting to print string")
 	return pon.decode(net.ReadString())
 end
 

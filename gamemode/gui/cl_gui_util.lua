@@ -7,10 +7,6 @@ function rain.dpi(nUnscaledX, nUnscaledY)
 	return (nUnscaledX / 1920) * ScrW(), (nUnscaledY / 1080) * ScrH()
 end
 
-function rain.addFont()
-
-end
-
 function DrawBlurRect(x, y, w, h, amount, heavyness)
 	local X, Y = 0,0
 	local scrW, scrH = ScrW(), ScrH()
@@ -135,7 +131,7 @@ hook.Add("HUDPaint", "testblur", function()
 					surface.SetDrawColor(255, 255, 255)
 
 					local shadowcolor = Color(35*2.5, 35*2.5, 35*2.5, 255)				
-					local text = string.upper(rain:GetItemByID( v:GetItemID() ).Name)
+					local text = string.upper(v:GetItemTable().Name)
 					local font = "Trebuchet24"
 
 					surface.SetFont(font)
@@ -154,7 +150,7 @@ hook.Add("HUDPaint", "testblur", function()
 			
 					y = y + 20
 			
-					text = string.upper("Weight "..rain:GetItemByID( v:GetItemID() ).Weight.."KG")
+					text = string.upper("Weight "..v:GetItemTable().Weight.."KG")
 
 					draw.DrawText(text, font, x - 1, y - 1, shadowcolor,  TEXT_ALIGN_RIGHT)
 					draw.DrawText(text, font, x + 1, y + 1, shadowcolor,  TEXT_ALIGN_RIGHT)
@@ -178,7 +174,6 @@ hook.Add("HUDPaint", "testblur", function()
 		end
 	end
 end)
-
 
 -- remove garrys mod default sandbox hints
 timer.Remove("HintSystem_OpeningMenu")

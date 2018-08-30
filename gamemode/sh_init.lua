@@ -18,7 +18,6 @@ rain.Name = "RAINDROP"
 rain.Website = "thereeplex.com"
 rain.Author = "jooni"
 rain.Email = "jooni@thereeplex.com"
-
 rain.dev = true
 
 -- include raindrop utilities to make loading the rest of the gamemode easier
@@ -32,7 +31,6 @@ end
 -- load all prerequisite libraries, these are typically external, written and pure lua and not by myself.
 rain.util.loadlibraries()
 rain.util.loadraindrop()
---rain.item.loadFromDir(GM.FolderName.."/gamemode/raindrop/items")
 
 function rain:Initialize()
 	if (SV) then
