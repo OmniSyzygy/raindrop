@@ -1,5 +1,8 @@
 -- accidentally committed the CC skin
 
+-- # Micro-ops
+local rain = rain
+
 rain.skin = {}
 
 function rain.skin.paintpanel(w, h, p, color)

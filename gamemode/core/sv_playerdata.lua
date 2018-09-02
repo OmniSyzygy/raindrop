@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 rain.pdata = {}
 
 -- these are caches, so they're preserved when the gamemode reloads

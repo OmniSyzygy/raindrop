@@ -3,6 +3,9 @@
 	Description: animation library taken from NS 1.1 since I rather KILL myself then write this out myself. Credit is due where it is due though.
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.anim = rain.anim or {}
 rain.anim.citizen_male = {
 	normal = {

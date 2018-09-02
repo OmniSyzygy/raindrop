@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 rain.cfg = rain.cfg or {}
 
 rain.cfg.item = {}
@@ -28,3 +31,6 @@ rain.cfg.dammul["ValveBiped.Bip01_L_Hand"] 		= 0.25
 rain.cfg.dammul["ValveBiped.Bip01_R_UpperArm"] 	= 0.5
 rain.cfg.dammul["ValveBiped.Bip01_R_Forearm"] 	= 0.4
 rain.cfg.dammul["ValveBiped.Bip01_R_Hand"] 		= 0.25
+
+rain.InventorySizeX = 5
+rain.InventorySizeY = 8

@@ -15,7 +15,7 @@ function PANEL:Init()
 
 	self.iconsize = 420 / 7
 
-	self.Inventory = CreateInventoryUI(LocalPlayer().Inventory, LocalPlayer(), self.iconsize)
+	self.Inventory = CreateInventoryUI(LocalPlayer().character.data_inventory, LocalPlayer(), self.iconsize)
 	self.Inventory:SetParent(self.InvPanel)
 
 	surface.CreateFont("NameFont", {
@@ -43,7 +43,6 @@ function PANEL:Init()
 	})
 
 	self.Rank = self.Rank or "Free Stalker"
-
 	self.WeaponPanel = {}
 
 	for i = 0, 1 do 
@@ -168,7 +167,7 @@ end
 
 function PANEL:Refresh()
 	self.Inventory:Remove()
-	self.Inventory = CreateInventoryUI(LocalPlayer().Inventory, LocalPlayer(), self.iconsize)
+	self.Inventory = CreateInventoryUI(LocalPlayer().character.data_inventory, LocalPlayer(), self.iconsize)
 	self.Inventory:SetParent(self.InvPanel)
 end
 
@@ -181,13 +180,13 @@ function PANEL:Paint(w, h)
 	-- surface.DrawTexturedRectUV( number x, number y, number width, number height, number startU, number startV, number endU, number endV ) 
 	surface.DrawTexturedRectUV(0, 0, w, h, 1/3, 0, 3/3, 9/12)
 
-	draw.DrawText(LocalPlayer():VisibleRPName(), "NameFont", 506 + 1, 32 + 1, Color(0,0,0,255), TEXT_ALIGN_LEFT) 
-	draw.DrawText(LocalPlayer():VisibleRPName(), "NameFont", 506, 32, Color(190,175,160,255), TEXT_ALIGN_LEFT) 
+	draw.DrawText(LocalPlayer():GetVisibleRPName(), "NameFont", 506 + 1, 32 + 1, Color(0,0,0,255), TEXT_ALIGN_LEFT) 
+	draw.DrawText(LocalPlayer():GetVisibleRPName(), "NameFont", 506, 32, Color(190,175,160,255), TEXT_ALIGN_LEFT) 
 	draw.DrawText(self.Rank, "TitleFont", 506 + 1, 54 + 1, Color(0,0,0,255), TEXT_ALIGN_LEFT) 
 	draw.DrawText(self.Rank, "TitleFont", 506, 54, Color(150,150,150,255), TEXT_ALIGN_LEFT) 
 
-	draw.DrawText(LocalPlayer():Money().." RU", "CashFont", 764 + 1, 106 + 1, Color(0,0,0,255), TEXT_ALIGN_RIGHT) 
-	draw.DrawText(LocalPlayer():Money().." RU", "CashFont", 764 , 106, Color(255,255,255,255), TEXT_ALIGN_RIGHT) 
+	--draw.DrawText(LocalPlayer():Money().." RU", "CashFont", 764 + 1, 106 + 1, Color(0,0,0,255), TEXT_ALIGN_RIGHT) 
+	--draw.DrawText(LocalPlayer():Money().." RU", "CashFont", 764 , 106, Color(255,255,255,255), TEXT_ALIGN_RIGHT) 
 
 	draw.DrawText("Total weight: "..LocalPlayer():InventoryWeight().." kg (max "..LocalPlayer():InventoryMaxWeight().." kg)", "TitleFont", 930 + 1, 1035 + 1, Color(0,0,0,255), TEXT_ALIGN_RIGHT) 
 	draw.DrawText("Total weight: "..LocalPlayer():InventoryWeight().." kg (max "..LocalPlayer():InventoryMaxWeight().." kg)", "TitleFont", 930, 1035, Color(150,150,150,255), TEXT_ALIGN_RIGHT) 

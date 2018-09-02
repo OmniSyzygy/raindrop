@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 surface.CreateFont("RD.CategoryButtonFont", {
 	font = "Constantia",
 	size = 25,
@@ -425,8 +428,10 @@ function PANEL:Init()
 
 		local gender = parent.selectedGender or parent.creationData.data.gender
 
-		for k, v in pairs(availableModels) do
-			self:AddModel(v)
+		for k = 1, #availableModels do
+			local x = availableModels[k]
+			self:AddModel(x)
+			x = nil
 		end
 	end
 
@@ -1106,9 +1111,7 @@ function PANEL:Init()
 		button:SetText("Create")
 
 		function button:DoClick()
-			net.Start("rain.charcreate")
-				rain.net.WriteTable(parent.creationData)
-			net.SendToServer()
+			netstream.Start("rain.charcreate", parent.creationData)
 
 			parent:Remove()
 
@@ -1240,9 +1243,7 @@ function PANEL:Init()
 				if (v.name == "Finish") then
 					--	Add checks here for valid information being entered.
 					
-					net.Start("rain.charcreate")
-						rain.net.WriteTable(parent.creationData)
-					net.SendToServer()
+					netstream.Start("rain.charcreate", parent.creationData)
 
 					parent:Remove()
 

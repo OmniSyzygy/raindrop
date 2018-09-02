@@ -3,6 +3,9 @@
 	Purpose: utility library to make networking a touch easier
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.net = {} -- net wrapper
 rain.repvars = {} -- all replicated vars in the gm
 rain.repvar = {} -- repvar library
@@ -42,7 +45,7 @@ end
 --]]
 
 function rain.net.WriteShortInt(nInt)
-	net.WriteInt(nInt, 16 + 1)
+	net.WriteInt(nInt, 17)
 end
 
 --[[
@@ -51,7 +54,7 @@ end
 --]]
 
 function rain.net.WriteLongInt(nInt)
-	net.WriteInt(nInt, 31 + 1)
+	net.WriteInt(nInt, 32)
 end
 
 --[[
@@ -60,7 +63,7 @@ end
 --]]
 
 function rain.net.WriteTinyUInt(nUInt)
-	net.WriteUInt(nUInt, 2 + 1)
+	net.WriteUInt(nUInt, 3)
 end
 
 --[[
@@ -69,7 +72,7 @@ end
 --]]
 
 function rain.net.WriteNibbleUInt(nUInt)
-	net.WriteUInt(nUInt, 4 + 1)
+	net.WriteUInt(nUInt, 5)
 end
 
 --[[
@@ -133,17 +136,21 @@ if (SV) then
 	--]]
 	
 	function rain.net.broadcast(bAdminOnly)
+		local plyData = player.GetAll()
 		if bAdminOnly then
-			for k, v in pairs(player.GetAll()) do
+			for k = 1, #plyData do
+				local v = plyData[k]
 				if v:IsAdmin() then
 					net.Send(v)
 				end
 			end
 		else
-			for k, v in pairs(player.GetAll()) do
+			for k = 1, #plyData do
+				local v = plyData[k]
 				net.Send(v)
 			end
 		end
+		plyData = nil
 	end
 
 end
@@ -154,8 +161,7 @@ end
 --]]
 
 function rain.net.ReadTable()
-print("attempting to print string")
-
+	print("attempting to print string")
 	return pon.decode(net.ReadString())
 end
 

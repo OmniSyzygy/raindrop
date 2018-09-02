@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 local PANEL = {}
 
 function PANEL:Init()

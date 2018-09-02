@@ -11,6 +11,9 @@ DATA_ADMINONLY = 3
 DATA_NAME = 4
 DATA_FACTIONS = 5
 
+-- # Micro-ops
+local rain = rain
+
 rain.character = {}
 
 if (SV) then
@@ -126,11 +129,12 @@ if (SV) then
 				SaveObj:Update(k, v)
 			end
 		end
-					
+
 		SaveObj:Update("charname", self:GetName())
 		SaveObj:Execute()
 	end
 
+	-- I think this is meta:UpdatePlayerField( field, value )
 	function character_meta:SaveByKey(enumDataType, sNewData)
 		local SaveObj = mysql:Update("characters")
 		SaveObj:Where("id", self:GetCharID())
@@ -168,34 +172,35 @@ if (SV) then
 
 		if (pReceiver) then
 			TargetPlayers = {pReceiver}
-		else
-			for k, v in pairs(TargetPlayers) do
-				local data = {}
+		end
+		
+		for k = 1, #TargetPlayers do
+			local v = TargetPlayers[k]
+			local data = {}
 
-				data.target = self:GetOwningClient()
+			data.target = self:GetOwningClient()
 
-				if v:IsAdmin() then
-					data.adminonly = self:GetAdminOnlyData()
-				else
-					data.adminonly = {}
-				end
-
-				data.character = self:GetData()
-				data.appearance = self:GetAppearanceData()
-
-				if (v == self:GetOwningClient()) or v:IsAdmin() then
-					data.inventory = self:GetInventory()
-				else
-					data.inventory = {}
-				end
-
-				data.name = self:GetName()
-				data.id = self:GetCharID()
-
-				net.Start("rain.charsync")
-					rain.net.WriteTable(data)
-				net.Send(v)
+			if v:IsAdmin() then
+				data.adminonly = self:GetAdminOnlyData()
+			else
+				data.adminonly = {}
 			end
+
+			data.character = self:GetData()
+			data.appearance = self:GetAppearanceData()
+
+			if (v == self:GetOwningClient()) or v:IsAdmin() then
+				data.Inventory = self:GetInventory()
+			else
+				data.Inventory = {}
+			end
+
+			data.name = self:GetName()
+			data.id = self:GetCharID()
+
+			net.Start("rain.charsync")
+				rain.net.WriteTable(data)
+			net.Send(v)
 		end
 	end
 
@@ -208,10 +213,11 @@ if (SV) then
 
 	util.AddNetworkString("rain.charsyncdatabykey")
 
-	function character_meta:SyncDataByKey(enumDataType, sKey, tNewData, bNoSave)
+	function character_meta:SyncDataByKey(enumDataType, sKey, tNewData)
 		self:SaveByKey(enumDataType)
-
-		for k, v in pairs(player.GetAll()) do
+		local plyData = player.GetAll()
+		for k = 1, #plyData do
+			local v = plyData[k]
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
 			rain.net.WriteTable({target = self:GetOwningClient(), key = sKey, newdata = tNewData})
@@ -222,6 +228,7 @@ if (SV) then
 				net.Send(v)
 			end
 		end
+		plyData = nil
 	end
 
 	--[[
@@ -236,7 +243,9 @@ if (SV) then
 	function character_meta:SyncData(enumDataType, tNewData, bNoSave)
 		self:SaveByKey(enumDataType)
 
-		for k, v in pairs(player.GetAll()) do
+		local plyData = player.GetAll()
+		for k = 1, #plyData do
+			local v = plyData[k]
 			net.Start("rain.charsyncdatabykey")
 			rain.net.WriteTinyInt(enumDataType)
 			rain.net.WriteTable({target = self:GetOwningClient(), newdata = tNewData})
@@ -247,14 +256,12 @@ if (SV) then
 				net.Send(v)
 			end
 		end
+		plyData = nil
 	end
 
-	util.AddNetworkString("rain.charcreate")
-
-	net.Receive("rain.charcreate", function(len, ply)
-	if ( IsValid( ply ) ) then
-		local charData = rain.net.ReadTable()
-		rain.character.create(ply, charData.data, charData.appearance)
+	netstream.Hook("rain.charcreate", function(ply, charData)
+		if ( IsValid( ply ) ) then
+			rain.character.create(ply, charData.data, charData.appearance, BuildEmptyInventory(rain.InventorySizeX, rain.InventorySizeY))
 		end
 	end)
 
@@ -513,7 +520,7 @@ if (CL) then
 		local adminonly = charsyncdata.adminonly
 		local character = charsyncdata.character
 		local appearance = charsyncdata.appearance
-		local inventory = charsyncdata.inventory
+		local inventory = charsyncdata.Inventory
 		local name = charsyncdata.name
 		local id = charsyncdata.id
 
@@ -535,7 +542,6 @@ if (CL) then
 	net.Receive("rain.charsyncdatabykey", function()
 		local datatype = rain.net.ReadTinyInt(enumDataType)
 		local data = rain.net.ReadTable()
-
 		local target = data.target.character
 
 		if datatype == DATA_CHARACTER then
@@ -552,7 +558,6 @@ if (CL) then
 	net.Receive("rain.charsyncdata", function()
 		local datatype = rain.net.ReadTinyInt(enumDataType)
 		local data = rain.net.ReadTable()
-
 		local target = data.target.character
 
 		if datatype == DATA_CHARACTER then
@@ -567,19 +572,14 @@ if (CL) then
 	end)
 
 	function rain.character.loadcharacter(charid)
-		net.Start("rain.loadcharacter")
-			rain.net.WriteLongInt(charid)
-		net.SendToServer()
+		netstream.Start("rain.loadcharacter", charid)
 	end
 end
 
 if (SV) then
-
-	util.AddNetworkString("rain.loadcharacter")
-	net.Receive("rain.loadcharacter", function(nLen, pClient)
-		local charid = rain.net.ReadLongInt()
+	netstream.Hook("rain.loadcharacter", function(player, charid)
 		if charid then
-			pClient:LoadCharacter(charid)
+			player:LoadCharacter(charid)
 		end 
 	end)
 
@@ -613,6 +613,7 @@ if (SV) then
 		if tInventory then
 			inventory = pon.encode(tInventory)
 		end
+		
 		local InsertObj = mysql:Insert("characters")
 		InsertObj:Insert("charname", name)
 		InsertObj:Insert("data_character", chardata)
@@ -661,7 +662,7 @@ if (SV) then
 		Desc: Syncs a single character
 	--]]
 
-	function rain.character.sync()
+	function rain.character.sync(pClient)
 		-- this will be written once I figure out some networking backend stuff
 	end
 
@@ -671,16 +672,26 @@ if (SV) then
 		Desc: Syncs the character index to all clients in the server
 	--]]
 
-	function rain.character.syncindex()
+	function rain.character.syncindex(pClient)
 		-- this will be written once I figure out some networking backend stuff
+		local tPlayers = player.GetAll()
+		for k = 1, #tPlayers do
+			local v = tPlayers[k]
+			if v:GetState() == STATE_ALIVE then
+				v:GetCharacter():Sync(pClient) 
+			end
+			v = nil
+		end
+		tPlayers = nil
 	end
 
 	function rain.character.playerspawn(pClient, tCharacter)
 		if (istable(tCharacter)) then
 			local appearTable = tCharacter.data_appearance
-
+			rain.character.syncindex(pClient)
 			pClient:SetModel(appearTable.model)
 			pClient:SetSkin(appearTable.skin)
+			--pClient:LoadItemsFromString(pon.encode(tCharacter.data_inventory))
 		end
 	end
 
@@ -699,7 +710,6 @@ if (SV) then
 			local LoadObj = mysql:Select("characters")
 			LoadObj:Where("id", tostring(v))
 			LoadObj:Callback(function(wResult, sStatus, nLastID)
-				PrintTable(wResult)
 				if (type(wResult) == "table") and (#wResult > 0) then
 					local tResult = wResult[1]
 					tResult.data_character = pon.decode(tResult.data_character or "{}")

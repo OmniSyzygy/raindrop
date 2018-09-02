@@ -56,9 +56,7 @@ function TOOL:LeftClick( trace )
 			end
 		elseif (self:GetStage() == STAGE_SENDTOSERVER) then
 			if (SERVER) then
-			
-							print("hello volume")
-			
+				print("hello volume")
 				local NewVolume = GAMEMODE.struct:GetStruct("VolumeType")
 
 				NewVolume.Min = Vector(self:GetClientInfo("min"))
@@ -138,7 +136,6 @@ if (CLIENT) then
 
 		cam.Start3D()
 		if (self.radial) then
-
 			render.DrawWireframeSphere(self.MinPoint, self.MaxPoint:Distance(self.MinPoint), 9, 9, voldata.DrawColor)
 		else
 			render.DrawWireframeBox(Vector(0,0,0), Angle(0,0,0), self.MinPoint, self.MaxPoint, voldata.DrawColor, true) 

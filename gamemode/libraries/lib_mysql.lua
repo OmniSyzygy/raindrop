@@ -1,7 +1,6 @@
 --[[
 	mysql - 1.0.2
 	A simple MySQL wrapper for Garry's Mod.
-
 	Alexander Grist-Hucker
 	http://www.alexgrist.com
 --]]
@@ -9,7 +8,7 @@
 mysql = mysql or {};
 
 local QueueTable = {};
-local Module = "mysqloo";
+local Module = "sqlite";
 local Connected = false;
 local type = type;
 local tostring = tostring;
@@ -412,7 +411,8 @@ function mysql:Connect(host, username, password, database, port, socket, flags)
 			self.connection.onConnectionFailed = function(database, errorText)
 				mysql:OnConnectionFailed(errorText);
 			end;		
-
+			
+			self.connection:setAutoReconnect(true)
 			self.connection:connect();
 		else
 			ErrorNoHalt(string.format(MODULE_NOT_EXIST, Module));
@@ -542,14 +542,14 @@ function mysql:OnConnected()
 	MsgC(Color(25, 235, 25), "[mysql] Connected to the database!\n");
 
 	Connected = true;
-	hook.Call("DatabaseConnected", nil);
+	hook.Run("DatabaseConnected");
 end;
 
 -- Called when the database connection fails.
 function mysql:OnConnectionFailed(errorText)
 	ErrorNoHalt("[mysql] Unable to connect to the database!\n"..errorText.."\n");
 
-	hook.Call("DatabaseConnectionFailed", nil, errorText);
+	hook.Run("DatabaseConnectionFailed", errorText);
 end;
 
 -- A function to check whether or not the module is connected to a database.

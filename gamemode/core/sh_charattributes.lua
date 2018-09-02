@@ -2,6 +2,9 @@
 	sh_attributes.lua
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.attributes = {}
 rain.attributebuffer = {}
 

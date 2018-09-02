@@ -1,5 +1,7 @@
-rain.factionflag = {}
+-- # Micro-ops
+local rain = rain
 
+rain.factionflag = {}
 
 local charmeta = rain.character.getmeta()
 
@@ -26,13 +28,12 @@ function charmeta:IsFaction(sFaction)
 end
 
 function charmeta:IsRank(sFaction, sRank)
-
 	local flags = self:GetFactions(true)
 	for _, flag in pairs(flags) do
 		if sFaction == string.StripExtension(flag) then
 			if sRank == string.gsub( flag, "^%d+%.", "" ) then
-			print("Player is in faction ID "..sFaction.." and is rank "..sRank)
-					return true
+				print("Player is in faction ID "..sFaction.." and is rank "..sRank)
+				return true
 			end
 		end
 	end
@@ -40,7 +41,6 @@ function charmeta:IsRank(sFaction, sRank)
 end
 
 function charmeta:GetRank(sFaction)
-
 	local flags = self:GetFactions(true)
 	for _, flag in pairs(flags) do
 		if sFaction == string.StripExtension(flag) then
@@ -75,10 +75,9 @@ end
 
 function charmeta:RemoveFaction(sFactionToRemove)
 	local currentflags = self:GetAdminOnlyData("factions", "")
+	if string.len(currentflags) > 0 then
+		newflags = string.Replace(currentflags, "!"..sFactionToRemove.."."..self:GetRank(sFactionToRemove), "")
+	end
 	
-		if string.len(currentflags) > 0 then
-			newflags = string.Replace(currentflags, "!"..sFactionToRemove.."."..self:GetRank(sFactionToRemove), "")
-		end
-
 	self:SetAdminOnlyData("factions", newflags)
 end

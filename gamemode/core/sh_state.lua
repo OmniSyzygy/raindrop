@@ -3,6 +3,9 @@
 	Description: Establishes the state that the client is in at the current time.	
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.state = {}
 
 -- enums for state

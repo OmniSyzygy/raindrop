@@ -41,7 +41,6 @@ function SLerpVector(nFraction, vOrigin, vTarget)
 end
 
 function rain.util.log(sText, sTag)
-
 	if !sTag then
 		sTag = "PRINT"
 	else
@@ -70,6 +69,10 @@ function rain.util.rawinclude(sFilePath)
 end
 
 function rain.util.include(sFilePath)
+	if (!sFilePath) then
+		error("[RAINDROP] No file name specified for including.")
+	end
+	
 	if (!SV and string.find(sFilePath, "sv_")) then
 		return
 	end
@@ -141,6 +144,13 @@ end
 if (SV) then
 	function rain.util.initraindrop()
 		rain.db.connect(rain.cfg.db.address, rain.cfg.db.username, rain.cfg.db.password, rain.cfg.db.database, rain.cfg.db.port)
+		
+		hook.Add("DatabaseConnected", "rain.DatabaseConnected", function()
+			if (mysql:IsConnected()) then
+				rain.db.onconnectionsuccess()
+				rain:LoadVolumes()
+			end
+		end)
 	end
 end	
 
@@ -219,4 +229,19 @@ function rain.util.isType(wToTest, wType)
 	end
 
 	return false
+end
+
+local plyMeta = FindMetaTable("Player")
+function plyMeta:AddChat(...)
+	if (SV) then
+		netstream.Start(self, "rain.AddChat", {...})
+	else
+		chat.AddText(unpack({...}))
+	end
+end
+
+if (CL) then
+	netstream.Hook("rain.AddChat", function(table)
+		chat.AddText(unpack(table))
+	end)
 end

@@ -50,6 +50,9 @@ local selectorY
 local selectorH
 local selectorOffset
 
+-- # Micro-ops
+local rain = rain
+
 local PANEL = {}
 
 function PANEL:Init()

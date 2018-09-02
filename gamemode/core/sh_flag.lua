@@ -2,6 +2,9 @@
 	Filename: sh_flag.lua
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.flag = {}
 rain.flagbuffer = {}
 
@@ -92,7 +95,7 @@ end
 function charmeta:RemoveFlags(sFlagsToRemove)
 	local flags = string.Explode("", sFlagsToRemove)
 	local currentflags = self:GetAdminOnlyData("flags", "")
-print("testing flag removal")
+	print("testing flag removal")
 	for _, flag in pairs(flags) do
 		if string.len(currentflags) > 0 then
 			newflags = string.Replace(currentflags, sFlagsToRemove, "")

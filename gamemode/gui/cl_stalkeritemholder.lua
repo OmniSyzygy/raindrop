@@ -6,7 +6,6 @@ AccessorFunc(PANEL, "m_UseCondition", "UseCondition",  FORCE_BOOL) -- wether or 
 AccessorFunc(PANEL, "m_Condition", "Condition",  FORCE_NUMBER)
 
 function PANEL:Init()
-
 	self:SetSlot(1)
 	self:SetSlotType(SLOT_QUICKUSE)
 
@@ -15,27 +14,29 @@ function PANEL:Init()
 
 	self:Receiver("InvItem", function(p, items, dropped)
 		local item = items[1]
+		local client = LocalPlayer()
 
-		if (item.Owner == LocalPlayer() and dropped) then 			
-			if (self:GetSlotType() == SLOT_QUICKUSE) then
-				local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
-				if (ItemTable.SizeX == 1) and (ItemTable.SizeY == 1) then -- only 1x1 items, mostly consumables can be quick used.
-					LocalPlayer():SetQuickSlot(self:GetSlot(), item.ItemID)
-					self:UpdateSlot()
-				end
-			elseif (self:GetSlotType() == SLOT_ARTIFACT) then
-				local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
-				if (ItemTable.IsArtifact) then
-					LocalPlayer():EquipArtifactFrom(item.Coords[1], item.Coords[2], self:GetSlot())
-					LocalPlayer():RefreshInventoryPanel()
-					self:UpdateSlot()
-				end
-			elseif (self:GetSlotType() == SLOT_GUN) then
-				local ItemTable = GAMEMODE:GetItemByID(item.ItemID)
-				if (ItemTable.IsWeapon) then
-					LocalPlayer():EquipWeaponFrom(item.Coords[1], item.Coords[2], self:GetSlot())
-					LocalPlayer():RefreshInventoryPanel()
-					self:UpdateSlot()
+		if (IsValid(client) and item.Owner == client and dropped) then
+			local ItemTable = rain:GetItemByID(item.ItemID)
+			
+			if (ItemTable) then
+				if (self:GetSlotType() == SLOT_QUICKUSE) then
+					if (ItemTable.SizeX == 1 and ItemTable.SizeY == 1 and !ItemTable.IsArtifact and !ItemTable.IsWeapon) then -- only 1x1 items, mostly consumables can be quick used.
+						client:SetQuickSlot(self:GetSlot(), item.ItemID)
+						self:UpdateSlot()
+					end
+				elseif (self:GetSlotType() == SLOT_ARTIFACT) then
+					if (ItemTable.IsArtifact) then
+						client:EquipArtifactFrom(item.Coords[1], item.Coords[2], self:GetSlot())
+						client:RefreshInventoryPanel()
+						self:UpdateSlot()
+					end
+				elseif (self:GetSlotType() == SLOT_GUN) then
+					if (ItemTable.IsWeapon) then
+						client:EquipWeaponFrom(item.Coords[1], item.Coords[2], self:GetSlot())
+						client:RefreshInventoryPanel()
+						self:UpdateSlot()
+					end
 				end
 			end
 		end
@@ -64,9 +65,14 @@ function PANEL:ConditionThink()
 end
 
 function PANEL:UpdateSlot()
+	local client = LocalPlayer()
+	if (!IsValid(client)) then
+		return
+	end
+	
 	if (self:GetSlotType() == SLOT_QUICKUSE) then
-		if (LocalPlayer():GetQuickSlot(self:GetSlot())) then
-			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetQuickSlot(self:GetSlot()))
+		if (client:GetQuickSlot(self:GetSlot())) then
+			local ItemTable = rain:GetItemByID(client:GetQuickSlot(self:GetSlot()))
 			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			local w, h = self:GetSize()
 			w = w * 0.8
@@ -75,17 +81,17 @@ function PANEL:UpdateSlot()
 			w = (w/2) - (self.ItemPanel:GetWide()/2)
 			h = (h/2) - (self.ItemPanel:GetTall()/2)
 			self.ItemPanel:SetPos(w, h)
-			self.ItemPanel:SetCoords(ItemTable.IconX,ItemTable.IconX + ItemTable.SizeX, ItemTable.IconY,ItemTable.IconY + ItemTable.SizeY)
+			self.ItemPanel:SetCoords(ItemTable.IconX,ItemTable.IconX + ItemTable.SizeX, ItemTable.IconY,ItemTable.IconY + ItemTable.SizeY, ItemTable.Model)
 			self.ItemPanel.DoRightClick = function()
-				LocalPlayer():ResetQuickSlot(self:GetSlot())
+				client:ResetQuickSlot(self:GetSlot())
 				self:UpdateSlot()
 			end
 		elseif (self.ItemPanel and IsValid(self.ItemPanel)) then
 			self.ItemPanel:Remove()
 		end
 	elseif (self:GetSlotType() == SLOT_ARTIFACT) then
-		if (LocalPlayer():GetArtifactSlot(self:GetSlot())) then
-			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetArtifactSlot(self:GetSlot()))
+		if (client:GetArtifactSlot(self:GetSlot())) then
+			local ItemTable = rain:GetItemByID(client:GetArtifactSlot(self:GetSlot()))
 			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			local w, h = self:GetSize()
 			w = w * 0.8
@@ -94,11 +100,11 @@ function PANEL:UpdateSlot()
 			w = (w/2) - (self.ItemPanel:GetWide()/2)
 			h = (h/2) - (self.ItemPanel:GetTall()/2)
 			self.ItemPanel:SetPos(w, h)
-			self.ItemPanel:SetCoords(ItemTable.IconX,ItemTable.IconX + ItemTable.SizeX, ItemTable.IconY,ItemTable.IconY + ItemTable.SizeY)
+			self.ItemPanel:SetCoords(ItemTable.IconX,ItemTable.IconX + ItemTable.SizeX, ItemTable.IconY,ItemTable.IconY + ItemTable.SizeY, ItemTable.Model)
 			self.ItemPanel.DoRightClick = function()
-				if (LocalPlayer():CanTakeItem(LocalPlayer():GetArtifactSlot(self:GetSlot()))) then
-					LocalPlayer():RemoveArtifactFrom(self:GetSlot())
-					LocalPlayer():RefreshInventoryPanel()
+				if (client:CanTakeItem(client:GetArtifactSlot(self:GetSlot()))) then
+					client:RemoveArtifactFrom(self:GetSlot())
+					client:RefreshInventoryPanel()
 					self:UpdateSlot()
 				end
 			end
@@ -106,8 +112,8 @@ function PANEL:UpdateSlot()
 			self.ItemPanel:Remove()
 		end
 	elseif (self:GetSlotType() == SLOT_GUN) then
-		if (LocalPlayer():GetGearSlot(self:GetSlot())) then
-			local ItemTable = GAMEMODE:GetItemByID(LocalPlayer():GetGearSlot(self:GetSlot()))
+		if (client:GetGearSlot(self:GetSlot())) then
+			local ItemTable = rain:GetItemByID(client:GetGearSlot(self:GetSlot()))
 			self.ItemPanel = vgui.Create("RD_StalkerIcon", self)
 			self.ItemPanel:SetRotated(true)
 			local w, h = self:GetSize()
@@ -118,11 +124,11 @@ function PANEL:UpdateSlot()
 			h = (h/2) - (self.ItemPanel:GetTall()/2)
 			self.ItemPanel:SetPos(w, h)
 			self.ItemPanel:SetRotated(true)
-			self.ItemPanel:SetCoords(ItemTable.IconY, ItemTable.IconY + ItemTable.SizeY, ItemTable.IconX, ItemTable.IconX + ItemTable.SizeX)
+			self.ItemPanel:SetCoords(ItemTable.IconY, ItemTable.IconY + ItemTable.SizeY, ItemTable.IconX, ItemTable.IconX + ItemTable.SizeX, ItemTable.Model)
 			self.ItemPanel.DoRightClick = function()
-				if (LocalPlayer():CanTakeItem(LocalPlayer():GetGearSlot(self:GetSlot()))) then
-					LocalPlayer():RemoveWeaponFrom(self:GetSlot())
-					LocalPlayer():RefreshInventoryPanel()
+				if (client:CanTakeItem(client:GetGearSlot(self:GetSlot()))) then
+					client:RemoveWeaponFrom(self:GetSlot())
+					client:RefreshInventoryPanel()
 					self:UpdateSlot()
 				end
 			end
@@ -135,7 +141,6 @@ function PANEL:UpdateSlot()
 end
 
 function PANEL:Paint(w, h)
-
 	return true
 end
 

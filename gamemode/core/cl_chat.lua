@@ -3,6 +3,9 @@
 	Description: Tabbed chat
 --]]
 
+-- # Micro-ops
+local rain = rain
+
 rain.chat = {}
 rain.chat.tabs = {}
 rain.chat.ui = rain.chat.ui or nil
@@ -226,7 +229,7 @@ end
 
 --local chatAddText = chatAddText or chat.AddText()
 
-function chat.AddText( ... )
+/*function chat.AddText( ... )
 
 	local tArgs = { ... }
 
@@ -241,7 +244,7 @@ function chat.AddText( ... )
 	end
 
 	--chatAddText(...)
-end
+end*/
 
 
 hook.Add("PlayerBindPress", "rain.chat.playerinput", function(client, sBind, bPressed)

@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 PANEL = {}
 function PANEL:Init()
 
@@ -55,7 +58,6 @@ function PANEL:Think()
 
 	end
 end
-			
 
 function PANEL:Paint()
 

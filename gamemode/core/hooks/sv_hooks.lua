@@ -1,3 +1,6 @@
+-- # Micro-ops
+local rain = rain
+
 function rain:PlayerInitialSpawn(pClient)
 	rain.pdata.clientinitialspawn(pClient)
 	rain:SendVolumes(pClient)
@@ -17,7 +20,6 @@ function rain:PostPlayerDeath(pClient)
 end
 
 function rain:PlayerLoadout(pClient)
-
 	pClient:Give("rain_hands")
 
 	if (pClient:IsAdmin()) then
